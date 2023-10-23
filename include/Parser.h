@@ -63,6 +63,9 @@ void validate_user(User_temp *nova, char parametros[][FIELD_SIZE]);
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de utilizadores, e caso algum elemento seja inválido
     //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 
+void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE]);
+    //    |->função que verifica parâmetro a parâmetro de cada elemento do array de reservas, e caso algum elemento seja inválido
+    //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 
 void open_files();
 

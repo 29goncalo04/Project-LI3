@@ -180,6 +180,14 @@ void validate_user(User_temp *nova, char parametros[][FIELD_SIZE]){
     nova->validation = validation;
 }
 
+void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE]){
+    int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
+                 verify_hotel_stars(parametros[4]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
+                 check_date(parametros[7]) && check_date(parametros[8]) && check_price_per_night(parametros[9]) && 
+                 verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
+    nova->validation = validation;
+}
+
 
 void open_files(){
     
@@ -199,7 +207,7 @@ void open_files(){
         int l = 0;
         switch (num_ficheiro){
             case 0:                                                      //ficheiro dos passageiros
-                    arquivo = fopen("../Projeto/dataset/data/passengers.csv", "r");
+                    arquivo = fopen("../trabalho-pratico/dataset/data/passengers.csv", "r");
                     if (arquivo == NULL) {
                         perror("Error\n");
                         return;
@@ -296,7 +304,7 @@ void open_files(){
                     fclose(arquivo);
                     break;
             case 1:                                                         //ficheiro dos voos
-                arquivo = fopen("../Projeto/dataset/data/flights.csv", "r");
+                arquivo = fopen("../trabalho-pratico/dataset/data/flights.csv", "r");
                 if (arquivo == NULL) {
                     perror("Error\n");
                     return;
@@ -342,7 +350,7 @@ void open_files(){
                 break;
 
             case 2:                                                       //ficheiro das reservas
-                arquivo = fopen("../Projeto/dataset/data/reservations.csv", "r");
+                arquivo = fopen("../trabalho-pratico/dataset/data/reservations.csv", "r");
                 if (arquivo == NULL) {
                     perror("Error\n");
                     return;
@@ -372,6 +380,7 @@ void open_files(){
                             }
                         }
                         Reservation_temp nova = create_reservation(parametros);
+                        validate_reservation(&nova, parametros);
                         reservation_array = realloc(reservation_array, (num_linhas[2]+1)*sizeof(Reservation_temp));
                         reservation_array[num_linhas[2]] = nova;
                         num_linhas[2]++;
@@ -383,7 +392,7 @@ void open_files(){
                 break;
 
             case 3:                                                 //ficheiro dos utilizadores
-                arquivo = fopen("../Projeto/dataset/data/users.csv", "r");
+                arquivo = fopen("../trabalho-pratico/dataset/data/users.csv", "r");
                 if (arquivo == NULL) {
                     perror("Error\n");
                     return;
@@ -425,7 +434,10 @@ void open_files(){
     }*/
     for (int i = 0; i < 10000; i++) {
         if (user_array[i].validation == 0) printf("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
-    }
+    }/*
+    for (int i = 0; i < 40952; i++) {
+        if (reservation_array[i].validation == 0) printf("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+    }*/
     /*
     for (int i = 296; i<297; i++){                       ///////180   69
         printf("%s    %d\n", flight_array[i].total_seats, contador_array[i].contador);
