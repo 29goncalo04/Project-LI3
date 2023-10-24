@@ -72,9 +72,8 @@ int verify_breakfast(char *breakfast){
         i++;
     }
     breakfast2[i] = '\0';
-    if (strcmp (breakfast2, "t")==0 || strcmp (breakfast2, "true")==0 || strcmp (breakfast2, "1")==0) result = 1;    //inclui breakfast
-    else if (strcmp (breakfast2, "f")==0 || strcmp (breakfast2, "false")==0 || strcmp (breakfast2, "0")==0 || strcmp (breakfast2, "")==0) result = 0;   //não inclui breakfast
-         else result = 2;  //caso em que é inválido
+    if (strcmp (breakfast2, "t")==0 || strcmp (breakfast2, "true")==0 || strcmp (breakfast2, "1")==0 || strcmp (breakfast2, "f")==0 || strcmp (breakfast2, "false")==0 || strcmp (breakfast2, "0")==0 || strcmp (breakfast2, "")==0) result = 1;    //parâmetro válido
+      else result = 0;  //caso em que é inválido
     free(breakfast2);
     return result; 
 }
