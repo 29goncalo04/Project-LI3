@@ -167,8 +167,6 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]){
 }
 
 
-
-
 void validate_flight(Flight_temp *nova, char parametros[][FIELD_SIZE], Contador_id *contador_array, int num_linhas_contador){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[10]) &&
                  check_length(parametros[11]) && verify_airport(parametros[4]) && verify_airport(parametros[5]) &&
@@ -178,6 +176,7 @@ void validate_flight(Flight_temp *nova, char parametros[][FIELD_SIZE], Contador_
     nova->validation = validation;
 }
 
+
 void validate_user(User_temp *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && verify_email(parametros[2]) && check_length(parametros[3]) &&
                  check_date(parametros[4]) && check_length(parametros[5]) && check_length(parametros[6]) &&
@@ -186,6 +185,7 @@ void validate_user(User_temp *nova, char parametros[][FIELD_SIZE]){
     nova->validation = validation;
 }
 
+
 void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
                  verify_hotel_stars(parametros[4]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
@@ -193,6 +193,7 @@ void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE])
                  verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     nova->validation = validation;
 }
+
 
 void free_all(){
     free_passenger(passenger_array, num_linhas[0]); 
@@ -436,22 +437,9 @@ void open_files(){
     free(line);
     free_contador(contador_array, num_linhas_contador);
     
-    
-    
-    /*for (int i = 0; i < 1000; i++) {
-        if (flight_array[i].validation == 0) printf("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",flight_array[i].id,flight_array[i].airline,flight_array[i].plane_model,flight_array[i].total_seats,flight_array[i].origin,flight_array[i].destination,flight_array[i].schedule_departure_date,flight_array[i].schedule_arrival_date,flight_array[i].real_departure_date,flight_array[i].real_arrival_date,flight_array[i].pilot,flight_array[i].copilot);
-    }
-    for (int i = 0; i < 10000; i++) {
-        if (user_array[i].validation == 0) printf("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
-    }
-    for (int i = 0; i < 40952; i++) {
-        if (reservation_array[i].validation == 0) printf("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
-    }
-    for (int i = 296; i<297; i++){                       ///////180   69
-        printf("%s    %d\n", flight_array[i].total_seats, contador_array[i].contador);
-    }
-    */  
+ 
 }
+
 
 void create_files() {
     arquivo = fopen("../trabalho-pratico/Resultados/passengers_errors.csv", "w");
@@ -485,18 +473,4 @@ void create_files() {
         if (user_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
     }
     fclose(arquivo);
-}
-
-
-    
-
-
-
-
-int main() {
-    open_files();
-    create_files();
-    //função que faz as queries
-    free_all();
-    return 0;
 }
