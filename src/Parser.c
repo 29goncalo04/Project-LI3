@@ -194,46 +194,13 @@ void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE])
     nova->validation = validation;
 }
 
-void create_files(int num_linhas[4], Passenger_temp *passenger_array, Flight_temp *flight_array, Reservation_temp *reservation_array, User_temp *user_array) {
-    arquivo = fopen("../trabalho-pratico/Resultados/passengers_errors.csv", "w");
-    char *passengers_first_line = "flight_id;user_id";
-    fprintf(arquivo, "%s\n", passengers_first_line);
-    for (int i = 0; i < num_linhas[0]; i++) {
-        if (passenger_array[i].validation == 0) fprintf(arquivo, "%s;%s\n",passenger_array[i].flight_id, passenger_array[i].user_id);
-    }
-    fclose(arquivo);
-
-    arquivo = fopen("../trabalho-pratico/Resultados/flights_errors.csv", "w");
-    char *flights_first_line = "id;airline;plane_model;total_seats;origin;destination;schedule_departure_date;schedule_arrival_date;real_departure_date;real_arrival_date;pilot;copilot;notes";
-    fprintf(arquivo, "%s\n", flights_first_line);
-    for (int i = 0; i < num_linhas[1]; i++) {
-        if (flight_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",flight_array[i].id,flight_array[i].airline,flight_array[i].plane_model,flight_array[i].total_seats,flight_array[i].origin,flight_array[i].destination,flight_array[i].schedule_departure_date,flight_array[i].schedule_arrival_date,flight_array[i].real_departure_date,flight_array[i].real_arrival_date,flight_array[i].pilot,flight_array[i].copilot, flight_array[i].notes);
-    }
-    fclose(arquivo);
-    
-    arquivo = fopen("../trabalho-pratico/Resultados/reservations_errors.csv", "w");
-    char *reservation_first_line = "id;user_id;hotel_id;hotel_name;hotel_stars;city_tax;address;begin_date;end_date;price_per_night;includes_breakfast;room_details;rating;comment";
-    fprintf(arquivo, "%s\n", reservation_first_line);
-    for (int i = 0; i < num_linhas[2]; i++) {
-        if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
-    }
-    fclose(arquivo);
-
-    arquivo = fopen("../trabalho-pratico/Resultados/users_errors.csv", "w");
-    char *users_first_line = "id;name;email;phone_number;birth_date;sex;passport;country_code;address;account_creation;pay_method;account_status";
-    fprintf(arquivo, "%s\n", users_first_line);
-    for (int i = 0; i < num_linhas[3]; i++) {
-        if (user_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
-    }
-    fclose(arquivo);
-
-
-    
+void free_all(){
     free_passenger(passenger_array, num_linhas[0]); 
     free_flight(flight_array, num_linhas[1]);            
     free_reservation(reservation_array, num_linhas[2]); 
     free_user(user_array, num_linhas[3]); 
 }
+
 
 void open_files(){
     char *line = NULL;
@@ -468,7 +435,7 @@ void open_files(){
     }
     free(line);
     free_contador(contador_array, num_linhas_contador);
-    create_files(num_linhas, passenger_array, flight_array, reservation_array, user_array);
+    
     
     
     /*for (int i = 0; i < 1000; i++) {
@@ -486,6 +453,40 @@ void open_files(){
     */  
 }
 
+void create_files() {
+    arquivo = fopen("../trabalho-pratico/Resultados/passengers_errors.csv", "w");
+    char *passengers_first_line = "flight_id;user_id";
+    fprintf(arquivo, "%s\n", passengers_first_line);
+    for (int i = 0; i < num_linhas[0]; i++) {
+        if (passenger_array[i].validation == 0) fprintf(arquivo, "%s;%s\n",passenger_array[i].flight_id, passenger_array[i].user_id);
+    }
+    fclose(arquivo);
+
+    arquivo = fopen("../trabalho-pratico/Resultados/flights_errors.csv", "w");
+    char *flights_first_line = "id;airline;plane_model;total_seats;origin;destination;schedule_departure_date;schedule_arrival_date;real_departure_date;real_arrival_date;pilot;copilot;notes";
+    fprintf(arquivo, "%s\n", flights_first_line);
+    for (int i = 0; i < num_linhas[1]; i++) {
+        if (flight_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",flight_array[i].id,flight_array[i].airline,flight_array[i].plane_model,flight_array[i].total_seats,flight_array[i].origin,flight_array[i].destination,flight_array[i].schedule_departure_date,flight_array[i].schedule_arrival_date,flight_array[i].real_departure_date,flight_array[i].real_arrival_date,flight_array[i].pilot,flight_array[i].copilot, flight_array[i].notes);
+    }
+    fclose(arquivo);
+    
+    arquivo = fopen("../trabalho-pratico/Resultados/reservations_errors.csv", "w");
+    char *reservation_first_line = "id;user_id;hotel_id;hotel_name;hotel_stars;city_tax;address;begin_date;end_date;price_per_night;includes_breakfast;room_details;rating;comment";
+    fprintf(arquivo, "%s\n", reservation_first_line);
+    for (int i = 0; i < num_linhas[2]; i++) {
+        if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+    }
+    fclose(arquivo);
+
+    arquivo = fopen("../trabalho-pratico/Resultados/users_errors.csv", "w");
+    char *users_first_line = "id;name;email;phone_number;birth_date;sex;passport;country_code;address;account_creation;pay_method;account_status";
+    fprintf(arquivo, "%s\n", users_first_line);
+    for (int i = 0; i < num_linhas[3]; i++) {
+        if (user_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
+    }
+    fclose(arquivo);
+}
+
 
     
 
@@ -494,5 +495,8 @@ void open_files(){
 
 int main() {
     open_files();
+    create_files();
+    //função que faz as queries
+    free_all();
     return 0;
 }

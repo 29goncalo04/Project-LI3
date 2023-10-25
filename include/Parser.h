@@ -67,6 +67,12 @@ void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE])
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de reservas, e caso algum elemento seja inválido
     //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 
+void free_all();
+    //    |->função responsável por libertar toda a memória alocada durante o programa
+
+void create_files();
+    //    |->função responsável por criar os ficheiros de erro e escrever lá as entradas inválidas
+
 void open_files();
 
 
