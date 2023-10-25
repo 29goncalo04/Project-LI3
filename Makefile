@@ -3,6 +3,7 @@ CFILES=$(wildcard src/*.c)
 PNTH=$(wildcard include/*.h)
 FLAGS= -Iinclude -Wall -Wextra -pedantic -O2 -g
 DIREC:=objetos/
+RESULTADOS:=Resultados/
 OBJFILES=$(CFILES:src/%.c=$(DIREC)%.o)
 
 run: $(OBJFILES)
@@ -25,4 +26,4 @@ $(DIREC)%.o: src/%.c | objetos
 	$(CC) $(FLAGS) -o "$@" -c "$<"  
 
 clean:
-	rm -rf $(DIREC) programa *.o
+	rm -rf $(DIREC) $(RESULTADOS)*.csv programa *.o
