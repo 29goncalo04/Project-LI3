@@ -8,13 +8,13 @@
 
 int num_linhas[4] = {0};
 int num_linhas_contador = 0;
-Flight_temp *flight_array = NULL;                          //inicialização de cada array
-Passenger_temp *passenger_array = NULL;
-Reservation_temp *reservation_array = NULL;
-User_temp *user_array = NULL;
+Flight *flight_array = NULL;                          //inicialização de cada array
+Passenger *passenger_array = NULL;
+Reservation *reservation_array = NULL;
+User *user_array = NULL;
 FILE *arquivo;
 
-void free_flight(Flight_temp *flight_array, int num_linhas) {      
+void free_flight(Flight *flight_array, int num_linhas) {      
     for (int i = 0; i < num_linhas; i++) {                             
         free(flight_array[i].id);
         free(flight_array[i].airline);
@@ -34,7 +34,7 @@ void free_flight(Flight_temp *flight_array, int num_linhas) {
 }
 
 
-void free_passenger(Passenger_temp *passenger_array, int num_linhas) {
+void free_passenger(Passenger *passenger_array, int num_linhas) {
     for (int i = 0; i < num_linhas; i++) {                               
         free(passenger_array[i].flight_id);
         free(passenger_array[i].user_id);
@@ -43,7 +43,7 @@ void free_passenger(Passenger_temp *passenger_array, int num_linhas) {
 }
 
 
-void free_reservation(Reservation_temp *reservation_array, int num_linhas) { 
+void free_reservation(Reservation *reservation_array, int num_linhas) { 
     for (int i = 0; i < num_linhas; i++) {                                  
         free(reservation_array[i].id);
         free(reservation_array[i].user_id);
@@ -63,7 +63,7 @@ void free_reservation(Reservation_temp *reservation_array, int num_linhas) {
     free(reservation_array);
 }
 
-void free_user(User_temp *user_array, int num_linhas) {  
+void free_user(User *user_array, int num_linhas) {  
     for (int i = 0; i < num_linhas; i++) {               
         free(user_array[i].id);
         free(user_array[i].name);
@@ -90,8 +90,8 @@ void free_contador(Contador_id *contador_array, int num_linhas_contador) {
 }
 
 
-Flight_temp create_flight(char parametros[][FIELD_SIZE]) {           
-    Flight_temp nova;                                              
+Flight create_flight(char parametros[][FIELD_SIZE]) {           
+    Flight nova;                                              
     nova.id = strdup(parametros[0]);                                   
     nova.airline = strdup(parametros[1]);                                                                        
     nova.plane_model = strdup(parametros[2]);
@@ -110,8 +110,8 @@ Flight_temp create_flight(char parametros[][FIELD_SIZE]) {
 }
 
 
-Passenger_temp create_passenger(char parametros[][FIELD_SIZE]) {  
-    Passenger_temp nova;                                           
+Passenger create_passenger(char parametros[][FIELD_SIZE]) {  
+    Passenger nova;                                           
     nova.flight_id = strdup(parametros[0]);                         
     nova.user_id = strdup(parametros[1]);                                                                     
     nova.validation = 1;
@@ -119,8 +119,8 @@ Passenger_temp create_passenger(char parametros[][FIELD_SIZE]) {
 }
 
 
-Reservation_temp create_reservation(char parametros[][FIELD_SIZE]) {  
-    Reservation_temp nova;                                              
+Reservation create_reservation(char parametros[][FIELD_SIZE]) {  
+    Reservation nova;                                              
     nova.id = strdup(parametros[0]);                                   
     nova.user_id = strdup(parametros[1]);
     nova.hotel_id = strdup(parametros[2]);
@@ -140,8 +140,8 @@ Reservation_temp create_reservation(char parametros[][FIELD_SIZE]) {
 }
 
 
-User_temp create_user(char parametros[][FIELD_SIZE]) {    
-    User_temp nova;                                           
+User create_user(char parametros[][FIELD_SIZE]) {    
+    User nova;                                           
     nova.id = strdup(parametros[0]);                          
     nova.name = strdup(parametros[1]);
     nova.email = strdup(parametros[2]);
@@ -167,30 +167,33 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]){
 }
 
 
-void validate_flight(Flight_temp *nova, char parametros[][FIELD_SIZE], Contador_id *contador_array, int num_linhas_contador){
-    int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[10]) &&
-                 check_length(parametros[11]) && verify_airport(parametros[4]) && verify_airport(parametros[5]) &&
-                 compare_date_time(parametros[6], parametros[7]) && compare_date_time(parametros[8], parametros[9]) &&
-                 check_dateWtime(parametros[6]) && check_dateWtime(parametros[7]) && check_dateWtime(parametros[8]) && check_dateWtime(parametros[9]) &&
-                 compare_seats_passengers(parametros[3], count_passengers(contador_array, num_linhas_contador, &parametros[3]));
+void validate_flight(Flight *nova, char parametros[][FIELD_SIZE], Contador_id *contador_array, int num_linhas_contador){
+    int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) &&
+                 check_length (parametros[3]) && check_length (parametros[6]) && check_length (parametros[7]) &&
+                 check_length(parametros[10]) && check_length(parametros[11]) &&
+                 compare_seats_passengers(parametros[3], count_passengers(contador_array, num_linhas_contador, &parametros[3])) &&
+                 verify_airport(parametros[4]) && verify_airport(parametros[5]) && compare_date_time(parametros[6], parametros[7]) &&
+                 compare_date_time(parametros[8], parametros[9]) && check_dateWtime(parametros[6]) && check_dateWtime(parametros[7]) && 
+                 check_dateWtime(parametros[8]) && check_dateWtime(parametros[9]);
     nova->validation = validation;
 }
 
 
-void validate_user(User_temp *nova, char parametros[][FIELD_SIZE]){
+void validate_user(User *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && verify_email(parametros[2]) && check_length(parametros[3]) &&
-                 check_date(parametros[4]) && check_length(parametros[5]) && check_length(parametros[6]) &&
+                 check_length (parametros[4]) && check_date(parametros[4]) && check_length(parametros[5]) && check_length(parametros[6]) &&
                  verify_country_code(parametros[7]) && check_length(parametros[8]) && check_dateWtime(parametros[9]) && check_length(parametros[10]) && 
-                 verify_account_status(parametros[11]) && compare_date_time(parametros[4], parametros[9]);
+                 check_length (parametros[11]) && verify_account_status(parametros[11]) && compare_date_time(parametros[4], parametros[9]);
     nova->validation = validation;
 }
 
 
-void validate_reservation(Reservation_temp *nova, char parametros[][FIELD_SIZE]){
+void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
-                 verify_hotel_stars(parametros[4]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
-                 check_date(parametros[7]) && check_date(parametros[8]) && check_price_per_night(parametros[9]) && 
-                 verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
+                 verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
+                 check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
+                 check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
+                 check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     nova->validation = validation;
 }
 
@@ -238,7 +241,7 @@ void open_files(){
                                 }
                             }
 
-                            Passenger_temp nova = create_passenger(parametros);
+                            Passenger nova = create_passenger(parametros);
 
                             if (num_linhas[0] == 0) {
                                 // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
@@ -298,7 +301,7 @@ void open_files(){
                                 }
                             }
 
-                            passenger_array = realloc(passenger_array, (num_linhas[0]+1)*sizeof(Passenger_temp));
+                            passenger_array = realloc(passenger_array, (num_linhas[0]+1)*sizeof(Passenger));
                             passenger_array[num_linhas[0]] = nova;
                             num_linhas[0]++;
 
@@ -340,9 +343,9 @@ void open_files(){
                             }
                         }
 
-                        Flight_temp nova = create_flight(parametros);    //é criado um novo elemento do array com os parâmetros lidos
+                        Flight nova = create_flight(parametros);    //é criado um novo elemento do array com os parâmetros lidos
                         validate_flight(&nova, parametros, contador_array, num_linhas_contador);
-                        flight_array = realloc(flight_array, (num_linhas[1]+1)*sizeof(Flight_temp));   
+                        flight_array = realloc(flight_array, (num_linhas[1]+1)*sizeof(Flight));   
                         flight_array[num_linhas[1]] = nova;        //esse novo elemento é adicionado ao array existente
                         num_linhas[1]++;
 
@@ -384,9 +387,9 @@ void open_files(){
                                 }
                             }
                         }
-                        Reservation_temp nova = create_reservation(parametros);
+                        Reservation nova = create_reservation(parametros);
                         validate_reservation(&nova, parametros);
-                        reservation_array = realloc(reservation_array, (num_linhas[2]+1)*sizeof(Reservation_temp));
+                        reservation_array = realloc(reservation_array, (num_linhas[2]+1)*sizeof(Reservation));
                         reservation_array[num_linhas[2]] = nova;
                         num_linhas[2]++;
                     } else {
@@ -421,9 +424,9 @@ void open_files(){
                                 parametros[i][j] = '\0';
                             }
                         }
-                        User_temp nova = create_user(parametros);
+                        User nova = create_user(parametros);
                         validate_user(&nova, parametros);
-                        user_array = realloc(user_array, (num_linhas[3]+1)*sizeof(User_temp));
+                        user_array = realloc(user_array, (num_linhas[3]+1)*sizeof(User));
                         user_array[num_linhas[3]] = nova;
                         num_linhas[3]++;
                     } else {

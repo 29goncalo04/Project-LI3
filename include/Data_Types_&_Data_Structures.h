@@ -25,14 +25,14 @@ typedef struct {           //struct temporária com os parâmetros dos voos
     char *copilot;
     char *notes;
     int validation;
-} Flight_temp;
+} Flight;
 
 
 typedef struct {       //struct temporária com os parâmetros dos passageiros
     char *flight_id;
     char *user_id;
     int validation;
-} Passenger_temp;
+} Passenger;
 
 
 typedef struct {           //struct temporária com os parâmetros das reservas
@@ -51,7 +51,7 @@ typedef struct {           //struct temporária com os parâmetros das reservas
     char *rating;
     char *comment;
     int validation;
-} Reservation_temp;
+} Reservation;
 
 
 typedef struct {            //struct temporária com os parâmetros dos utilizadores
@@ -68,7 +68,7 @@ typedef struct {            //struct temporária com os parâmetros dos utilizad
     char *pay_method;
     char *account_status;
     int validation;
-} User_temp;
+} User;
 
 
 /*typedef struct flights_valid {

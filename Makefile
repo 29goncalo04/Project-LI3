@@ -7,15 +7,15 @@ RESULTADOS:=Resultados/
 OBJFILES=$(CFILES:src/%.c=$(DIREC)%.o)
 
 run: $(OBJFILES)
-	$(CC) -o programa $^ $(FLAGS) -lm
+	$(CC) -o programa-principal $^ $(FLAGS) -lm
 
 
 compile: run
-	./programa
+	./programa-principal
 
 
 valgrind: run
-	valgrind --leak-check=full ./programa
+	valgrind --leak-check=full ./programa-principal
 
 
 objetos:
@@ -26,4 +26,4 @@ $(DIREC)%.o: src/%.c | objetos
 	$(CC) $(FLAGS) -o "$@" -c "$<"  
 
 clean:
-	rm -rf $(DIREC) $(RESULTADOS)*.csv programa *.o
+	rm -rf $(DIREC) $(RESULTADOS)*.csv programa-principal *.o
