@@ -52,7 +52,8 @@ int verify_account_status(char *status){
         i++;
     }
     status2[i] = '\0';
-    if (strcmp (status2, "active")==0 || strcmp (status2, "inactive")==0) result = 1;
+    if (strcmp (status2, "active")==0) result = 1;
+    else if (strcmp (status2, "inactive")==0) result = 2;
     else result = 0;
     free(status2);
     return result;
@@ -72,8 +73,9 @@ int verify_breakfast(char *breakfast){
         i++;
     }
     breakfast2[i] = '\0';
-    if (strcmp (breakfast2, "t")==0 || strcmp (breakfast2, "true")==0 || strcmp (breakfast2, "1")==0 || strcmp (breakfast2, "f")==0 || strcmp (breakfast2, "false")==0 || strcmp (breakfast2, "0")==0 || strcmp (breakfast2, "")==0) result = 1;    //parâmetro válido
-      else result = 0;  //caso em que é inválido
+    if (strcmp (breakfast2, "t")==0 || strcmp (breakfast2, "true")==0 || strcmp (breakfast2, "1")==0) result = 1;    //parâmetro válido
+      else if (strcmp (breakfast2, "f")==0 || strcmp (breakfast2, "false")==0 || strcmp (breakfast2, "0")==0 || strcmp (breakfast2, "")==0) result = 2;
+        else result = 0;  //caso em que é inválido
     free(breakfast2);
     return result; 
 }

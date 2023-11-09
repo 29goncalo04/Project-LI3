@@ -26,4 +26,4 @@ $(DIREC)%.o: src/%.c | objetos
 	$(CC) $(FLAGS) -o "$@" -c "$<"  
 
 clean:
-	rm -rf $(DIREC) $(RESULTADOS)*.csv programa-principal *.o
+	rm -rf $(DIREC) $(RESULTADOS)*.csv $(RESULTADOS)*.txt programa-principal *.o

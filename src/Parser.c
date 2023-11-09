@@ -13,6 +13,7 @@ Passenger *passenger_array = NULL;
 Reservation *reservation_array = NULL;
 User *user_array = NULL;
 FILE *arquivo;
+Contador_id *contador_array = NULL;
 
 void free_flight(Flight *flight_array, int num_linhas) {      
     for (int i = 0; i < num_linhas; i++) {                             
@@ -183,8 +184,16 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && verify_email(parametros[2]) && check_length(parametros[3]) &&
                  check_length (parametros[4]) && check_date(parametros[4]) && check_length(parametros[5]) && check_length(parametros[6]) &&
                  verify_country_code(parametros[7]) && check_length(parametros[8]) && check_dateWtime(parametros[9]) && check_length(parametros[10]) && 
-                 check_length (parametros[11]) && verify_account_status(parametros[11]) && compare_date_time(parametros[4], parametros[9]);
+                 check_length (parametros[11]) && (verify_account_status(parametros[11])==1 || verify_account_status(parametros[11])==2) && compare_date_time(parametros[4], parametros[9]);
     nova->validation = validation;
+    if (verify_account_status(parametros[11])==1){
+        free(nova->account_status);
+        nova->account_status = strdup("active");
+    }
+    if (verify_account_status(parametros[11])==2){
+        free(nova->account_status);
+        nova->account_status = strdup("inactive");
+    }
 }
 
 
@@ -192,9 +201,17 @@ void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
                  verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
                  check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
-                 check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
+                 check_length (parametros[10]) && (verify_breakfast(parametros[10])==1 || verify_breakfast(parametros[10])==2) && check_length(parametros[11]) && check_length (parametros[12]) &&
                  check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     nova->validation = validation;
+    if (verify_breakfast(parametros[10])==1){
+        free(nova->includes_breakfast);
+        nova->includes_breakfast = strdup("True");
+    }
+    if (verify_breakfast(parametros[10])==2){
+        free(nova->includes_breakfast);
+        nova->includes_breakfast = strdup("False");
+    }
 }
 
 
@@ -210,7 +227,6 @@ void open_files(){
     char *line = NULL;
     size_t len = 0;
     int j = 0;
-    Contador_id *contador_array = NULL;
     for (int num_ficheiro = 0; num_ficheiro<4; num_ficheiro++){         //existe um caso específico para cada ficheiro     
         int l = 0;
         switch (num_ficheiro){

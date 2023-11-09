@@ -10,6 +10,15 @@
 
 #include "../include/Data_Types_&_Data_Structures.h"
 
+extern int num_linhas[4];
+extern int num_linhas_contador;
+extern Flight *flight_array;
+extern Passenger *passenger_array;
+extern Reservation *reservation_array;
+extern User *user_array;
+extern FILE *arquivo;
+extern Contador_id *contador_array;
+
 
 void free_flight(Flight *flight_array, int num_linhas);
     //     |->função que libera a memória que foi alocada para criar cada

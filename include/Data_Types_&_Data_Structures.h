@@ -9,8 +9,9 @@
 #include <string.h>
 
 #define FIELD_SIZE 100
+#define DATE 20231001    /////////
 
-typedef struct {           //struct temporária com os parâmetros dos voos
+typedef struct {           //struct com os parâmetros dos voos
     char *id;
     char *airline;
     char *plane_model;
@@ -28,14 +29,14 @@ typedef struct {           //struct temporária com os parâmetros dos voos
 } Flight;
 
 
-typedef struct {       //struct temporária com os parâmetros dos passageiros
+typedef struct {       //struct com os parâmetros dos passageiros
     char *flight_id;
     char *user_id;
     int validation;
 } Passenger;
 
 
-typedef struct {           //struct temporária com os parâmetros das reservas
+typedef struct {           //struct com os parâmetros das reservas
     char *id;
     char *user_id;
     char *hotel_id;
@@ -54,7 +55,7 @@ typedef struct {           //struct temporária com os parâmetros das reservas
 } Reservation;
 
 
-typedef struct {            //struct temporária com os parâmetros dos utilizadores
+typedef struct {            //struct com os parâmetros dos utilizadores
     char *id;
     char *name;
     char *email;
