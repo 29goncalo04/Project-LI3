@@ -42,13 +42,14 @@ int age_user(char *birth_date){  //1979/11/27
     if (10 < mes || (10 == mes && 1 < dia)) age--;
     return age;
 }
-/*
-int number_of_flights(){
-    int flights = 0,
+
+int number_of_flights(char *user){
+    int flights = 0;
     for (int l = 0; l<num_linhas[0]; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
-        if (strcmp(user_array[wanted_id].id, passenger_array[l].user_id)==0) flights++;
+        if (strcmp(user, passenger_array[l].user_id)==0) flights++;
     }
-}*/
+    return flights;
+}
 
 void query1(char *line, int i, int n){
     int wanted_id = -1, index_line = i, wanted_user_id = -1;//, wanted_id_2 = -1;
@@ -154,11 +155,11 @@ void query1(char *line, int i, int n){
             else{
                 if (verify_account_status(user_array[wanted_id].account_status) == 2);   //não imprime nada caso a conta do utilizador esteja inativa
                 else{
-                    int flights = 0, reservations = 0;
-                    double total_spent = 0;
+                    int /*flights = 0,*/ reservations = 0;
+                    double total_spent = 0;/*
                     for (int l = 0; l<num_linhas[0]; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
                         if (strcmp(user_array[wanted_id].id, passenger_array[l].user_id)==0) flights++;
-                    }
+                    }*/
                     for (int k = 0; k<num_linhas[2]; k++){   //procura o id do utilizador no array das reservas para ver quantas reservas ele fez 
                         if (strcmp(user_array[wanted_id].id, reservation_array[k].user_id)==0){
                             reservations++;
@@ -166,7 +167,7 @@ void query1(char *line, int i, int n){
                         }
                     }
                     if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", user_array[wanted_id].name, user_array[wanted_id].sex, age_user(user_array[wanted_id].birth_date),user_array[wanted_id].country_code, user_array[wanted_id].passport, flights, reservations, total_spent);
+                        fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", user_array[wanted_id].name, user_array[wanted_id].sex, age_user(user_array[wanted_id].birth_date),user_array[wanted_id].country_code, user_array[wanted_id].passport, number_of_flights(user_array[wanted_id].id), reservations, total_spent);
                     }
                     else{   //1F
                         fprintf(output, "--- 1 ---\n");
@@ -175,7 +176,7 @@ void query1(char *line, int i, int n){
                         fprintf(output, "age: %d\n", age_user(user_array[wanted_id].birth_date));
                         fprintf(output, "country_code: %s\n", user_array[wanted_id].country_code);
                         fprintf(output, "passport: %s\n", user_array[wanted_id].passport);
-                        fprintf(output, "number_of_flights: %d\n", flights);
+                        fprintf(output, "number_of_flights: %d\n", number_of_flights(user_array[wanted_id].id));
                         fprintf(output, "number_of_reservations: %d\n", reservations);
                         fprintf(output, "total_spent: %.3f\n", total_spent);
                     }

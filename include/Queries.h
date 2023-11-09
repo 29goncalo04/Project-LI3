@@ -25,6 +25,10 @@ double total_price(char *price_per_night, int nights, char *city_tax);
 int age_user(char *birth_date);
     //     |->função responsável por calcular a idade de um utilizador
 
+int number_of_flights(char *user);
+    //     |->função responsável por calcular o número de voos
+    //        em que um utilizador andou 
+
 void identify_query();
     //     |->função responsável por identificar
     //        o id da querie que o comando chama
