@@ -212,6 +212,7 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
                  verify_country_code(parametros[7]) && check_length(parametros[8]) && check_dateWtime(parametros[9]) && check_length(parametros[10]) && 
                  check_length (parametros[11]) && (verify_account_status(parametros[11])==1 || verify_account_status(parametros[11])==2) && compare_date_time(parametros[4], parametros[9]);
     nova->validation = validation;
+    free(nova->account_status);
     nova->account_status = strdup(parametros[11]);
 }
 
@@ -223,6 +224,7 @@ void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
                  check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
                  check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     nova->validation = validation;
+    free(nova->includes_breakfast);
     nova->includes_breakfast = strdup(parametros[10]);
 }
 
