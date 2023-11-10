@@ -32,6 +32,7 @@ typedef struct {           //struct com os parâmetros dos voos
 typedef struct {       //struct com os parâmetros dos passageiros
     char *flight_id;
     char *user_id;
+    int validation_flight;
     int validation;
 } Passenger;
 
