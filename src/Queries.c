@@ -188,6 +188,62 @@ void query1(char *line, int i, int n){
     free(filename);
 }
 
+void query3(char *line, int i, int n) {
+    double rating = 0, rating_t = 0, total = 0, media = 0;
+
+    int flag;
+    if (i == 2) flag = 1;
+    else flag = 0;
+
+    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
+    if (n>=10 && n<100) filename_size++;
+    else if (n>=100) filename_size++;
+    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
+    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
+    output = fopen(filename, "w");
+
+    if (output == NULL) {
+        fprintf(stderr, "Error opening file: %s\n", filename);
+        free(filename);
+        return;
+    }
+
+    int index_line = i;
+    for (; line[index_line]== ' ' || line[index_line] == '"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
+    int argument_length = 0;
+    for (int j = index_line; line[j] != '\0' && line[j] != '\n'; j++, argument_length++);  //conta o tamanho do argumento
+    char argument[argument_length];
+    for (int k = 0, j = index_line; k < argument_length; k++, j++) argument[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
+    argument[argument_length] = '\0';
+
+    int check = check_length(argument);
+    if (check == 1) {
+        for (i = 0; i < num_linhas[2]; i++) {
+            if ((strcmp(reservation_array[i].hotel_id, "HTL1002") == 0) && reservation_array[i].validation == 1) {
+                //printf("%s\n",argument);
+                //printf("%s\n",reservation_array[i].rating);
+                rating = (double) atof(reservation_array[i].rating);
+                rating_t += (double) rating;
+                total = (double) total + 1;
+            }
+        }
+
+        if (total != 0) {
+            media = (double) (rating_t / total);
+
+            if (flag == 0)   //3
+                fprintf(output, "%.3f\n", media);
+            else {   //3F
+                fprintf(output, "--- 3 ---\n");
+                fprintf(output, "rating: %.3f\n", media);
+            }
+        }
+    }
+
+    fclose(output);
+    free(filename);
+}
+
 void identify_query(){
     char *line = NULL;
     size_t len = 0;
@@ -212,7 +268,7 @@ void identify_query(){
 
                     break;
                     case '3':  //3 ou 3F
-
+                        query3(line, i, n);
                     break;
                     case '4':  //4 ou 4F
 

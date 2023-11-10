@@ -168,16 +168,19 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]){
     return novo;
 }
 
-void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE]){
+void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation){
     int wanted_flight_id_validation = 0, wanted_user_id_validation = 0;
-    if (check_length(parametros[0])==1){
-        for (int k=0; k<num_linhas[1]; k++){   //procura esse id de voo no array que tem os voos guardados
-            if (strcmp(parametros[0], flight_array[k].id)==0){
-                if (flight_array[k].validation == 1) wanted_flight_id_validation = 1; //o id desse voo é válido
-                break;
+    if (flight_validation==0){
+        if (check_length(parametros[0])==1){
+            for (int k=0; k<num_linhas[1]; k++){   //procura esse id de voo no array que tem os voos guardados
+                if (strcmp(parametros[0], flight_array[k].id)==0){
+                    if (flight_array[k].validation == 1) wanted_flight_id_validation = 1; //o id desse voo é válido
+                    break;
+                }
             }
         }
     }
+    if (flight_validation==1) wanted_flight_id_validation = 1;
     if (wanted_flight_id_validation==1 && check_length(parametros[1])==1){
         for (int l=0; l<num_linhas[3]; l++){   //procura esse id de utilizador no array que tem os utilizadores guardados
             if (strcmp(parametros[1], user_array[l].id)==0){
@@ -282,13 +285,16 @@ void open_files(){
                             }
 
                             Passenger nova = create_passenger(parametros);
-                            if (num_linhas[0] == 0) validate_passenger(&nova, parametros);
+                            if (num_linhas[0] == 0) validate_passenger(&nova, parametros, 0);
                             else{
                                 if (strcmp(nova.flight_id, passenger_array[num_linhas[0]-1].flight_id)==0){
-                                    if (passenger_array[num_linhas[0]-1].validation_flight==1) validate_passenger(&nova, parametros);///////////////////////////////
-                                    else nova.validation = 0;
+                                    if (passenger_array[num_linhas[0]-1].validation_flight==1) validate_passenger(&nova, parametros, 1);
+                                    else {
+                                        nova.validation = 0;
+                                        nova.validation_flight = 0;
+                                    }
                                 }
-                                else validate_passenger(&nova, parametros);
+                                else validate_passenger(&nova, parametros, 0);
                             }
 
                             if (nova.validation==1){
@@ -352,7 +358,7 @@ void open_files(){
                             else{
                                 if (line[j_linha] != '\0') {          //o programa apenas copia os caracteres para o parâmetro "notes"         
                                     j = 0;                           //caso existam notes para ser lidas nessa linha, senão o parâmetro fica ""
-                                    while (line[j_linha+1] != '\0' && line[j_linha+1] != '\n') {
+                                    while (line[j_linha] != '\0' && line[j_linha] != '\n') {
                                         parametros[12][j] = line[j_linha];
                                         j_linha++;
                                         j++;

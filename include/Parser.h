@@ -64,7 +64,7 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de contadores
     //        que guarda o número de passageiros num determinado voo
 
-void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE]);
+void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation);
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de passageiros, e caso algum elemento seja inválido
     //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 
