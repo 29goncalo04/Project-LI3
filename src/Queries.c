@@ -52,7 +52,7 @@ int number_of_flights(char *user){
 }
 
 void query1(char *line, int i, int n){
-    int wanted_id = -1, index_line = i, wanted_user_id = -1;//, wanted_id_2 = -1;
+    int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1;
     for (; line[index_line]==' ' || line[index_line]=='"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
     for (int j=index_line; line[j]!='\0' && line[j]!='\n' && line[j]!='"'; j++, argument_length++);  //conta o tamanho do argumento
@@ -79,16 +79,16 @@ void query1(char *line, int i, int n){
         else {   //esse id de voo existe
             if (flight_array[wanted_id].validation==0); //esse voo é inválido por isso tem de criar um ficheiro vazio 
             else{
-                for (int k=0; strcmp(argument, contador_array[k].id_flight)==0; k++){
-          //          wanted_id_2 = k+1;
+                for (int l = 0; l < num_linhas_contador; l++) {
+                    if (strcmp(argument, contador_array[l].id_flight) == 0) {
+                        wanted_id_2 = l;
+                        break;
+                    }
                 }
                 if (index_line==2){   //1
-          //        printf("existe\n");
-                    //printf("%s\n", contador_array[3].id_flight);
-                  fprintf(output, "%s;%s;%s;%s;%s;%s;%d\n", flight_array[wanted_id].airline, flight_array[wanted_id].plane_model, flight_array[wanted_id].origin, flight_array[wanted_id].destination, flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].schedule_arrival_date/*, contador_array[wanted_id_2].contador*/, delay(flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].real_departure_date));
+                  fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", flight_array[wanted_id].airline, flight_array[wanted_id].plane_model, flight_array[wanted_id].origin, flight_array[wanted_id].destination, flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].schedule_arrival_date, contador_array[wanted_id_2].contador, delay(flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].real_departure_date));
                 }
                 else{   //1F
-            //      printf("existe\n");
                     fprintf(output, "--- 1 ---\n");
                     fprintf(output, "airline: %s\n", flight_array[wanted_id].airline);
                     fprintf(output, "plane_model: %s\n", flight_array[wanted_id].plane_model);
@@ -96,7 +96,7 @@ void query1(char *line, int i, int n){
                     fprintf(output, "destination: %s\n", flight_array[wanted_id].destination);
                     fprintf(output, "schedule_departure_date: %s\n", flight_array[wanted_id].schedule_departure_date);
                     fprintf(output, "schedule_arrival_date: %s\n", flight_array[wanted_id].schedule_arrival_date);
-                    //fprintf(output, "passengers: %d\n", flight_array[wanted_id_2].contador);
+                    fprintf(output, "passengers: %d\n", contador_array[wanted_id_2].contador);
                     fprintf(output, "delay: %d\n", delay(flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].real_departure_date));
                 }
             }
