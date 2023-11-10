@@ -21,6 +21,9 @@ int verify_account_status(char *status);
 int verify_airport (char *airport);
     //    |->função que verifica se o nome dum aeroporto tem 3 letras 
 
+void toLowerCase(char *str);
+     //    |->função que passa uma string para caracteres em minuscula
+
 int verify_breakfast(char *breakfast);
     //    |->função que verifica se o breakfast está incluido (1) ou não (0) ou é inválido (2) 
 

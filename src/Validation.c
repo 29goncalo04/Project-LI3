@@ -65,18 +65,20 @@ int verify_airport (char *airport){     //função para verificar se um aeroport
     return 1;
 }
 
-int verify_breakfast(char *breakfast){
-    int tamanho = strlen(breakfast), i = 0, result = 2;
-    char *breakfast2 = malloc(tamanho + 1); //o +1 é para guardar o '\0'
-    while (i<tamanho){
-        breakfast2[i] = tolower(breakfast[i]);
-        i++;
+void toLowerCase(char *str) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        str[i] = tolower(str[i]);
     }
-    breakfast2[i] = '\0';
-    if (strcmp (breakfast2, "t")==0 || strcmp (breakfast2, "true")==0 || strcmp (breakfast2, "1")==0) result = 1;    //parâmetro válido
-      else if (strcmp (breakfast2, "f")==0 || strcmp (breakfast2, "false")==0 || strcmp (breakfast2, "0")==0 || strcmp (breakfast2, "")==0) result = 2;
+}
+
+int verify_breakfast(char *breakfast){
+    int result;
+    if (breakfast[0] != ' ') toLowerCase(breakfast);
+    if (strcmp (breakfast, "t")==0 || strcmp (breakfast, "true")==0 || strcmp (breakfast, "1")==0) result = 1;    //parâmetro válido
+    else {
+        if (strcmp (breakfast, "f")==0 || strcmp (breakfast, "false")==0 || strcmp (breakfast, "0")==0 || strcmp (breakfast, " ")==0) result = 2;
         else result = 0;  //caso em que é inválido
-    free(breakfast2);
+    }
     return result; 
 }
 
@@ -245,10 +247,11 @@ int check_price_per_night(char *p) {
 
 int check_reserva_rating(char *r) {
   int i = 0, check = 0;
-  for (; r[i] != '\0'; i++) {
-    if (r[i] < '1' || '5' < r[i]) return check;
+  if (strlen(r) == 1) {
+      if (r[i] < '1' || '5' < r[i]) return check;
+      check = 1;
+      return check;
   }
-  check = 1;
   return check;
 }
 

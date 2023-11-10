@@ -212,14 +212,7 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
                  verify_country_code(parametros[7]) && check_length(parametros[8]) && check_dateWtime(parametros[9]) && check_length(parametros[10]) && 
                  check_length (parametros[11]) && (verify_account_status(parametros[11])==1 || verify_account_status(parametros[11])==2) && compare_date_time(parametros[4], parametros[9]);
     nova->validation = validation;
-    if (verify_account_status(parametros[11])==1){
-        free(nova->account_status);
-        nova->account_status = strdup("active");
-    }
-    if (verify_account_status(parametros[11])==2){
-        free(nova->account_status);
-        nova->account_status = strdup("inactive");
-    }
+    nova->account_status = strdup(parametros[11]);
 }
 
 
@@ -227,19 +220,11 @@ void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
                  verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
                  check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
-                 check_length (parametros[10]) && (verify_breakfast(parametros[10])==1 || verify_breakfast(parametros[10])==2) && check_length(parametros[11]) && check_length (parametros[12]) &&
+                 check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
                  check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     nova->validation = validation;
-    if (verify_breakfast(parametros[10])==1){
-        free(nova->includes_breakfast);
-        nova->includes_breakfast = strdup("True");
-    }
-    if (verify_breakfast(parametros[10])==2){
-        free(nova->includes_breakfast);
-        nova->includes_breakfast = strdup("False");
-    }
+    nova->includes_breakfast = strdup(parametros[10]);
 }
-
 
 void free_all(){
     free_passenger(passenger_array, num_linhas[0]); 
@@ -397,13 +382,19 @@ void open_files(){
                                 for (j = 0; line[j_linha] != ';'; j_linha++, j++) {
                                     parametros[i][j] = line[j_linha];
                                 }
-                                parametros[i][j] = '\0';
+                                if (j == 0 && i == 10 && line[j_linha] == ';') {
+                                    parametros[i][j] = ' ';
+                                    parametros[i][j+1] = '\0';
+                                }
+                                else {
+                                    parametros[i][j] = '\0';
+                                }
                                 j_linha++;
                             }
                             else{
                                 if (line[j_linha] != '\0') {     //o programa apenas copia os caracteres para o parâmetro "comment"         
                                     j = 0;                       //caso existam comentários para ser lidos nessa linha, senão o parâmetro fica ""
-                                    while (line[j_linha+1] != '\0' && line[j_linha+1] != '\n') {
+                                    while (line[j_linha] != '\0' && line[j_linha] != '\n') {
                                         parametros[13][j] = line[j_linha];
                                         j_linha++;
                                         j++;
@@ -489,7 +480,12 @@ void create_files() {
     char *reservation_first_line = "id;user_id;hotel_id;hotel_name;hotel_stars;city_tax;address;begin_date;end_date;price_per_night;includes_breakfast;room_details;rating;comment";
     fprintf(arquivo, "%s\n", reservation_first_line);
     for (int i = 0; i < num_linhas[2]; i++) {
-        if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+        if (strcmp(reservation_array[i].includes_breakfast, " ") == 0) {
+            if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+        }
+        else {
+            if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+        }
     }
     fclose(arquivo);
 

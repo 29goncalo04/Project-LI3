@@ -53,6 +53,9 @@ int number_of_flights(char *user){
 
 void query1(char *line, int i, int n){
     int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1;
+    char *breakfast;
+    char *status;
+    
     for (; line[index_line]==' ' || line[index_line]=='"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
     for (int j=index_line; line[j]!='\0' && line[j]!='\n' && line[j]!='"'; j++, argument_length++);  //conta o tamanho do argumento
@@ -123,8 +126,10 @@ void query1(char *line, int i, int n){
                 }
                 if (verify_account_status(user_array[wanted_user_id].account_status) == 2); //não imprime nada caso a conta do utilizador esteja inativa
                 else{
+                    if (verify_breakfast(reservation_array[wanted_id].includes_breakfast) == 1) breakfast = strdup("True");
+                    else  breakfast = strdup("False");
                     if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", reservation_array[wanted_id].hotel_id, reservation_array[wanted_id].hotel_name, reservation_array[wanted_id].hotel_stars, reservation_array[wanted_id].begin_date, reservation_array[wanted_id].end_date, reservation_array[wanted_id].includes_breakfast, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), total_price(reservation_array[wanted_id].price_per_night, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), reservation_array[wanted_id].city_tax));
+                        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", reservation_array[wanted_id].hotel_id, reservation_array[wanted_id].hotel_name, reservation_array[wanted_id].hotel_stars, reservation_array[wanted_id].begin_date, reservation_array[wanted_id].end_date, breakfast, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), total_price(reservation_array[wanted_id].price_per_night, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), reservation_array[wanted_id].city_tax));
                     }
                     else{   //1F
                         fprintf(output, "--- 1 ---\n");
@@ -133,10 +138,11 @@ void query1(char *line, int i, int n){
                         fprintf(output, "hotel_stars: %s\n", reservation_array[wanted_id].hotel_stars);
                         fprintf(output, "begin_date: %s\n", reservation_array[wanted_id].begin_date);
                         fprintf(output, "end_date: %s\n", reservation_array[wanted_id].end_date);
-                        fprintf(output, "includes_breakfast: %s\n", reservation_array[wanted_id].includes_breakfast);
+                        fprintf(output, "includes_breakfast: %s\n", breakfast);
                         fprintf(output, "nights: %d\n", nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date));
                         fprintf(output, "total_price: %.3f\n", total_price(reservation_array[wanted_id].price_per_night, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), reservation_array[wanted_id].city_tax));
                     }
+                    free(breakfast);
                 }
             }
         }
@@ -153,7 +159,9 @@ void query1(char *line, int i, int n){
         else{
             if (user_array[wanted_id].validation==0); //esse utilizador é inválido por isso tem de criar um ficheiro vazio 
             else{
-                if (verify_account_status(user_array[wanted_id].account_status) == 2);   //não imprime nada caso a conta do utilizador esteja inativa
+                status = strdup(user_array[wanted_id].account_status);
+                toLowerCase(status);
+                if (verify_account_status(status) == 2);   //não imprime nada caso a conta do utilizador esteja inativa
                 else{
                     int /*flights = 0,*/ reservations = 0;
                     double total_spent = 0;/*
@@ -181,6 +189,7 @@ void query1(char *line, int i, int n){
                         fprintf(output, "total_spent: %.3f\n", total_spent);
                     }
                 }
+                free(status);
             }
         }  
     }
