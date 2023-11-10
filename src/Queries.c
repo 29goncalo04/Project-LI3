@@ -228,9 +228,7 @@ void query3(char *line, int i, int n) {
     int check = check_length(argument);
     if (check == 1) {
         for (i = 0; i < num_linhas[2]; i++) {
-            if ((strcmp(reservation_array[i].hotel_id, "HTL1002") == 0) && reservation_array[i].validation == 1) {
-                //printf("%s\n",argument);
-                //printf("%s\n",reservation_array[i].rating);
+            if ((strcmp(reservation_array[i].hotel_id, argument) == 0) && reservation_array[i].validation == 1) {
                 rating = (double) atof(reservation_array[i].rating);
                 rating_t += (double) rating;
                 total = (double) total + 1;
