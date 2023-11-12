@@ -528,7 +528,7 @@ void query3(char *line, int i, int n) {
             if (flag == 0)   //3
                 fprintf(output, "%.3f\n", media);
             else {   //3F
-                fprintf(output, "--- 3 ---\n");
+                fprintf(output, "--- 1 ---\n");
                 fprintf(output, "rating: %.3f\n", media);
             }
         }
