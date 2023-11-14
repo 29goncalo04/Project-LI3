@@ -222,11 +222,22 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
 
 
 void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
-    int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
-                 verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
-                 check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
-                 check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
-                 check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
+    int validation = 0, wanted_user_id_validation = 0;
+    if (check_length(parametros[1])==1){
+        for (int i = 0; i<num_linhas[3]; i++){
+            if (strcmp(parametros[1], user_array[i].id)==0) {
+                if (user_array[i].validation==1) wanted_user_id_validation = 1;
+                break;
+            }
+        }
+    }
+    if (wanted_user_id_validation==1){
+        validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
+        verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
+        check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
+        check_length (parametros[10]) && verify_breakfast(parametros[10]) && check_length(parametros[11]) && check_length (parametros[12]) &&
+        check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
+    }
     nova->validation = validation;
     free(nova->includes_breakfast);
     nova->includes_breakfast = strdup(parametros[10]);

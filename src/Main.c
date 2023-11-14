@@ -7,7 +7,7 @@
 #include "../include/Queries.h"
 
 
-int main(int agrc, char* argv[]) {
+int main(int argc, char* argv[]) {
     open_files(argv[1]);
     create_files(argv[1]);
     identify_query(argv[2]);//função que faz as queries

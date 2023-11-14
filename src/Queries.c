@@ -542,7 +542,7 @@ void identify_query(char* path){
     char *line = NULL;
     size_t len = 0;
     int n = 0;
-    char *aux_queries = strcat(strdup(path), "/input.txt");
+    char *aux_queries = strdup(path);
     input = fopen(aux_queries, "r");
     //input = fopen("../trabalho-pratico/dataset/input.txt", "r");
     if (input == NULL) {
@@ -588,4 +588,5 @@ void identify_query(char* path){
             }
     }
     free(line);
+    free(aux_queries);
 }
