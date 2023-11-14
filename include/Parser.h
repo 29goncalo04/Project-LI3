@@ -86,7 +86,7 @@ void free_all();
 void create_files();
     //    |->função responsável por criar os ficheiros de erro e escrever lá as entradas inválidas
 
-void open_files();
+void open_files(char* path);
 
 
 #endif 

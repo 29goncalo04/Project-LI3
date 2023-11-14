@@ -51,7 +51,7 @@ Flight_aux create_flight_aux(char *flight_id, char *schedule_departure_date, int
 Reservation_aux create_reservation_aux(char *reservation_id, char *begin_date, int exists_argument2);
     //     |->função que cria um elemento individual do array de reservas de um utilizador
 
-void identify_query();
+void identify_query(char* path);
     //     |->função responsável por identificar
     //        o id da querie que o comando chama
 

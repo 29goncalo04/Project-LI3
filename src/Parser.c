@@ -12,6 +12,10 @@ Flight *flight_array = NULL;                          //inicialização de cada 
 Passenger *passenger_array = NULL;
 Reservation *reservation_array = NULL;
 User *user_array = NULL;
+FILE *fpassengers;
+FILE *freservations;
+FILE *fusers;
+FILE *fflights;
 FILE *arquivo;
 Contador_id *contador_array = NULL;
 
@@ -237,99 +241,109 @@ void free_all(){
 }
 
 
-void open_files(){
+void open_files(char* path){
     char *line = NULL;
     size_t len = 0;
     int j = 0;
+    char *aux_passengers = NULL;
+    aux_passengers = (char *)malloc(strlen(path) + strlen("/passengers.csv") + 1);
+    strcpy(aux_passengers, path);
+    strcat(aux_passengers, "/passengers.csv");
+    char *aux_flights = NULL;
+    aux_flights = (char *)malloc(strlen(path) + strlen("/flights.csv") + 1);
+    strcpy(aux_flights, path);
+    strcat(aux_flights, "/flights.csv");
+    char *aux_reservations = NULL;
+    aux_reservations = (char *)malloc(strlen(path) + strlen("/reservations.csv") + 1);
+    strcpy(aux_reservations, path);
+    strcat(aux_reservations, "/reservations.csv");
+    char *aux_users = NULL;
+    aux_users = (char *)malloc(strlen(path) + strlen("/users.csv") + 1);
+    strcpy(aux_users, path);
+    strcat(aux_users, "/users.csv");
+
+
+
+
+
+
     for (int num_ficheiro = 0; num_ficheiro<4; num_ficheiro++){         //existe um caso específico para cada ficheiro     
         int l = 0;
         switch (num_ficheiro){
-            case 3:                                                      //ficheiro dos passageiros
-                    arquivo = fopen("../trabalho-pratico/dataset/data/passengers.csv", "r");
-                    if (arquivo == NULL) {
-                        perror("Error\n");
-                        return;
-                    }
-                    while (getline(&line, &len, arquivo) != -1) {
-                        if (l != 0) {
-                            char parametros[2][FIELD_SIZE];
-                            int j_linha = 0;
-
-                            for (int i = 0; i<2; i++){
-                                if (i==0){
-                                    for (j = 0; line[j_linha] != ';'; j_linha++, j++) {
-                                        parametros[i][j] = line[j_linha];
-                                    }
-                                    parametros[i][j] = '\0';
-                                    j_linha++;
+            case 3: 
+                fpassengers = fopen(aux_passengers, "r");                                                    //ficheiro dos passageiros
+                while (getline(&line, &len, fpassengers) != -1) {
+                    if (l != 0) {
+                        char parametros[2][FIELD_SIZE];
+                        int j_linha = 0;
+                        for (int i = 0; i<2; i++){
+                            if (i==0){
+                                for (j = 0; line[j_linha] != ';'; j_linha++, j++) {
+                                    parametros[i][j] = line[j_linha];
                                 }
-                                else{           //parte do código responsável por guardar o último parâmetro (user_id)
-                                    for (j = 0; line[j_linha] != '\0' && line[j_linha] != '\n'; j_linha++, j++) {
-                                        parametros[i][j] = line[j_linha];
-                                    }
-                                    parametros[i][j] = '\0';
-                                }
+                                parametros[i][j] = '\0';
+                                j_linha++;
                             }
-
-                            Passenger nova = create_passenger(parametros);
-                            if (num_linhas[0] == 0) validate_passenger(&nova, parametros, 0);
-                            else{
-                                if (strcmp(nova.flight_id, passenger_array[num_linhas[0]-1].flight_id)==0){
-                                    if (passenger_array[num_linhas[0]-1].validation_flight==1) validate_passenger(&nova, parametros, 1);
-                                    else {
-                                        nova.validation = 0;
-                                        nova.validation_flight = 0;
-                                    }
+                            else{           //parte do código responsável por guardar o último parâmetro (user_id)
+                                for (j = 0; line[j_linha] != '\0' && line[j_linha] != '\n'; j_linha++, j++) {
+                                    parametros[i][j] = line[j_linha];
                                 }
-                                else validate_passenger(&nova, parametros, 0);
+                                parametros[i][j] = '\0';
                             }
-
-                            if (nova.validation==1){
-                                if (num_linhas[0]==0){ // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
-                                    Contador_id novo = create_contador(parametros);
-                                    contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-                                    contador_array[num_linhas_contador] = novo;
-                                    num_linhas_contador++;
-                                }
-                                else{
-                                    if (atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight)>1){ //se o ID anterior não é o estritamente anterior ao ID da linha atual  (por exemplo: atual->003, anterior->001)
-                                        int array_vazio = atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight);
-                                        for (int k = 0; k<array_vazio; k++){
-                                            contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-                                            contador_array[num_linhas_contador].id_flight = strdup("");
-                                            contador_array[num_linhas_contador].contador = 0;
-                                            num_linhas_contador++;
-                                        }
-                                    }
-                                    if (strcmp(nova.flight_id, contador_array[num_linhas_contador-1].id_flight)==0){  //se o ID anterior é igual ao da linha atual 
-                                        // Se o ID do voo é o mesmo, apenas atualiza o contador do elemento existente
-                                        if (contador_array[num_linhas_contador - 1].contador == 0) contador_array[num_linhas_contador - 1].contador++;
-                                        contador_array[num_linhas_contador - 1].contador++;
-                                    } else{  // Se o ID do voo é diferente, cria um novo elemento Contador_id e adiciona ao contador_array
-                                    Contador_id novo = create_contador(parametros);
-                                    contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-                                    contador_array[num_linhas_contador] = novo;
-                                    num_linhas_contador++;
-                                    }
-                                }
-                            }
-                            passenger_array = realloc(passenger_array, (num_linhas[0]+1)*sizeof(Passenger));
-                            passenger_array[num_linhas[0]] = nova;
-                            num_linhas[0]++;
-
-                        } else {
-                            l++;
                         }
+                        Passenger nova = create_passenger(parametros);
+                        if (num_linhas[0] == 0) validate_passenger(&nova, parametros, 0);
+                        else{
+                            if (strcmp(nova.flight_id, passenger_array[num_linhas[0]-1].flight_id)==0){
+                                if (passenger_array[num_linhas[0]-1].validation_flight==1) validate_passenger(&nova, parametros, 1);
+                                else {
+                                    nova.validation = 0;
+                                    nova.validation_flight = 0;
+                                }
+                            }
+                            else validate_passenger(&nova, parametros, 0);
+                        }
+                        if (nova.validation==1){
+                            if (num_linhas[0]==0){ // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
+                                Contador_id novo = create_contador(parametros);
+                                contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
+                                contador_array[num_linhas_contador] = novo;
+                                num_linhas_contador++;
+                            }
+                            else{
+                                if (atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight)>1){ //se o ID anterior não é o estritamente anterior ao ID da linha atual  (por exemplo: atual->003, anterior->001)
+                                    int array_vazio = atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight);
+                                    for (int k = 0; k<array_vazio; k++){
+                                        contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
+                                        contador_array[num_linhas_contador].id_flight = strdup("");
+                                        contador_array[num_linhas_contador].contador = 0;
+                                        num_linhas_contador++;
+                                    }
+                                }
+                                if (strcmp(nova.flight_id, contador_array[num_linhas_contador-1].id_flight)==0){  //se o ID anterior é igual ao da linha atual 
+                                    // Se o ID do voo é o mesmo, apenas atualiza o contador do elemento existente
+                                    if (contador_array[num_linhas_contador - 1].contador == 0) contador_array[num_linhas_contador - 1].contador++;
+                                    contador_array[num_linhas_contador - 1].contador++;
+                                } else{  // Se o ID do voo é diferente, cria um novo elemento Contador_id e adiciona ao contador_array
+                                Contador_id novo = create_contador(parametros);
+                                contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
+                                contador_array[num_linhas_contador] = novo;
+                                num_linhas_contador++;
+                                }
+                            }
+                        }
+                        passenger_array = realloc(passenger_array, (num_linhas[0]+1)*sizeof(Passenger));
+                        passenger_array[num_linhas[0]] = nova;
+                        num_linhas[0]++;
+                    } else {
+                        l++;
                     }
-                    fclose(arquivo);
-                    break;
-            case 1:                                                         //ficheiro dos voos
-                arquivo = fopen("../trabalho-pratico/dataset/data/flights.csv", "r");
-                if (arquivo == NULL) {
-                    perror("Error\n");
-                    return;
                 }
-                while (getline(&line, &len, arquivo) != -1) {               //o programa vai ler linha a linha do ficheiro aberto
+                fclose(fpassengers);
+                break;
+            case 1:   
+                fflights = fopen(aux_flights, "r");                                                      //ficheiro dos voos
+                while (getline(&line, &len, fflights) != -1) {               //o programa vai ler linha a linha do ficheiro aberto
                     if (l != 0) {
                         char parametros[13][FIELD_SIZE];                       //o número de parâmetros varia de ficheiro para ficheiro
                         int j_linha = 0;
@@ -366,16 +380,12 @@ void open_files(){
                     }
                 }
     
-                fclose(arquivo);
+                fclose(fflights);
                 break;
 
-            case 2:                                                       //ficheiro das reservas
-                arquivo = fopen("../trabalho-pratico/dataset/data/reservations.csv", "r");
-                if (arquivo == NULL) {
-                    perror("Error\n");
-                    return;
-                }
-                while (getline(&line, &len, arquivo) != -1) {
+            case 2:  
+                freservations = fopen(aux_reservations, "r");                                                     //ficheiro das reservas
+                while (getline(&line, &len, freservations) != -1) {
                     if (l != 0) {
                         char parametros[14][FIELD_SIZE];
                         int j_linha = 0;
@@ -414,16 +424,12 @@ void open_files(){
                         l++;
                     }
                 }
-                fclose(arquivo);
+                fclose(freservations);
                 break;
 
-            case 0:                                                 //ficheiro dos utilizadores
-                arquivo = fopen("../trabalho-pratico/dataset/data/users.csv", "r");
-                if (arquivo == NULL) {
-                    perror("Error\n");
-                    return;
-                }
-                while (getline(&line, &len, arquivo) != -1) {
+            case 0:
+                fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                while (getline(&line, &len, fusers) != -1) {
                     if (l != 0) {
                         char parametros[12][FIELD_SIZE];
                         int j_linha = 0;
@@ -451,10 +457,14 @@ void open_files(){
                         l++;
                     }
                 }
-                fclose(arquivo); 
+                fclose(fusers); 
                 break;           
         }
     }
+    free(aux_passengers);
+    free(aux_flights);
+    free(aux_users);
+    free(aux_reservations);
     free(line);
     
  

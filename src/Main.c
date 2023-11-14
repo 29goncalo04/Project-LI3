@@ -7,10 +7,10 @@
 #include "../include/Queries.h"
 
 
-int main() {
-    open_files();
-    create_files();
-    identify_query();//função que faz as queries
+int main(int agrc, char* argv[]) {
+    open_files(argv[1]);
+    create_files(argv[1]);
+    identify_query(argv[2]);//função que faz as queries
     free_all();
     return 0;
 }

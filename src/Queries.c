@@ -145,7 +145,7 @@ void query1(char *line, int i, int n){
 
     int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
     if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+= 2;
+    else if (n>=100) filename_size+=2;
     char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
     snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
     output = fopen(filename, "w");
@@ -538,11 +538,13 @@ void query3(char *line, int i, int n) {
     free(filename);
 }
 
-void identify_query(){
+void identify_query(char* path){
     char *line = NULL;
     size_t len = 0;
     int n = 0;
-    input = fopen("../trabalho-pratico/dataset/input.txt", "r");
+    char *aux_queries = strcat(strdup(path), "/input.txt");
+    input = fopen(aux_queries, "r");
+    //input = fopen("../trabalho-pratico/dataset/input.txt", "r");
     if (input == NULL) {
         perror("Error\n");
         return;
