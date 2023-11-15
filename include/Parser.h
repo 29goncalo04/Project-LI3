@@ -10,29 +10,50 @@
 
 #include "../include/Data_Types_&_Data_Structures.h"
 
-extern int num_linhas[4];
+extern int num_linhas_valid[4];
+extern int num_linhas_invalid[4];
 extern int num_linhas_contador;
-extern Flight *flight_array;
-extern Passenger *passenger_array;
-extern Reservation *reservation_array;
-extern User *user_array;
+extern Flight *flight_array_valid;
+extern Flight *flight_array_invalid;
+extern Passenger *passenger_array_valid;
+extern Passenger *passenger_array_invalid;
+extern Reservation *reservation_array_valid;
+extern Reservation *reservation_array_invalid;
+extern User *user_array_valid;
+extern User *user_array_invalid;
 extern FILE *arquivo;
 extern Contador_id *contador_array;
 
 
-void free_flight(Flight *flight_array, int num_linhas);
+void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de voos, e libera elemento a elemento
 
-void free_passenger(Passenger *passenger_array, int num_linhas);
+void free_flight_invalid(Flight *flight_array_invalid, int num_linhas_invalid);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de voos, e libera elemento a elemento
+
+void free_passenger_valid(Passenger *passenger_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de passageiros, e libera elemento a elemento
 
-void free_reservation(Reservation *reservation_array, int num_linhas);
+void free_passenger_invalid(Passenger *passenger_array_invalid, int num_linhas_invalid);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de passageiros, e libera elemento a elemento
+
+void free_reservation_valid(Reservation *reservation_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de reservas, e libera elemento a elemento
 
-void free_user(User *user_array, int num_linhas);
+void free_reservation_invalid(Reservation *reservation_array_invalid, int num_linhas_invalid);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de reservas, e libera elemento a elemento
+
+void free_user_valid(User *user_array_valid, int num_linhas_valid);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de utilizadores, e libera elemento a elemento
+
+void free_user_invalid(User *user_array_invalid, int num_linhas_invalid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de utilizadores, e libera elemento a elemento
 

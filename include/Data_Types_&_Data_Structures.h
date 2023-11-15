@@ -73,43 +73,6 @@ typedef struct {            //struct com os parâmetros dos utilizadores
 } User;
 
 
-/*typedef struct flights_valid {
-    char* id;
-    char* airline;
-    char* plane_model;
-    char* total_seats;
-    char* origin;
-    char* destination;
-    char* schedule_departure_date;
-    char* schedule_arrival_date;
-    char* real_departure_date;
-    char* real_arrival_date;
-    char* pilot;
-    char* copilot;
-    char* notes;
-    int validation;
-    struct flights_valid* next;
-} flights_valid;
-
-typedef struct flights_invalid {
-    char* id;
-    char* airline;
-    char* plane_model;
-    char* total_seats;
-    char* origin;
-    char* destination;
-    char* schedule_departure_date;
-    char* schedule_arrival_date;
-    char* real_departure_date;
-    char* real_arrival_date;
-    char* pilot;
-    char* copilot;
-    char* notes;
-    int validation;
-    struct flights_invalid* next;
-} flights_invalid;*/
-
-
 typedef struct {       //struct com os dados do array de contadores
     char *id_flight;
     int contador;

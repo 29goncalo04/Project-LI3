@@ -45,8 +45,8 @@ int age_user(char *birth_date){  //1979/11/27
 
 int number_of_flights(char *user){
     int flights = 0;
-    for (int l = 0; l<num_linhas[0]; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
-        if (strcmp(user, passenger_array[l].user_id)==0) flights++;
+    for (int l = 0; l<num_linhas_valid[0]; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
+        if (strcmp(user, passenger_array_valid[l].user_id)==0) flights++;
     }
     return flights;
 }
@@ -119,17 +119,22 @@ void insertionSort_flights(Flight_aux *flight_aux_array, int size){
     }
 }
 
-void insertionSort_reservations(Reservation_aux *reservation_aux_array, int size){
+void insertionSort_reservations(Reservation_aux *reservation_aux_array, int size) {
     for (int i = 1; i < size; i++) {
         Reservation_aux key = reservation_aux_array[i];
         int j = i - 1;
-        while (j >= 0 && compare_date_time(reservation_aux_array[j].begin_date, key.begin_date)==1) {
+        
+        // Enquanto a data for menor e não chegarmos ao início do array
+        while (j >= 0 && compare_date_time(reservation_aux_array[j].begin_date, key.begin_date) == 1) {
             reservation_aux_array[j + 1] = reservation_aux_array[j];
             j--;
-        }  
+        }
+
+        // Insira a reserva na posição correta
         reservation_aux_array[j + 1] = key;
     }
 }
+
 
 void query1(char *line, int i, int n){
     int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1;
@@ -152,16 +157,21 @@ void query1(char *line, int i, int n){
 
     if (isdigit(line[index_line])){   //irá listar o resumo de um voo
         wanted_id = -1;
-        for (int k=0; k<num_linhas[1]; k++){   //procura esse id de voo no array que tem os voos guardados
-            if (strcmp(argument, flight_array[k].id)==0){
+        for (int k=0; k<num_linhas_invalid[1]; k++){   //procura esse id de voo no array que tem os voos inválidos guardados
+            if (strcmp(argument, flight_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id desse voo
                 break;
             }
         }
-        if (wanted_id == -1);//não encontrou o id desse voo por isso tem de criar um ficheiro vazio 
-        else {   //esse id de voo existe
-            if (flight_array[wanted_id].validation==0); //esse voo é inválido por isso tem de criar um ficheiro vazio 
-            else{
+        if (wanted_id != -1);//encontrou o id desse voo nos inválidos
+        else {   //esse id de voo é válido
+            for (int k=0; k<num_linhas_valid[1]; k++){   //procura esse id de voo no array que tem os voos válidos guardados
+                if (strcmp(argument, flight_array_valid[k].id)==0){
+                    wanted_id = k;  //encontrou o id desse voo
+                    break;
+                }
+            }
+            if (wanted_id != -1){
                 for (int l = 0; l < num_linhas_contador; l++) {
                     if (strcmp(argument, contador_array[l].id_flight) == 0) {
                         wanted_id_2 = l;
@@ -169,18 +179,18 @@ void query1(char *line, int i, int n){
                     }
                 }
                 if (index_line==2){   //1
-                  fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", flight_array[wanted_id].airline, flight_array[wanted_id].plane_model, flight_array[wanted_id].origin, flight_array[wanted_id].destination, flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].schedule_arrival_date, contador_array[wanted_id_2].contador, delay(flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].real_departure_date));
+                  fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", flight_array_valid[wanted_id].airline, flight_array_valid[wanted_id].plane_model, flight_array_valid[wanted_id].origin, flight_array_valid[wanted_id].destination, flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].schedule_arrival_date, contador_array[wanted_id_2].contador, delay(flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].real_departure_date));
                 }
                 else{   //1F
                     fprintf(output, "--- 1 ---\n");
-                    fprintf(output, "airline: %s\n", flight_array[wanted_id].airline);
-                    fprintf(output, "plane_model: %s\n", flight_array[wanted_id].plane_model);
-                    fprintf(output, "origin: %s\n", flight_array[wanted_id].origin);
-                    fprintf(output, "destination: %s\n", flight_array[wanted_id].destination);
-                    fprintf(output, "schedule_departure_date: %s\n", flight_array[wanted_id].schedule_departure_date);
-                    fprintf(output, "schedule_arrival_date: %s\n", flight_array[wanted_id].schedule_arrival_date);
+                    fprintf(output, "airline: %s\n", flight_array_valid[wanted_id].airline);
+                    fprintf(output, "plane_model: %s\n", flight_array_valid[wanted_id].plane_model);
+                    fprintf(output, "origin: %s\n", flight_array_valid[wanted_id].origin);
+                    fprintf(output, "destination: %s\n", flight_array_valid[wanted_id].destination);
+                    fprintf(output, "schedule_departure_date: %s\n", flight_array_valid[wanted_id].schedule_departure_date);
+                    fprintf(output, "schedule_arrival_date: %s\n", flight_array_valid[wanted_id].schedule_arrival_date);
                     fprintf(output, "passengers: %d\n", contador_array[wanted_id_2].contador);
-                    fprintf(output, "delay: %d\n", delay(flight_array[wanted_id].schedule_departure_date, flight_array[wanted_id].real_departure_date));
+                    fprintf(output, "delay: %d\n", delay(flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].real_departure_date));
                 }
             }
         }
@@ -188,39 +198,44 @@ void query1(char *line, int i, int n){
     
     else if (line[index_line]=='B' && line[index_line+1]=='o' && line[index_line+2]=='o' && line[index_line+3]=='k'){  //irá listar o resumo de uma reserva
         wanted_id = -1;
-        for (int k=0; k<num_linhas[2]; k++){   //procura esse id da reserva no array que tem as reservas guardados
-            if (strcmp(argument, reservation_array[k].id)==0){
+        for (int k=0; k<num_linhas_invalid[2]; k++){   //procura esse id da reserva no array que tem as reservas inválidas guardadas
+            if (strcmp(argument, reservation_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id dessa reserva
                 break;
             }
         }
-        if (wanted_id == -1);//não encontrou o id dessa reserva por isso tem de criar um ficheiro vazio 
-        else {   //esse id de voo existe
-            if (reservation_array[wanted_id].validation==0); //essa reserva é inválida por isso tem de criar um ficheiro vazio 
-            else{
-                for (int k = 0; k<num_linhas[3]; k++){   //procura o id do utilizador que fez essa reserva para ver qual o seu account status
-                    if (strcmp(reservation_array[wanted_id].user_id, user_array[k].id)==0){
+        if (wanted_id != -1);//encontrou o id dessa reserva nas inválidas 
+        else {   //esse id de reserva é válido
+            for (int k=0; k<num_linhas_valid[2]; k++){   //procura esse id da reserva no array que tem as reservas válidas guardadas
+                if (strcmp(argument, reservation_array_valid[k].id)==0){
+                    wanted_id = k;  //encontrou o id dessa reserva
+                    break;
+                }
+            }
+            if (wanted_id != -1){
+                for (int k = 0; k<num_linhas_valid[3]; k++){   //procura o id do utilizador que fez essa reserva para ver qual o seu account status
+                    if (strcmp(reservation_array_valid[wanted_id].user_id, user_array_valid[k].id)==0){
                         wanted_user_id = k;  //encontrou o id desse utilizador
                         break;
                     }
                 }
-                if (verify_account_status(user_array[wanted_user_id].account_status) == 2); //não imprime nada caso a conta do utilizador esteja inativa
+                if (verify_account_status(user_array_valid[wanted_user_id].account_status) == 2); //não imprime nada caso a conta do utilizador esteja inativa
                 else{
-                    if (verify_breakfast(reservation_array[wanted_id].includes_breakfast) == 1) breakfast = strdup("True");
+                    if (verify_breakfast(reservation_array_valid[wanted_id].includes_breakfast) == 1) breakfast = strdup("True");
                     else  breakfast = strdup("False");
                     if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", reservation_array[wanted_id].hotel_id, reservation_array[wanted_id].hotel_name, reservation_array[wanted_id].hotel_stars, reservation_array[wanted_id].begin_date, reservation_array[wanted_id].end_date, breakfast, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), total_price(reservation_array[wanted_id].price_per_night, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), reservation_array[wanted_id].city_tax));
+                        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", reservation_array_valid[wanted_id].hotel_id, reservation_array_valid[wanted_id].hotel_name, reservation_array_valid[wanted_id].hotel_stars, reservation_array_valid[wanted_id].begin_date, reservation_array_valid[wanted_id].end_date, breakfast, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), total_price(reservation_array_valid[wanted_id].price_per_night, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), reservation_array_valid[wanted_id].city_tax));
                     }
                     else{   //1F
                         fprintf(output, "--- 1 ---\n");
-                        fprintf(output, "hotel_id: %s\n", reservation_array[wanted_id].hotel_id);
-                        fprintf(output, "hotel_name: %s\n", reservation_array[wanted_id].hotel_name);
-                        fprintf(output, "hotel_stars: %s\n", reservation_array[wanted_id].hotel_stars);
-                        fprintf(output, "begin_date: %s\n", reservation_array[wanted_id].begin_date);
-                        fprintf(output, "end_date: %s\n", reservation_array[wanted_id].end_date);
+                        fprintf(output, "hotel_id: %s\n", reservation_array_valid[wanted_id].hotel_id);
+                        fprintf(output, "hotel_name: %s\n", reservation_array_valid[wanted_id].hotel_name);
+                        fprintf(output, "hotel_stars: %s\n", reservation_array_valid[wanted_id].hotel_stars);
+                        fprintf(output, "begin_date: %s\n", reservation_array_valid[wanted_id].begin_date);
+                        fprintf(output, "end_date: %s\n", reservation_array_valid[wanted_id].end_date);
                         fprintf(output, "includes_breakfast: %s\n", breakfast);
-                        fprintf(output, "nights: %d\n", nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date));
-                        fprintf(output, "total_price: %.3f\n", total_price(reservation_array[wanted_id].price_per_night, nights(reservation_array[wanted_id].begin_date,reservation_array[wanted_id].end_date), reservation_array[wanted_id].city_tax));
+                        fprintf(output, "nights: %d\n", nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date));
+                        fprintf(output, "total_price: %.3f\n", total_price(reservation_array_valid[wanted_id].price_per_night, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), reservation_array_valid[wanted_id].city_tax));
                     }
                     free(breakfast);
                 }
@@ -229,17 +244,22 @@ void query1(char *line, int i, int n){
     }
     else{  //irá listar o resumo de um utilizador
         wanted_id = -1;
-        for (int k=0; k<num_linhas[3]; k++){   //procura esse id do utilizador no array que tem os utilizadores guardados
-            if (strcmp(argument, user_array[k].id)==0){
+        for (int k=0; k<num_linhas_invalid[3]; k++){   //procura esse id do utilizador no array que tem os utilizadores inválidos guardados
+            if (strcmp(argument, user_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id desse utilizador
                 break;
             }
         }
-        if (wanted_id == -1);//não encontrou o id desse utilizador por isso tem de criar um ficheiro vazio  
+        if (wanted_id != -1);//encontrou o id desse utilizador nos inválidos  
         else{
-            if (user_array[wanted_id].validation==0); //esse utilizador é inválido por isso tem de criar um ficheiro vazio 
-            else{
-                status = strdup(user_array[wanted_id].account_status);
+            for (int k=0; k<num_linhas_valid[3]; k++){   //procura esse id do utilizador no array que tem os utilizadores válidos guardados
+                if (strcmp(argument, user_array_valid[k].id)==0){
+                    wanted_id = k;  //encontrou o id desse utilizador
+                    break;
+                }
+            }
+            if (wanted_id != -1){
+                status = strdup(user_array_valid[wanted_id].account_status);
                 toLowerCase(status);
                 if (verify_account_status(status) == 2);   //não imprime nada caso a conta do utilizador esteja inativa
                 else{
@@ -248,23 +268,23 @@ void query1(char *line, int i, int n){
                     for (int l = 0; l<num_linhas[0]; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
                         if (strcmp(user_array[wanted_id].id, passenger_array[l].user_id)==0) flights++;
                     }*/
-                    for (int k = 0; k<num_linhas[2]; k++){   //procura o id do utilizador no array das reservas para ver quantas reservas ele fez 
-                        if (strcmp(user_array[wanted_id].id, reservation_array[k].user_id)==0){
+                    for (int k = 0; k<num_linhas_valid[2]; k++){   //procura o id do utilizador no array das reservas para ver quantas reservas ele fez 
+                        if (strcmp(user_array_valid[wanted_id].id, reservation_array_valid[k].user_id)==0){
                             reservations++;
-                            total_spent += total_price(reservation_array[k].price_per_night, nights(reservation_array[k].begin_date,reservation_array[k].end_date), reservation_array[k].city_tax);
+                            total_spent += total_price(reservation_array_valid[k].price_per_night, nights(reservation_array_valid[k].begin_date,reservation_array_valid[k].end_date), reservation_array_valid[k].city_tax);
                         }
                     }
                     if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", user_array[wanted_id].name, user_array[wanted_id].sex, age_user(user_array[wanted_id].birth_date),user_array[wanted_id].country_code, user_array[wanted_id].passport, number_of_flights(user_array[wanted_id].id), reservations, total_spent);
+                        fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", user_array_valid[wanted_id].name, user_array_valid[wanted_id].sex, age_user(user_array_valid[wanted_id].birth_date),user_array_valid[wanted_id].country_code, user_array_valid[wanted_id].passport, number_of_flights(user_array_valid[wanted_id].id), reservations, total_spent);
                     }
                     else{   //1F
                         fprintf(output, "--- 1 ---\n");
-                        fprintf(output, "name: %s\n", user_array[wanted_id].name);
-                        fprintf(output, "sex: %s\n", user_array[wanted_id].sex);
-                        fprintf(output, "age: %d\n", age_user(user_array[wanted_id].birth_date));
-                        fprintf(output, "country_code: %s\n", user_array[wanted_id].country_code);
-                        fprintf(output, "passport: %s\n", user_array[wanted_id].passport);
-                        fprintf(output, "number_of_flights: %d\n", number_of_flights(user_array[wanted_id].id));
+                        fprintf(output, "name: %s\n", user_array_valid[wanted_id].name);
+                        fprintf(output, "sex: %s\n", user_array_valid[wanted_id].sex);
+                        fprintf(output, "age: %d\n", age_user(user_array_valid[wanted_id].birth_date));
+                        fprintf(output, "country_code: %s\n", user_array_valid[wanted_id].country_code);
+                        fprintf(output, "passport: %s\n", user_array_valid[wanted_id].passport);
+                        fprintf(output, "number_of_flights: %d\n", number_of_flights(user_array_valid[wanted_id].id));
                         fprintf(output, "number_of_reservations: %d\n", reservations);
                         fprintf(output, "total_spent: %.3f\n", total_spent);
                     }
@@ -275,6 +295,10 @@ void query1(char *line, int i, int n){
     }
     fclose(output);
     free(filename);
+}
+
+int compare_date_time2(char *i, char *f) {
+    return strcmp(i, f);
 }
 
 void query2(char *line, int i, int n){
@@ -311,15 +335,21 @@ void query2(char *line, int i, int n){
     snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
     output = fopen(filename, "w");
 
-    for (int i = 0; i<num_linhas[3]; i++){     //vai procurar o id do utilizador
-        if (strcmp(argument1, user_array[i].id)==0){   //se encontrar o id desse utilizador
+    for (int i = 0; i<num_linhas_invalid[3]; i++){     //vai procurar o id do utilizador nos inválidos
+        if (strcmp(argument1, user_array_invalid[i].id)==0){   //se encontrar o id desse utilizador
             wanted_user_id = i;
             break;
         }
     }
-    if (wanted_user_id!=-1){   //caso o utilizador exista
-        if (user_array[wanted_user_id].validation==1){  //só vai buscar parâmetros caso essa linha do utilizador seja válida
-            status = strdup(user_array[wanted_user_id].account_status);
+    if (wanted_user_id==-1){   //caso o utilizador seja válido
+        for (int i = 0; i<num_linhas_valid[3]; i++){     //vai procurar o id do utilizador nos válidos
+            if (strcmp(argument1, user_array_valid[i].id)==0){   //se encontrar o id desse utilizador
+                wanted_user_id = i;
+                break;
+            }
+        }
+        if (wanted_user_id != -1){
+            status = strdup(user_array_valid[wanted_user_id].account_status);
             toLowerCase(status);
             if (verify_account_status(status) == 1){   //apenas imprime caso a conta do utilizador esteja ativa
                 int num_flights_passenger_id = 0, num_reservations = 0;
@@ -327,21 +357,21 @@ void query2(char *line, int i, int n){
                 Flight_aux *flight_aux_array = NULL; //será um array para armazenar a data esperada de partida e o id do voo em que o utilizador voou
                 Reservation_aux *reservation_aux_array = NULL; //será um array para armazenar a data da reserva e o id da reserva que o utilizador fez
                 if (strcmp(argument2, "reservations")!=0){
-                    for (int i = 0; i<num_linhas[0]; i++){   //procura o id desse utilizador no array dos passageiros para saber qual o seu voo
-                        if (strcmp(argument1, passenger_array[i].user_id)==0 && passenger_array[i].validation==1){   //se econtrar o id do utilizador no ficheiro dos passageiros e essa linha for válida
-                            Flight_id_passenger novo = create_flight_id(passenger_array[i].flight_id);    //é criado um novo elemento do array com o parâmetro lido
+                    for (int i = 0; i<num_linhas_valid[0]; i++){   //procura o id desse utilizador no array dos passageiros para saber qual o seu voo
+                        if (strcmp(argument1, passenger_array_valid[i].user_id)==0){   //se econtrar o id do utilizador no ficheiro dos passageiros e essa linha for válida
+                            Flight_id_passenger novo = create_flight_id(passenger_array_valid[i].flight_id);    //é criado um novo elemento do array com o parâmetro lido
                             flight_id_passenger_array = realloc(flight_id_passenger_array, (num_flights_passenger_id+1)*sizeof(Flight_id_passenger)); 
                             flight_id_passenger_array[num_flights_passenger_id] = novo;        //esse novo elemento é adicionado ao array existente
                             num_flights_passenger_id++;
                         }
                     }
                     if (num_flights_passenger_id!=0){  //se encontrou voos em que o utilizador voou
-                        for (int i = 0, j = 0; i<num_linhas[1] && j<num_flights_passenger_id; i++){   //procura esses id's de voos no ficheiro dos voos
-                            if (strcmp(flight_array[i].id, flight_id_passenger_array[j].flight_id)==0){   //encontrou o id de voo
-                                char* departure_date = only_date(flight_array[i].schedule_departure_date);
+                        for (int i = 0, j = 0; i<num_linhas_valid[1] && j<num_flights_passenger_id; i++){   //procura esses id's de voos no ficheiro dos voos
+                            if (strcmp(flight_array_valid[i].id, flight_id_passenger_array[j].flight_id)==0){   //encontrou o id de voo
+                                char* departure_date = only_date(flight_array_valid[i].schedule_departure_date);
                                 Flight_aux novo;
-                                if (exists_argument2==0) novo = create_flight_aux(flight_array[i].id, departure_date, 0);
-                                else novo = create_flight_aux(flight_array[i].id, departure_date, 1);
+                                if (exists_argument2==0) novo = create_flight_aux(flight_array_valid[i].id, departure_date, 0);
+                                else novo = create_flight_aux(flight_array_valid[i].id, departure_date, 1);
                                 flight_aux_array = realloc(flight_aux_array, (j+1)*sizeof(Flight_aux));
                                 flight_aux_array[j] = novo;
                                 j++;
@@ -352,20 +382,21 @@ void query2(char *line, int i, int n){
                     }
                 }
                 if (strcmp(argument2, "flights")!=0){    //só lista as reservas que um utilizador fez caso o segundo argumento não exista ou seja diferente de "flights"
-               //     printf("reservation\n");
-                    for (int i = 0; i<num_linhas[2]; i++){   //procura o id desse utilizador no array das reservas para saber qual a sua reserva
-                        if (strcmp(argument1, reservation_array[i].user_id)==0 && reservation_array[i].validation==1){   //se econtrar o id do utilizador no ficheiro das reservas e essa linha for válida
+                    //printf("reservation\n");
+                    for (int i = 0; i<num_linhas_valid[2]; i++){   //procura o id desse utilizador no array das reservas para saber qual a sua reserva
+                        if (strcmp(argument1, reservation_array_valid[i].user_id)==0){   //se econtrar o id do utilizador no ficheiro das reservas válidas
+                            //printf("%s\n", reservation_array_valid[i].id);
                             Reservation_aux novo;
-                            if (exists_argument2==0) novo = create_reservation_aux(reservation_array[i].id, reservation_array[i].begin_date, 0);
-                            else novo = create_reservation_aux(reservation_array[i].id, reservation_array[i].begin_date, 1);
+                            if (exists_argument2==0) novo = create_reservation_aux(reservation_array_valid[i].id, reservation_array_valid[i].begin_date, 0);
+                            else novo = create_reservation_aux(reservation_array_valid[i].id, reservation_array_valid[i].begin_date, 1);
                             reservation_aux_array = realloc(reservation_aux_array, (num_reservations+1)*sizeof(Reservation_aux));
                             reservation_aux_array[num_reservations] = novo;
                             num_reservations++; 
                         }
                     }
-                    insertionSort_reservations(reservation_aux_array, num_reservations);
                 }  
                 if (index_line==2){ //2
+                    insertionSort_reservations(reservation_aux_array, num_reservations);
                     if (strcmp(argument2, "flights")==0){  //só lista os voos
                         for (int i = 0; i<num_flights_passenger_id; i++){
                             fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
@@ -394,11 +425,11 @@ void query2(char *line, int i, int n){
                                             fprintf(output, "%s;%s%s\n", reservation_aux_array[j].reservation_id, reservation_aux_array[j].begin_date, reservation_aux_array[j].type);
                                             j++;
                                         }
-                                        else if (compare_date_time(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)==0){
+                                        else if (compare_date_time2(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)>0){
                                             fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
                                             i++;
                                         }
-                                            else if (compare_date_time(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)==1){
+                                            else if (compare_date_time2(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)<0){
                                                 fprintf(output, "%s;%s%s\n", reservation_aux_array[j].reservation_id, reservation_aux_array[j].begin_date, reservation_aux_array[j].type);
                                                 j++;
                                             }
@@ -514,9 +545,9 @@ void query3(char *line, int i, int n) {
 
     int check = check_length(argument);
     if (check == 1) {
-        for (i = 0; i < num_linhas[2]; i++) {
-            if ((strcmp(reservation_array[i].hotel_id, argument) == 0) && reservation_array[i].validation == 1) {
-                rating = (double) atof(reservation_array[i].rating);
+        for (i = 0; i < num_linhas_valid[2]; i++) {
+            if (strcmp(reservation_array_valid[i].hotel_id, argument) == 0){
+                rating = (double) atof(reservation_array_valid[i].rating);
                 rating_t += (double) rating;
                 total = (double) total + 1;
             }

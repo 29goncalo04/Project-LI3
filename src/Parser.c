@@ -6,12 +6,16 @@
 #include "../include/Parser.h"
 #include "../include/Validation.h"
 
-int num_linhas[4] = {0};
+int num_linhas_valid[4] = {0}, num_linhas_invalid[4] = {0};
 int num_linhas_contador = 0;
-Flight *flight_array = NULL;                          //inicialização de cada array
-Passenger *passenger_array = NULL;
-Reservation *reservation_array = NULL;
-User *user_array = NULL;
+Flight *flight_array_valid = NULL;                          //inicialização de cada array
+Flight *flight_array_invalid = NULL;
+Passenger *passenger_array_valid = NULL;
+Passenger *passenger_array_invalid = NULL;
+Reservation *reservation_array_valid = NULL;
+Reservation *reservation_array_invalid = NULL;
+User *user_array_valid = NULL;
+User *user_array_invalid = NULL;
 FILE *fpassengers;
 FILE *freservations;
 FILE *fusers;
@@ -19,71 +23,136 @@ FILE *fflights;
 FILE *arquivo;
 Contador_id *contador_array = NULL;
 
-void free_flight(Flight *flight_array, int num_linhas) {      
-    for (int i = 0; i < num_linhas; i++) {                             
-        free(flight_array[i].id);
-        free(flight_array[i].airline);
-        free(flight_array[i].plane_model);
-        free(flight_array[i].total_seats);
-        free(flight_array[i].origin);
-        free(flight_array[i].destination);
-        free(flight_array[i].schedule_departure_date);
-        free(flight_array[i].schedule_arrival_date);
-        free(flight_array[i].real_departure_date);
-        free(flight_array[i].real_arrival_date);
-        free(flight_array[i].pilot);
-        free(flight_array[i].copilot);
-        free(flight_array[i].notes);
+void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid) {      
+    for (int i = 0; i < num_linhas_valid; i++) {                             
+        free(flight_array_valid[i].id);
+        free(flight_array_valid[i].airline);
+        free(flight_array_valid[i].plane_model);
+        free(flight_array_valid[i].total_seats);
+        free(flight_array_valid[i].origin);
+        free(flight_array_valid[i].destination);
+        free(flight_array_valid[i].schedule_departure_date);
+        free(flight_array_valid[i].schedule_arrival_date);
+        free(flight_array_valid[i].real_departure_date);
+        free(flight_array_valid[i].real_arrival_date);
+        free(flight_array_valid[i].pilot);
+        free(flight_array_valid[i].copilot);
+        free(flight_array_valid[i].notes);
     }
-    free(flight_array);
+    free(flight_array_valid);
+}
+
+void free_flight_invalid(Flight *flight_array_invalid, int num_linhas_invalid) {      
+    for (int i = 0; i < num_linhas_invalid; i++) {                             
+        free(flight_array_invalid[i].id);
+        free(flight_array_invalid[i].airline);
+        free(flight_array_invalid[i].plane_model);
+        free(flight_array_invalid[i].total_seats);
+        free(flight_array_invalid[i].origin);
+        free(flight_array_invalid[i].destination);
+        free(flight_array_invalid[i].schedule_departure_date);
+        free(flight_array_invalid[i].schedule_arrival_date);
+        free(flight_array_invalid[i].real_departure_date);
+        free(flight_array_invalid[i].real_arrival_date);
+        free(flight_array_invalid[i].pilot);
+        free(flight_array_invalid[i].copilot);
+        free(flight_array_invalid[i].notes);
+    }
+    free(flight_array_invalid);
 }
 
 
-void free_passenger(Passenger *passenger_array, int num_linhas) {
-    for (int i = 0; i < num_linhas; i++) {                               
-        free(passenger_array[i].flight_id);
-        free(passenger_array[i].user_id);
+void free_passenger_valid(Passenger *passenger_array_valid, int num_linhas_valid) {
+    for (int i = 0; i < num_linhas_valid; i++) {                               
+        free(passenger_array_valid[i].flight_id);
+        free(passenger_array_valid[i].user_id);
     }
-    free(passenger_array);
+    free(passenger_array_valid);
+}
+
+void free_passenger_invalid(Passenger *passenger_array_invalid, int num_linhas_invalid) {
+    for (int i = 0; i < num_linhas_invalid; i++) {                               
+        free(passenger_array_invalid[i].flight_id);
+        free(passenger_array_invalid[i].user_id);
+    }
+    free(passenger_array_invalid);
 }
 
 
-void free_reservation(Reservation *reservation_array, int num_linhas) { 
-    for (int i = 0; i < num_linhas; i++) {                                  
-        free(reservation_array[i].id);
-        free(reservation_array[i].user_id);
-        free(reservation_array[i].hotel_id);
-        free(reservation_array[i].hotel_name);
-        free(reservation_array[i].hotel_stars);
-        free(reservation_array[i].city_tax);
-        free(reservation_array[i].address);
-        free(reservation_array[i].begin_date);
-        free(reservation_array[i].end_date);
-        free(reservation_array[i].price_per_night);
-        free(reservation_array[i].includes_breakfast);
-        free(reservation_array[i].room_details);
-        free(reservation_array[i].rating);
-        free(reservation_array[i].comment);
+void free_reservation_valid(Reservation *reservation_array_valid, int num_linhas_valid) { 
+    for (int i = 0; i < num_linhas_valid; i++) {                                  
+        free(reservation_array_valid[i].id);
+        free(reservation_array_valid[i].user_id);
+        free(reservation_array_valid[i].hotel_id);
+        free(reservation_array_valid[i].hotel_name);
+        free(reservation_array_valid[i].hotel_stars);
+        free(reservation_array_valid[i].city_tax);
+        free(reservation_array_valid[i].address);
+        free(reservation_array_valid[i].begin_date);
+        free(reservation_array_valid[i].end_date);
+        free(reservation_array_valid[i].price_per_night);
+        free(reservation_array_valid[i].includes_breakfast);
+        free(reservation_array_valid[i].room_details);
+        free(reservation_array_valid[i].rating);
+        free(reservation_array_valid[i].comment);
     }
-    free(reservation_array);
+    free(reservation_array_valid);
 }
 
-void free_user(User *user_array, int num_linhas) {  
-    for (int i = 0; i < num_linhas; i++) {               
-        free(user_array[i].id);
-        free(user_array[i].name);
-        free(user_array[i].email);
-        free(user_array[i].phone_number);
-        free(user_array[i].birth_date);
-        free(user_array[i].sex);
-        free(user_array[i].passport);
-        free(user_array[i].country_code);
-        free(user_array[i].address);
-        free(user_array[i].account_creation);
-        free(user_array[i].pay_method);
-        free(user_array[i].account_status);
+void free_reservation_invalid(Reservation *reservation_array_invalid, int num_linhas_invalid) { 
+    for (int i = 0; i < num_linhas_invalid; i++) {                                  
+        free(reservation_array_invalid[i].id);
+        free(reservation_array_invalid[i].user_id);
+        free(reservation_array_invalid[i].hotel_id);
+        free(reservation_array_invalid[i].hotel_name);
+        free(reservation_array_invalid[i].hotel_stars);
+        free(reservation_array_invalid[i].city_tax);
+        free(reservation_array_invalid[i].address);
+        free(reservation_array_invalid[i].begin_date);
+        free(reservation_array_invalid[i].end_date);
+        free(reservation_array_invalid[i].price_per_night);
+        free(reservation_array_invalid[i].includes_breakfast);
+        free(reservation_array_invalid[i].room_details);
+        free(reservation_array_invalid[i].rating);
+        free(reservation_array_invalid[i].comment);
     }
-    free(user_array);
+    free(reservation_array_invalid);
+}
+
+void free_user_valid(User *user_array_valid, int num_linhas_valid) {  
+    for (int i = 0; i < num_linhas_valid; i++) {               
+        free(user_array_valid[i].id);
+        free(user_array_valid[i].name);
+        free(user_array_valid[i].email);
+        free(user_array_valid[i].phone_number);
+        free(user_array_valid[i].birth_date);
+        free(user_array_valid[i].sex);
+        free(user_array_valid[i].passport);
+        free(user_array_valid[i].country_code);
+        free(user_array_valid[i].address);
+        free(user_array_valid[i].account_creation);
+        free(user_array_valid[i].pay_method);
+        free(user_array_valid[i].account_status);
+    }
+    free(user_array_valid);
+}
+
+void free_user_invalid(User *user_array_invalid, int num_linhas_invalid) {  
+    for (int i = 0; i < num_linhas_invalid; i++) {               
+        free(user_array_invalid[i].id);
+        free(user_array_invalid[i].name);
+        free(user_array_invalid[i].email);
+        free(user_array_invalid[i].phone_number);
+        free(user_array_invalid[i].birth_date);
+        free(user_array_invalid[i].sex);
+        free(user_array_invalid[i].passport);
+        free(user_array_invalid[i].country_code);
+        free(user_array_invalid[i].address);
+        free(user_array_invalid[i].account_creation);
+        free(user_array_invalid[i].pay_method);
+        free(user_array_invalid[i].account_status);
+    }
+    free(user_array_invalid);
 }
 
 
@@ -173,22 +242,19 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]){
 }
 
 void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation){
-    int wanted_flight_id_validation = 0, wanted_user_id_validation = 0;
+    int wanted_flight_id_validation = 1, wanted_user_id_validation = 1;
     if (flight_validation==0){
-        if (check_length(parametros[0])==1){
-            for (int k=0; k<num_linhas[1]; k++){   //procura esse id de voo no array que tem os voos guardados
-                if (strcmp(parametros[0], flight_array[k].id)==0){
-                    if (flight_array[k].validation == 1) wanted_flight_id_validation = 1; //o id desse voo é válido
-                    break;
-                }
+        for (int k=0; k<num_linhas_invalid[1]; k++){   //procura esse id de voo no array que tem os voos inválidos guardados
+            if (strcmp(parametros[0], flight_array_invalid[k].id)==0){
+                wanted_flight_id_validation = 0;
+                break;
             }
         }
     }
-    if (flight_validation==1) wanted_flight_id_validation = 1;
-    if (wanted_flight_id_validation==1 && check_length(parametros[1])==1){
-        for (int l=0; l<num_linhas[3]; l++){   //procura esse id de utilizador no array que tem os utilizadores guardados
-            if (strcmp(parametros[1], user_array[l].id)==0){
-                if (user_array[l].validation == 1) wanted_user_id_validation = 1; //o id desse utilizador é válido
+    if (wanted_flight_id_validation==1){
+        for (int l=0; l<num_linhas_invalid[3]; l++){   //procura esse id de utilizador no array que tem os utilizadores inválidos guardados
+            if (strcmp(parametros[1], user_array_invalid[l].id)==0){
+                wanted_user_id_validation = 0;
                 break;
             }
         }
@@ -222,13 +288,11 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
 
 
 void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
-    int validation = 0, wanted_user_id_validation = 0;
-    if (check_length(parametros[1])==1){
-        for (int i = 0; i<num_linhas[3]; i++){
-            if (strcmp(parametros[1], user_array[i].id)==0) {
-                if (user_array[i].validation==1) wanted_user_id_validation = 1;
-                break;
-            }
+    int validation = 0, wanted_user_id_validation = 1;
+    for (int i = 0; i<num_linhas_invalid[3]; i++){
+        if (strcmp(parametros[1], user_array_invalid[i].id)==0) {    //encontrou o id desse utilizador no array de utilizadores inválidos
+            wanted_user_id_validation = 0;
+            break;
         }
     }
     if (wanted_user_id_validation==1){
@@ -244,10 +308,14 @@ void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
 }
 
 void free_all(){
-    free_passenger(passenger_array, num_linhas[0]); 
-    free_flight(flight_array, num_linhas[1]);            
-    free_reservation(reservation_array, num_linhas[2]); 
-    free_user(user_array, num_linhas[3]); 
+    free_passenger_valid(passenger_array_valid, num_linhas_valid[0]);
+    free_flight_valid(flight_array_valid, num_linhas_valid[1]);
+    free_reservation_valid(reservation_array_valid, num_linhas_valid[2]);
+    free_user_valid(user_array_valid, num_linhas_valid[3]);
+    free_passenger_invalid(passenger_array_invalid, num_linhas_invalid[0]); 
+    free_flight_invalid(flight_array_invalid, num_linhas_invalid[1]);            
+    free_reservation_invalid(reservation_array_invalid, num_linhas_invalid[2]); 
+    free_user_invalid(user_array_invalid, num_linhas_invalid[3]); 
     free_contador(contador_array, num_linhas_contador);
 }
 
@@ -255,7 +323,9 @@ void free_all(){
 void open_files(char* path){
     char *line = NULL;
     size_t len = 0;
-    int j = 0;
+    int j = 0, previous_flight_id_validation = 0;
+    //char *previous_flight_id = NULL;
+    char previous_flight_id[11] = "0000000000";
     char *aux_passengers = NULL;
     aux_passengers = (char *)malloc(strlen(path) + strlen("/passengers.csv") + 1);
     strcpy(aux_passengers, path);
@@ -303,19 +373,34 @@ void open_files(char* path){
                             }
                         }
                         Passenger nova = create_passenger(parametros);
-                        if (num_linhas[0] == 0) validate_passenger(&nova, parametros, 0);
+                        //if (num_linhas_valid[0] == 0) validate_passenger(&nova, parametros, 0);
+                        if (num_linhas_contador==0) {
+                            validate_passenger(&nova, parametros, 0);  //se for a primeira vez que está a ler uma linha
+                            if (nova.validation_flight==0) previous_flight_id_validation = 0;
+                            else previous_flight_id_validation = 1;
+                         //   printf("%s\n", nova.flight_id);
+                        }
                         else{
-                            if (strcmp(nova.flight_id, passenger_array[num_linhas[0]-1].flight_id)==0){
-                                if (passenger_array[num_linhas[0]-1].validation_flight==1) validate_passenger(&nova, parametros, 1);
+                            if (strcmp(nova.flight_id, previous_flight_id)==0){
+                                if (previous_flight_id_validation == 1){
+                                    //printf("1\n");
+                                    validate_passenger(&nova, parametros, 1);    //se o id de voo que está a ler é igual ao anterior e esse era válido
+                                }
                                 else {
+                                    //printf("%s\n", nova.flight_id);
                                     nova.validation = 0;
+                                    previous_flight_id_validation = 0;
                                     nova.validation_flight = 0;
                                 }
                             }
-                            else validate_passenger(&nova, parametros, 0);
+                            else{
+                                validate_passenger(&nova, parametros, 0);
+                                if (nova.validation_flight==0) previous_flight_id_validation = 0;
+                                else previous_flight_id_validation = 1;
+                            }
                         }
                         if (nova.validation==1){
-                            if (num_linhas[0]==0){ // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
+                            if (num_linhas_contador==0){ // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
                                 Contador_id novo = create_contador(parametros);
                                 contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
                                 contador_array[num_linhas_contador] = novo;
@@ -342,14 +427,29 @@ void open_files(char* path){
                                 num_linhas_contador++;
                                 }
                             }
+                            previous_flight_id_validation = 1;
+                            //free(previous_flight_id);
+                            //previous_flight_id = strdup(nova.flight_id);
+                            strcpy(previous_flight_id, nova.flight_id);
+                            passenger_array_valid = realloc(passenger_array_valid, (num_linhas_valid[0]+1)*sizeof(Passenger));
+                            passenger_array_valid[num_linhas_valid[0]] = nova;
+                            num_linhas_valid[0]++;
                         }
-                        passenger_array = realloc(passenger_array, (num_linhas[0]+1)*sizeof(Passenger));
-                        passenger_array[num_linhas[0]] = nova;
-                        num_linhas[0]++;
+                        else{
+                            //previous_flight_id_validation = 0;
+                            //free(previous_flight_id);
+                            //previous_flight_id = strdup(nova.flight_id);
+                            strcpy(previous_flight_id, nova.flight_id);
+                            passenger_array_invalid = realloc(passenger_array_invalid, (num_linhas_invalid[0]+1)*sizeof(Passenger));
+                            passenger_array_invalid[num_linhas_invalid[0]] = nova;
+                            num_linhas_invalid[0]++;
+                        }
+
                     } else {
                         l++;
                     }
                 }
+                //free(previous_flight_id);
                 fclose(fpassengers);
                 break;
             case 1:   
@@ -382,9 +482,16 @@ void open_files(char* path){
 
                         Flight nova = create_flight(parametros);    //é criado um novo elemento do array com os parâmetros lidos
                         validate_flight(&nova, parametros, contador_array, num_linhas_contador);
-                        flight_array = realloc(flight_array, (num_linhas[1]+1)*sizeof(Flight));   
-                        flight_array[num_linhas[1]] = nova;        //esse novo elemento é adicionado ao array existente
-                        num_linhas[1]++;
+                        if (nova.validation == 1){    //se essa linha for válida os seus parâmetros são armazenados no array de voos válidos
+                            flight_array_valid = realloc(flight_array_valid, (num_linhas_valid[1]+1)*sizeof(Flight));   
+                            flight_array_valid[num_linhas_valid[1]] = nova;        //esse novo elemento é adicionado ao array de válidos
+                            num_linhas_valid[1]++;
+                        }
+                        else{
+                            flight_array_invalid = realloc(flight_array_invalid, (num_linhas_invalid[1]+1)*sizeof(Flight));   
+                            flight_array_invalid[num_linhas_invalid[1]] = nova;        //esse novo elemento é adicionado ao array de inválidos
+                            num_linhas_invalid[1]++;
+                        }
 
                     } else {
                         l++;
@@ -428,9 +535,16 @@ void open_files(char* path){
                         }
                         Reservation nova = create_reservation(parametros);
                         validate_reservation(&nova, parametros);
-                        reservation_array = realloc(reservation_array, (num_linhas[2]+1)*sizeof(Reservation));
-                        reservation_array[num_linhas[2]] = nova;
-                        num_linhas[2]++;
+                        if (nova.validation == 1){  //se essa linha for válida os seus parâmetros são armazenados no array de reservas válidas
+                            reservation_array_valid = realloc(reservation_array_valid, (num_linhas_valid[2]+1)*sizeof(Reservation));
+                            reservation_array_valid[num_linhas_valid[2]] = nova;
+                            num_linhas_valid[2]++;
+                        }
+                        else{
+                            reservation_array_invalid = realloc(reservation_array_invalid, (num_linhas_invalid[2]+1)*sizeof(Reservation));
+                            reservation_array_invalid[num_linhas_invalid[2]] = nova;
+                            num_linhas_invalid[2]++;
+                        }
                     } else {
                         l++;
                     }
@@ -461,9 +575,16 @@ void open_files(char* path){
                         }
                         User nova = create_user(parametros);
                         validate_user(&nova, parametros);
-                        user_array = realloc(user_array, (num_linhas[3]+1)*sizeof(User));
-                        user_array[num_linhas[3]] = nova;
-                        num_linhas[3]++;
+                        if (nova.validation == 1){  //se essa linha for válida os seus parâmetros são armazenados no array de utilizadores válidos
+                            user_array_valid = realloc(user_array_valid, (num_linhas_valid[3]+1)*sizeof(User));
+                            user_array_valid[num_linhas_valid[3]] = nova;
+                            num_linhas_valid[3]++;
+                        }
+                        else{
+                            user_array_invalid = realloc(user_array_invalid, (num_linhas_invalid[3]+1)*sizeof(User));
+                            user_array_invalid[num_linhas_invalid[3]] = nova;
+                            num_linhas_invalid[3]++;
+                        }
                     } else {
                         l++;
                     }
@@ -486,37 +607,35 @@ void create_files() {
     arquivo = fopen("../trabalho-pratico/Resultados/passengers_errors.csv", "w");
     char *passengers_first_line = "flight_id;user_id";
     fprintf(arquivo, "%s\n", passengers_first_line);
-    for (int i = 0; i < num_linhas[0]; i++) {
-        if (passenger_array[i].validation == 0) fprintf(arquivo, "%s;%s\n",passenger_array[i].flight_id, passenger_array[i].user_id);
+    for (int i = 0; i < num_linhas_invalid[0]; i++) {
+        fprintf(arquivo, "%s;%s\n",passenger_array_invalid[i].flight_id, passenger_array_invalid[i].user_id);
     }
     fclose(arquivo);
 
     arquivo = fopen("../trabalho-pratico/Resultados/flights_errors.csv", "w");
     char *flights_first_line = "id;airline;plane_model;total_seats;origin;destination;schedule_departure_date;schedule_arrival_date;real_departure_date;real_arrival_date;pilot;copilot;notes";
     fprintf(arquivo, "%s\n", flights_first_line);
-    for (int i = 0; i < num_linhas[1]; i++) {
-        if (flight_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",flight_array[i].id,flight_array[i].airline,flight_array[i].plane_model,flight_array[i].total_seats,flight_array[i].origin,flight_array[i].destination,flight_array[i].schedule_departure_date,flight_array[i].schedule_arrival_date,flight_array[i].real_departure_date,flight_array[i].real_arrival_date,flight_array[i].pilot,flight_array[i].copilot, flight_array[i].notes);
+    for (int i = 0; i < num_linhas_invalid[1]; i++) {
+        fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",flight_array_invalid[i].id,flight_array_invalid[i].airline,flight_array_invalid[i].plane_model,flight_array_invalid[i].total_seats,flight_array_invalid[i].origin,flight_array_invalid[i].destination,flight_array_invalid[i].schedule_departure_date,flight_array_invalid[i].schedule_arrival_date,flight_array_invalid[i].real_departure_date,flight_array_invalid[i].real_arrival_date,flight_array_invalid[i].pilot,flight_array_invalid[i].copilot, flight_array_invalid[i].notes);
     }
     fclose(arquivo);
     
     arquivo = fopen("../trabalho-pratico/Resultados/reservations_errors.csv", "w");
     char *reservation_first_line = "id;user_id;hotel_id;hotel_name;hotel_stars;city_tax;address;begin_date;end_date;price_per_night;includes_breakfast;room_details;rating;comment";
     fprintf(arquivo, "%s\n", reservation_first_line);
-    for (int i = 0; i < num_linhas[2]; i++) {
-        if (strcmp(reservation_array[i].includes_breakfast, " ") == 0) {
-            if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
+    for (int i = 0; i < num_linhas_invalid[2]; i++) {
+        if (strcmp(reservation_array_invalid[i].includes_breakfast, " ")==0){
+            fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;;%s;%s;%s\n",reservation_array_invalid[i].id,reservation_array_invalid[i].user_id,reservation_array_invalid[i].hotel_id,reservation_array_invalid[i].hotel_name,reservation_array_invalid[i].hotel_stars,reservation_array_invalid[i].city_tax,reservation_array_invalid[i].address,reservation_array_invalid[i].begin_date,reservation_array_invalid[i].end_date,reservation_array_invalid[i].price_per_night,reservation_array_invalid[i].room_details,reservation_array_invalid[i].rating,reservation_array_invalid[i].comment);
         }
-        else {
-            if (reservation_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array[i].id,reservation_array[i].user_id,reservation_array[i].hotel_id,reservation_array[i].hotel_name,reservation_array[i].hotel_stars,reservation_array[i].city_tax,reservation_array[i].address,reservation_array[i].begin_date,reservation_array[i].end_date,reservation_array[i].price_per_night,reservation_array[i].includes_breakfast,reservation_array[i].room_details,reservation_array[i].rating,reservation_array[i].comment);
-        }
+        else fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",reservation_array_invalid[i].id,reservation_array_invalid[i].user_id,reservation_array_invalid[i].hotel_id,reservation_array_invalid[i].hotel_name,reservation_array_invalid[i].hotel_stars,reservation_array_invalid[i].city_tax,reservation_array_invalid[i].address,reservation_array_invalid[i].begin_date,reservation_array_invalid[i].end_date,reservation_array_invalid[i].price_per_night,reservation_array_invalid[i].includes_breakfast,reservation_array_invalid[i].room_details,reservation_array_invalid[i].rating,reservation_array_invalid[i].comment);
     }
     fclose(arquivo);
 
     arquivo = fopen("../trabalho-pratico/Resultados/users_errors.csv", "w");
     char *users_first_line = "id;name;email;phone_number;birth_date;sex;passport;country_code;address;account_creation;pay_method;account_status";
     fprintf(arquivo, "%s\n", users_first_line);
-    for (int i = 0; i < num_linhas[3]; i++) {
-        if (user_array[i].validation == 0) fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array[i].id,user_array[i].name,user_array[i].email,user_array[i].phone_number,user_array[i].birth_date,user_array[i].sex,user_array[i].passport,user_array[i].country_code,user_array[i].address,user_array[i].account_creation,user_array[i].pay_method,user_array[i].account_status);
+    for (int i = 0; i < num_linhas_invalid[3]; i++) {
+        fprintf(arquivo, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",user_array_invalid[i].id,user_array_invalid[i].name,user_array_invalid[i].email,user_array_invalid[i].phone_number,user_array_invalid[i].birth_date,user_array_invalid[i].sex,user_array_invalid[i].passport,user_array_invalid[i].country_code,user_array_invalid[i].address,user_array_invalid[i].account_creation,user_array_invalid[i].pay_method,user_array_invalid[i].account_status);
     }
     fclose(arquivo);
 }
