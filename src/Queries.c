@@ -1,3 +1,4 @@
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -562,7 +563,7 @@ void query3(char *line, int i, int n) {
         free(filename);
         return;
     }
-
+ 
     int index_line = i;
     for (; line[index_line]== ' ' || line[index_line] == '"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
@@ -599,8 +600,8 @@ void query3(char *line, int i, int n) {
 
 void query6 (char *line, int i, int n) {
     int flag, index_pXa, index;
-    char *date_t = malloc(5);
-    char* origin = malloc(4);
+    char *date_t = (char*)malloc(5 * sizeof(char));
+    char* origin = (char*)malloc(4 * sizeof(char));
     
     if (i == 2) flag = 1;
     else flag = 0;
@@ -665,16 +666,6 @@ void query6 (char *line, int i, int n) {
             }
         }
     }
-    
-    //for (index_pXa = 0; index_pXa < num_linhas_contador; index_pXa++) {
-    //    printf("%s;%d\n", contador_array[index_pXa].id_flight, contador_array[index_pXa].contador);
-    //}
-    //printf("%d\n", num_linhas_PassengersXairport);
-    /*for (index_pXa = 0; index_pXa < num_linhas_PassengersXairport; index_pXa++) {
-        printf("%s;%d\n", passengersXairport_array[index_pXa].origin, passengersXairport_array[index_pXa].passengers);
-    }*/
-
-    //printf("\n");
 
     for (index_pXa = 0; index_pXa < num_linhas_PassengersXairport; index_pXa++) {
         for (int index_pXa_prox = index_pXa + 1; index_pXa_prox < num_linhas_PassengersXairport; index_pXa_prox++) {
@@ -737,16 +728,13 @@ void query9 (char *line, int i, int n) {
         return;
     }
 
-    if (line[i] == ' ') ind = i + 2;
+    if (line[i+1] == '"') ind = i + 2;
     else ind = i + 1;
 
     temp = ind;
 
-    for (int l_line = strlen(line); line[ind] != '\0' && ind < l_line; ind++, l_name++) {
-        if ('1' <= line[ind] && line[ind] <= '9') {
-            //printf("\n");
-            return; // No es un dígito ni un espacio, rompe el bucle
-        }
+    for (int l_line = strlen(line); line[ind] != '\0' && line[ind]!='"' && line[ind]!='\n' && ind < l_line; ind++, l_name++) {
+        if ('0' <= line[ind] && line[ind] <= '9') return; // No es un dígito ni un espacio, rompe el bucle
     }
 
     char *name = malloc(l_name + 1); //free
@@ -755,35 +743,35 @@ void query9 (char *line, int i, int n) {
         name[temp] = line[ind];
     }
     name[temp] = '\0';
-    //printf("%s\n", name);
 
+    char *status_cpy = NULL;
     int num_linhas_idXname = 0;
     idXname *idXname_array = NULL;
     for (int k = 0; k < num_linhas_valid[3]; k++) {
-            char *status_cpy = strdup(user_array_valid[k].account_status); //free
-            toLowerCase (status_cpy);
-            if (strcmp(status_cpy,"active") == 0) {
-                free(status_cpy);
-                for (ind = 0; name[ind] == user_array_valid[k].name[ind] && ind < l_name; ind++);
-                if (ind == l_name) {
-                    idXname novo = create_IdXname (user_array_valid[k].id, user_array_valid[k].name);
-                    idXname_array = realloc(idXname_array, (num_linhas_idXname + 1) * sizeof(idXname));
-                    idXname_array[num_linhas_idXname] = novo;
-                    num_linhas_idXname++;
-                }
+        free(status_cpy);
+        status_cpy = strdup(user_array_valid[k].account_status);
+        toLowerCase (status_cpy);
+        if (strcmp(status_cpy,"active") == 0) {
+            for (ind = 0; name[ind] == user_array_valid[k].name[ind]; ind++);
+            if (name[ind] == '\0') {
+                idXname novo = create_IdXname (user_array_valid[k].id, user_array_valid[k].name);
+                idXname_array = realloc(idXname_array, (num_linhas_idXname + 1) * sizeof(idXname));
+                idXname_array[num_linhas_idXname] = novo;
+                num_linhas_idXname++;
             }
+        }
     }
 
     for(int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
         for (int index_idXn_prox = index_idXn + 1; index_idXn_prox < num_linhas_idXname; index_idXn_prox++) {
-            if (strcasecmp(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) > 0) { //comparar ignorando maiusculas e minusculas
+            if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) > 0) { //comparar ignorando maiusculas e minusculas
                 // Uso da função para trocar strings
                 swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
                 swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
             }
             else
-                if (strcasecmp(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) == 0) { //comparar ignorando maiusculas e minusculas
-                    if (strcasecmp(idXname_array[index_idXn].id,idXname_array[index_idXn_prox].id) > 0) { //comparar ignorando maiusculas e minusculas
+                if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) == 0) { //comparar ignorando maiusculas e minusculas
+                    if (strcoll(idXname_array[index_idXn].id,idXname_array[index_idXn_prox].id) > 0) { //comparar ignorando maiusculas e minusculas
                         // Uso da função para trocar strings
                         swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
                         swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
@@ -810,6 +798,7 @@ void query9 (char *line, int i, int n) {
     fclose(output);
     free(filename);
     free(name);
+    free(status_cpy);
 }
 
 void identify_query(char* path){

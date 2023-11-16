@@ -5,6 +5,7 @@
 #ifndef QUERIES_H
 #define QUERIES_H
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
