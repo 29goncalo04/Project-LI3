@@ -71,6 +71,12 @@ void toLowerCase(char *str) {
     }
 }
 
+void toUpperCase(char *str) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        str[i] = toupper(str[i]);
+    }
+}
+
 int verify_breakfast(char *breakfast){
     int result;
     if (breakfast[0] != ' ') toLowerCase(breakfast);

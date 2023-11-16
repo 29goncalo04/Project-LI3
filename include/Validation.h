@@ -23,6 +23,9 @@ int verify_airport (char *airport);
 
 void toLowerCase(char *str);
      //    |->função que passa uma string para caracteres em minuscula
+     
+void toUpperCase(char *str);
+     //    |->função que passa uma string para caracteres em maiuscula
 
 int verify_breakfast(char *breakfast);
     //    |->função que verifica se o breakfast está incluido (1) ou não (0) ou é inválido (2) 

@@ -94,6 +94,16 @@ typedef struct{     //struct com os pârametros da reserva de um passageiro
     char *begin_date;
     char *type;
 } Reservation_aux;
+
+typedef struct {       //struct com os dados para a Query6
+    char *origin;
+    int passengers;
+} PassengersXairport;
+
+typedef struct {       //struct com os dados para a Query9
+    char *id;
+    char *name;
+} idXname;
  
 
 

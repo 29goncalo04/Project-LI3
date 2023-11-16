@@ -51,6 +51,20 @@ int number_of_flights(char *user){
     return flights;
 }
 
+// Troca o conteudo de dois ints
+void swap_contador(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Troca o conteúdo de duas strings
+void swapStrings(char **str1, char **str2) {
+    char *temp = *str1;
+    *str1 = *str2;
+    *str2 = temp;
+}
+
 void free_flight_id_passenger(Flight_id_passenger *flight_id_passenger_array, int num_flights_passenger_id){
     for (int i = 0; i<num_flights_passenger_id; i++){
         free(flight_id_passenger_array[i].flight_id);
@@ -76,6 +90,22 @@ void free_reservation_aux(Reservation_aux *reservation_aux_array, int num_reserv
     free(reservation_aux_array);
 }
 
+void free_PassengersXairport(PassengersXairport *passengersXairport_array, int num_linhas_PassengersXairport) {
+    for (int i = 0; i < num_linhas_PassengersXairport; i++) {                         
+        free(passengersXairport_array[i].origin);
+    }
+    free(passengersXairport_array);
+}
+
+void free_idXname(idXname *idXname_array, int num_linhas_idXname) {
+    for (int i = 0; i < num_linhas_idXname; i++){
+        free(idXname_array[i].id);
+        free(idXname_array[i].name);
+
+    }
+    free(idXname_array);
+}
+
 Flight_id_passenger create_flight_id(char *flight_id){     
     Flight_id_passenger novo;                                          
     novo.flight_id = strdup(flight_id);
@@ -97,6 +127,20 @@ Reservation_aux create_reservation_aux(char *reservation_id, char *begin_date, i
     novo.begin_date = strdup(begin_date);
     if(exists_argument2==1) novo.type = strdup("");
     else novo.type = strdup (";reservation");
+    return novo;
+}
+
+PassengersXairport create_PassengersXairport(char* origin, int passengers){     
+    PassengersXairport novo;                                          
+    novo.origin = strdup(origin);
+    novo.passengers = passengers;
+    return novo;
+}
+
+idXname create_IdXname(char* id, char* name){     
+    idXname novo;                                          
+    novo.id = strdup(id);
+    novo.name = strdup(name);
     return novo;
 }
 
@@ -553,6 +597,221 @@ void query3(char *line, int i, int n) {
     free(filename);
 }
 
+void query6 (char *line, int i, int n) {
+    int flag, index_pXa, index;
+    char *date_t = malloc(5);
+    char* origin = malloc(4);
+    
+    if (i == 2) flag = 1;
+    else flag = 0;
+
+    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
+    if (n>=10 && n<100) filename_size++;
+    else if (n>=100) filename_size++;
+    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
+    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
+    output = fopen(filename, "w");
+
+    if (output == NULL) {
+        fprintf(stderr, "Error opening file: %s\n", filename);
+        free(filename);
+        return;
+    }
+    
+    //int date = atoi(&line[2]);
+    int top = atoi(&line[7]);
+    
+    int index_line = i; // _2023 5
+    for (; line[index_line] == ' '; index_line++);
+    int l_date = 0, j;
+    for (j = index_line; line[j] != ' '; j++, l_date++);  //conta o tamanho do argumento
+    char date[l_date];
+    for (int k = 0, j = index_line; k < l_date; k++, j++) date[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
+    date[l_date] = '\0';
+
+    int num_linhas_PassengersXairport = 0;
+    PassengersXairport *passengersXairport_array = NULL;
+    for (int k = 0; k < num_linhas_valid[1]; k++) {
+        if (flight_array_valid[k].validation == 1) {
+            for (index = 0; index < 4; index++) {
+                date_t[index] = flight_array_valid[k].schedule_departure_date[index];
+            }
+            date_t[index] = '\0';
+            //int date_t = atoi(&flight_array[k].schedule_departure_date[0]);
+            if (strcmp(date_t, date) == 0) {
+                //printf("%s ", flight_array[k].origin);
+                strcpy(origin, flight_array_valid[k].origin);
+                toUpperCase(origin);
+                for (int pos = 0; pos < num_linhas_contador; pos++) {
+                    if (strcmp(contador_array[pos].id_flight, flight_array_valid[k].id) == 0) {
+                        int ind;
+                        //printf("%s %d\n", contador_array[pos].id_flight, contador_array[pos].contador);
+                        for (ind = 0; ind < num_linhas_PassengersXairport; ind++) {
+                            if (strcmp(origin,passengersXairport_array[ind].origin) == 0) {
+                                passengersXairport_array[ind].passengers += contador_array[pos].contador;
+                                //printf("%d\n",2);
+                                break;
+                            }
+                        }
+                        if (ind == num_linhas_PassengersXairport) {
+                            //printf("%d\n",3);
+                            PassengersXairport novo = create_PassengersXairport (origin, contador_array[pos].contador);
+                            passengersXairport_array = realloc(passengersXairport_array, (num_linhas_PassengersXairport + 1) * sizeof(PassengersXairport));
+                            passengersXairport_array[num_linhas_PassengersXairport] = novo;
+                            num_linhas_PassengersXairport++; 
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    //for (index_pXa = 0; index_pXa < num_linhas_contador; index_pXa++) {
+    //    printf("%s;%d\n", contador_array[index_pXa].id_flight, contador_array[index_pXa].contador);
+    //}
+    //printf("%d\n", num_linhas_PassengersXairport);
+    /*for (index_pXa = 0; index_pXa < num_linhas_PassengersXairport; index_pXa++) {
+        printf("%s;%d\n", passengersXairport_array[index_pXa].origin, passengersXairport_array[index_pXa].passengers);
+    }*/
+
+    //printf("\n");
+
+    for (index_pXa = 0; index_pXa < num_linhas_PassengersXairport; index_pXa++) {
+        for (int index_pXa_prox = index_pXa + 1; index_pXa_prox < num_linhas_PassengersXairport; index_pXa_prox++) {
+            if (passengersXairport_array[index_pXa].passengers < passengersXairport_array[index_pXa_prox].passengers) {
+                // Uso da função para trocar ints
+                swap_contador(&passengersXairport_array[index_pXa].passengers, &passengersXairport_array[index_pXa_prox].passengers);
+                // Uso da função para trocar strings
+                swapStrings(&passengersXairport_array[index_pXa].origin, &passengersXairport_array[index_pXa_prox].origin);
+            }
+            else
+                if (passengersXairport_array[index_pXa].passengers == passengersXairport_array[index_pXa_prox].passengers) {
+                    if (strcmp(passengersXairport_array[index_pXa].origin, passengersXairport_array[index_pXa_prox].origin) < 0) {
+                         // Uso da função para trocar ints
+                        swap_contador(&passengersXairport_array[index_pXa].passengers, &passengersXairport_array[index_pXa_prox].passengers);
+                        // Uso da função para trocar strings
+                        swapStrings(&passengersXairport_array[index_pXa].origin, &passengersXairport_array[index_pXa_prox].origin);
+                    }
+                }
+            
+        }
+    }
+    
+    if (flag == 0)   //3
+        for (index_pXa = 0; index_pXa < top; index_pXa++) {
+            fprintf(output, "%s;%d\n", passengersXairport_array[index_pXa].origin, passengersXairport_array[index_pXa].passengers);
+        }
+    
+    else {          //3F
+        for (index_pXa = 0; index_pXa < top; index_pXa++) {
+            fprintf(output, "--- %d ---\n",index_pXa+1);
+            fprintf(output, "name: %s\n", passengersXairport_array[index_pXa].origin);
+            fprintf(output, "passengers: %d\n", passengersXairport_array[index_pXa].passengers);
+            if (index_pXa+1 != top) fprintf(output, "\n");
+        }
+    }
+    
+    free_PassengersXairport(passengersXairport_array, num_linhas_PassengersXairport);
+    free(origin);
+    fclose(output);
+    free(filename);
+    free(date_t);
+}
+
+void query9 (char *line, int i, int n) {
+    int flag, ind, l_name = 0, temp;
+    
+    if (i == 2) flag = 1;
+    else flag = 0;
+
+    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
+    if (n>=10 && n<100) filename_size++;
+    else if (n>=100) filename_size++;
+    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
+    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
+    output = fopen(filename, "w");
+
+    if (output == NULL) {
+        fprintf(stderr, "Error opening file: %s\n", filename);
+        free(filename);
+        return;
+    }
+
+    if (line[i] == ' ') ind = i + 2;
+    else ind = i + 1;
+
+    temp = ind;
+
+    for (int l_line = strlen(line); line[ind] != '\0' && ind < l_line; ind++, l_name++) {
+        if ('1' <= line[ind] && line[ind] <= '9') {
+            //printf("\n");
+            return; // No es un dígito ni un espacio, rompe el bucle
+        }
+    }
+
+    char *name = malloc(l_name + 1); //free
+    ind = temp;
+    for (temp = 0; temp < l_name; temp++, ind++) {
+        name[temp] = line[ind];
+    }
+    name[temp] = '\0';
+    //printf("%s\n", name);
+
+    int num_linhas_idXname = 0;
+    idXname *idXname_array = NULL;
+    for (int k = 0; k < num_linhas_valid[3]; k++) {
+            char *status_cpy = strdup(user_array_valid[k].account_status); //free
+            toLowerCase (status_cpy);
+            if (strcmp(status_cpy,"active") == 0) {
+                free(status_cpy);
+                for (ind = 0; name[ind] == user_array_valid[k].name[ind] && ind < l_name; ind++);
+                if (ind == l_name) {
+                    idXname novo = create_IdXname (user_array_valid[k].id, user_array_valid[k].name);
+                    idXname_array = realloc(idXname_array, (num_linhas_idXname + 1) * sizeof(idXname));
+                    idXname_array[num_linhas_idXname] = novo;
+                    num_linhas_idXname++;
+                }
+            }
+    }
+
+    for(int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
+        for (int index_idXn_prox = index_idXn + 1; index_idXn_prox < num_linhas_idXname; index_idXn_prox++) {
+            if (strcasecmp(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) > 0) { //comparar ignorando maiusculas e minusculas
+                // Uso da função para trocar strings
+                swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
+                swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
+            }
+            else
+                if (strcasecmp(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) == 0) { //comparar ignorando maiusculas e minusculas
+                    if (strcasecmp(idXname_array[index_idXn].id,idXname_array[index_idXn_prox].id) > 0) { //comparar ignorando maiusculas e minusculas
+                        // Uso da função para trocar strings
+                        swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
+                        swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
+                    }
+                }  
+        }
+    }  
+
+    if (flag == 0)   //9
+        for (int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
+            fprintf(output, "%s;%s\n", idXname_array[index_idXn].id, idXname_array[index_idXn].name);
+        }
+    
+    else {          //9F
+        for (int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
+            fprintf(output, "--- %d ---\n",index_idXn+1);
+            fprintf(output, "id: %s\n", idXname_array[index_idXn].id);
+            fprintf(output, "name: %s\n", idXname_array[index_idXn].name);
+            if (index_idXn+1 != num_linhas_idXname) fprintf(output, "\n");
+        }
+    }
+
+    free_idXname(idXname_array, num_linhas_idXname);
+    fclose(output);
+    free(filename);
+    free(name);
+}
+
 void identify_query(char* path){
     char *line = NULL;
     size_t len = 0;
@@ -588,7 +847,7 @@ void identify_query(char* path){
 
                     break;
                     case '6':  //6 ou 6F
-
+                        query6(line, i, n);
                     break;
                     case '7':  //7 ou 7F
 
@@ -597,7 +856,7 @@ void identify_query(char* path){
 
                     break;
                     case '9':  //9 ou 9F
-
+                        query9(line, i, n);
                     break;
                 }
             }

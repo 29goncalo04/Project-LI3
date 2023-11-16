@@ -11,6 +11,12 @@
 
 #include "../include/Data_Types_&_Data_Structures.h"
 
+extern int num_linhas_PassengersXairport;
+extern PassengersXairport *passengersXairport_array;
+
+void swap_contador(int *a, int *b);
+void swapStrings(char **str1, char **str2);
+
 int delay(char *schedule, char *real);
     //     |->função responsável por calcular a diferença de segundos entre
     //        a hora estimada de partida e a hora real de partida do voo
@@ -28,6 +34,8 @@ int age_user(char *birth_date);
 int number_of_flights(char *user);
     //     |->função responsável por calcular o número de voos
     //        em que um utilizador andou 
+    
+ 
 
 void free_flight_id_passenger(Flight_id_passenger *flight_id_passenger_array, int num_flights_passenger_id);
     //     |->função responsável por fazer free do array com os id's dos 
@@ -41,6 +49,14 @@ void free_reservation_aux(Reservation_aux *reservation_aux_array, int num_reserv
     //     |->função responsável por fazer free do array com os parâmetros das 
     //        reservas que um utilizador fez
 
+void free_PassengersXairport(PassengersXairport *passengersXairport_array, int num_linhas_PassengersXairport);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de passengersXairport, e libera elemento a elemento
+    
+void free_idXname(idXname *idXname_array, int num_linhas_idXname);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de ideXname, e libera elemento a elemento
+
 Flight_id_passenger create_flight_id(char *flight_id);
     //     |->função que cria um elemento individual do array de id's de voos
     //        de um passageiro
@@ -50,6 +66,10 @@ Flight_aux create_flight_aux(char *flight_id, char *schedule_departure_date, int
 
 Reservation_aux create_reservation_aux(char *reservation_id, char *begin_date, int exists_argument2);
     //     |->função que cria um elemento individual do array de reservas de um utilizador
+
+PassengersXairport create_PassengersXairport(char* origin, int passengers);
+    //     |->função que cria um elemento individual do array de passengersXairport
+    //        que guarda o origin e o número de passageiros num determinado voo
 
 void identify_query(char* path);
     //     |->função responsável por identificar
@@ -74,6 +94,14 @@ void query2(char *line, int i, int n);
 void query3(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 3
+
+void query6(char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 6
+
+void query9(char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 9
 
 
 
