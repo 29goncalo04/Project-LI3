@@ -119,23 +119,6 @@ void insertionSort_flights(Flight_aux *flight_aux_array, int size){
     }
 }
 
-void insertionSort_reservations(Reservation_aux *reservation_aux_array, int size) {
-    for (int i = 1; i < size; i++) {
-        Reservation_aux key = reservation_aux_array[i];
-        int j = i - 1;
-        
-        // Enquanto a data for menor e não chegarmos ao início do array
-        while (j >= 0 && compare_date_time(reservation_aux_array[j].begin_date, key.begin_date) == 1) {
-            reservation_aux_array[j + 1] = reservation_aux_array[j];
-            j--;
-        }
-
-        // Insira a reserva na posição correta
-        reservation_aux_array[j + 1] = key;
-    }
-}
-
-
 void query1(char *line, int i, int n){
     int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1;
     char *breakfast;
@@ -382,28 +365,29 @@ void query2(char *line, int i, int n){
                     }
                 }
                 if (strcmp(argument2, "flights")!=0){    //só lista as reservas que um utilizador fez caso o segundo argumento não exista ou seja diferente de "flights"
-                    //printf("reservation\n");
                     for (int i = 0; i<num_linhas_valid[2]; i++){   //procura o id desse utilizador no array das reservas para saber qual a sua reserva
                         if (strcmp(argument1, reservation_array_valid[i].user_id)==0){   //se econtrar o id do utilizador no ficheiro das reservas válidas
-                            //printf("%s\n", reservation_array_valid[i].id);
                             Reservation_aux novo;
-                            if (exists_argument2==0) novo = create_reservation_aux(reservation_array_valid[i].id, reservation_array_valid[i].begin_date, 0);
+                            if (exists_argument2 == 0) novo = create_reservation_aux(reservation_array_valid[i].id, reservation_array_valid[i].begin_date, 0);
                             else novo = create_reservation_aux(reservation_array_valid[i].id, reservation_array_valid[i].begin_date, 1);
-                            reservation_aux_array = realloc(reservation_aux_array, (num_reservations+1)*sizeof(Reservation_aux));
-                            reservation_aux_array[num_reservations] = novo;
-                            num_reservations++; 
+                            int j = num_reservations - 1;
+                            reservation_aux_array = realloc(reservation_aux_array, (num_reservations + 1) * sizeof(Reservation_aux));
+                            while (j >= 0 && compare_date_time(reservation_aux_array[j].begin_date, novo.begin_date) == 1) {
+                                reservation_aux_array[j + 1] = reservation_aux_array[j];
+                                j--;
+                            }
+                            reservation_aux_array[j + 1] = novo;
+                            num_reservations++;
                         }
                     }
                 }  
                 if (index_line==2){ //2
-                    insertionSort_reservations(reservation_aux_array, num_reservations);
                     if (strcmp(argument2, "flights")==0){  //só lista os voos
                         for (int i = 0; i<num_flights_passenger_id; i++){
                             fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
                         }
                     }
                     else if(strcmp(argument2, "reservations")==0){  //só lista as reservas
-                        //    printf("%d\n", num_reservations);
                             for (int i = 0; i<num_reservations; i++){
                                 fprintf(output, "%s;%s%s\n", reservation_aux_array[i].reservation_id, reservation_aux_array[i].begin_date, reservation_aux_array[i].type);
                             }

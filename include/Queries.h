@@ -63,10 +63,6 @@ void insertionSort_flights(Flight_aux *flight_aux_array, int size);
     //     |->função responsável por ordenar o array que tem as informações 
     //        de voo em que um passageiro voou
 
-void insertionSort_reservations(Reservation_aux *reseration_aux_array, int size);
-    //     |->função responsável por ordenar o array que tem as informações 
-    //        da reserva que o utilizador fez
-
 void query1(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 1
