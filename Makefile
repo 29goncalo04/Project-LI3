@@ -14,8 +14,8 @@ compile: run
 	./programa-principal
 
 
-valgrind: run
-	valgrind --leak-check=full ./programa-principal
+valgrind: ./programa-principal
+	valgrind --leak-check=full --show-leak-kinds=all ./programa-principal dataset/data/ dataset/input.txt
 
 
 objetos:

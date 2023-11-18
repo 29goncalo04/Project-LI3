@@ -34,7 +34,18 @@ int age_user(char *birth_date);
 
 int number_of_flights(char *user);
     //     |->função responsável por calcular o número de voos
-    //        em que um utilizador andou 
+    //        em que um utilizador andou
+
+int compare_hotels (const void *a, const void *b);
+    //     |->função responsável por comparar dois elementos do array das reservas
+    //        para o ordenar por data de início (ou id, caso a data seja igual)
+
+int is_date_between (char *date, char *i, char *f);
+    //     |->função que verifica se uma data (date) está entre duas outras datas (i e f)
+
+int compare_flights (const void *a, const void *b);
+    //     |->função responsável por comparar dois elementos do array dos voos
+    //        para o ordenar por data de partida (ou id, caso a data seja igual)
     
  
 
@@ -58,6 +69,14 @@ void free_idXname(idXname *idXname_array, int num_linhas_idXname);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de ideXname, e libera elemento a elemento
 
+void free_hotel_aux(hotel_aux *hotel_aux_array, int num_hotels);
+    //     |->função responsável por fazer free do array com os parâmetros das 
+    //        reservas de um dado hotel
+
+void free_flight_date_aux (flight_date_aux *flight_date_aux_array, int num_flights);
+    //     |->função responsável por fazer free do array com os parâmetros dos 
+    //        voos com origem num dado aeroporto
+
 Flight_id_passenger create_flight_id(char *flight_id);
     //     |->função que cria um elemento individual do array de id's de voos
     //        de um passageiro
@@ -72,9 +91,15 @@ PassengersXairport create_PassengersXairport(char* origin, int passengers);
     //     |->função que cria um elemento individual do array de passengersXairport
     //        que guarda o origin e o número de passageiros num determinado voo
 
+hotel_aux create_hotel_aux (char *id, char *begin_date, char *end_date, char *user_id, char *rating, double total_price);
+    //     |->função que cria um elemento individual do array das reservas de um hotel
+
+flight_date_aux create_flight_date_aux (char *id, char *schedule_departure_date, char *destination, char *airline, char *plane_model);
+    //     |->função que cria um elemento individual do array dos voos com origem num dado aeroporto
+
 void identify_query(char* path);
     //     |->função responsável por identificar
-    //        o id da querie que o comando chama
+    //        o id da query que o comando chama
 
 char *only_date(char *schedule_departure_date);
     //     |->função responsável por retornar apenas a data após ler a data 
@@ -95,6 +120,14 @@ void query2(char *line, int i, int n);
 void query3(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 3
+
+//void query4(char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 4
+
+//void query5 (char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 5
 
 void query6(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre

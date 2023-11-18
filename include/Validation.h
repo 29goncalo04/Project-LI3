@@ -23,7 +23,7 @@ int verify_airport (char *airport);
 
 void toLowerCase(char *str);
      //    |->função que passa uma string para caracteres em minuscula
-     
+
 void toUpperCase(char *str);
      //    |->função que passa uma string para caracteres em maiuscula
 

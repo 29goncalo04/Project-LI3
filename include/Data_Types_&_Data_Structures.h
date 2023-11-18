@@ -104,7 +104,24 @@ typedef struct {       //struct com os dados para a Query9
     char *id;
     char *name;
 } idXname;
- 
 
+typedef struct {     //struct com os pârametros da reserva de um hotel para a Query4
+    char *id;
+    char *begin_date;
+    char *end_date;
+    char *user_id;
+    char *rating;
+    double total_price;
+} hotel_aux;
+
+typedef struct {     // struct com os parâmetros dos voos entre duas datas para a Query5
+    char *id;
+    char *schedule_departure_date;
+    char *destination;
+    char *airline;
+    char *plane_model;
+} flight_date_aux;
+
+ 
 
 #endif 
