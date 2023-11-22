@@ -13,6 +13,7 @@
 extern int num_linhas_valid[4];
 extern int num_linhas_invalid[4];
 extern int num_linhas_contador;
+extern int num_Atrasos;
 extern Flight *flight_array_valid;
 extern Flight *flight_array_invalid;
 extern Passenger *passenger_array_valid;
@@ -23,7 +24,10 @@ extern User *user_array_valid;
 extern User *user_array_invalid;
 extern FILE *arquivo;
 extern Contador_id *contador_array;
+extern Atrasos *Atrasos_array;
 
+void insertionSort_atrasos(int *atrasos, int num_atrasos);
+    //     |->função que ordena o array de atrasos de um aeroporto
 
 void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
@@ -61,6 +65,10 @@ void free_contador(Contador_id *contador_array, int num_linhas_contador);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de contador de passageiros num voo, e libera elemento a elemento
 
+void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos);
+    //     |->função que libera a memória que foi alocada para criar cada
+    //        elemento do array de atrasos, e libera elemento a elemento
+
 Flight create_flight(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de voos
     //        com todos os respetivos parâmetros, e a função "strdup" 
@@ -84,6 +92,14 @@ User create_user(char parametros[][FIELD_SIZE]);
 Contador_id create_contador(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de contadores
     //        que guarda o número de passageiros num determinado voo
+
+Atrasos create_atrasos (char *airport, int atraso);
+    //     |->função que cria um elemento individual do array de atrasos
+    //        que guarda os atrasos respetivos de cada aeroporto
+
+void adicionar_atrasos(Atrasos *atrasos, int novo_atraso);
+    //     |->função que insere o atraso de um voo na respetiva posição do array de atrasos que contém
+    //        o nome desse aeroporto e os respetivos atrasos de voos com origem nesse aeroporto
 
 void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation);
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de passageiros, e caso algum elemento seja inválido

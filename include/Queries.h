@@ -46,8 +46,6 @@ int is_date_between (char *date, char *i, char *f);
 int compare_flights (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array dos voos
     //        para o ordenar por data de partida (ou id, caso a data seja igual)
-    
- 
 
 void free_flight_id_passenger(Flight_id_passenger *flight_id_passenger_array, int num_flights_passenger_id);
     //     |->função responsável por fazer free do array com os id's dos 
@@ -77,6 +75,9 @@ void free_flight_date_aux (flight_date_aux *flight_date_aux_array, int num_fligh
     //     |->função responsável por fazer free do array com os parâmetros dos 
     //        voos com origem num dado aeroporto
 
+void free_Mediana(Mediana *mediana_array, int num_medianas);
+    //     |->função responsável por fazer free do array com as medianas de todos os aeroportos 
+
 Flight_id_passenger create_flight_id(char *flight_id);
     //     |->função que cria um elemento individual do array de id's de voos
     //        de um passageiro
@@ -101,6 +102,9 @@ void identify_query(char* path);
     //     |->função responsável por identificar
     //        o id da query que o comando chama
 
+Mediana create_mediana (char *airport, int mediana);
+    //     |->função que cria um elemento individual do array de medianas dos aeroportos
+
 char *only_date(char *schedule_departure_date);
     //     |->função responsável por retornar apenas a data após ler a data 
     //        prevista de partida que inicialmente também contém as horas
@@ -108,6 +112,13 @@ char *only_date(char *schedule_departure_date);
 void insertionSort_flights(Flight_aux *flight_aux_array, int size);
     //     |->função responsável por ordenar o array que tem as informações 
     //        de voo em que um passageiro voou
+
+void insertionSort_medianas(Mediana *mediana_array, int num_medianas);
+    //     |->função responsável por ordenar o array que tem as medianas 
+    //        dos vários aeroportos
+
+int calculate_mediana(int *atrasos, int num_atrasos);
+    //     |->função responsável por calcular a mediana de um aeroporto 
 
 void query1(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
@@ -121,17 +132,21 @@ void query3(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 3
 
-//void query4(char *line, int i, int n);
+void query4(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 4
 
-//void query5 (char *line, int i, int n);
+void query5 (char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 5
 
 void query6(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 6
+
+void query7(char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 7
 
 void query9(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre

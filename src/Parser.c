@@ -5,9 +5,11 @@
 #include "../include/Data_Types_&_Data_Structures.h"
 #include "../include/Parser.h"
 #include "../include/Validation.h"
+#include "../include/Queries.h"
+
 
 int num_linhas_valid[4] = {0}, num_linhas_invalid[4] = {0};
-int num_linhas_contador = 0;
+int num_linhas_contador = 0, num_Atrasos = 0;
 Flight *flight_array_valid = NULL;                          //inicialização de cada array
 Flight *flight_array_invalid = NULL;
 Passenger *passenger_array_valid = NULL;
@@ -22,6 +24,19 @@ FILE *fusers;
 FILE *fflights;
 FILE *arquivo;
 Contador_id *contador_array = NULL;
+Atrasos *Atrasos_array = NULL;
+
+void insertionSort_atrasos(int *atrasos, int num_atrasos){
+    for (int i = 1; i < num_atrasos; i++) {
+        int key = atrasos[i];
+        int j = i - 1;
+        while (j >= 0 && atrasos[j]>key){
+            atrasos[j + 1] = atrasos[j];
+            j--;
+        }  
+        atrasos[j + 1] = key;
+    }
+}
 
 void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid) {      
     for (int i = 0; i < num_linhas_valid; i++) {                             
@@ -163,6 +178,14 @@ void free_contador(Contador_id *contador_array, int num_linhas_contador) {
     free(contador_array);
 }
 
+void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos){
+    for (int i = 0; i<num_Atrasos; i++){
+        free(Atrasos_array[i].airport);
+        free(Atrasos_array[i].atraso);
+    }
+    free(Atrasos_array);
+}
+
 
 Flight create_flight(char parametros[][FIELD_SIZE]) {           
     Flight nova;                                              
@@ -241,6 +264,21 @@ Contador_id create_contador(char parametros[][FIELD_SIZE]){
     return novo;
 }
 
+Atrasos create_atrasos (char *airport, int atraso){
+    Atrasos novo;
+    novo.airport = strdup(airport);
+    novo.atraso = malloc(sizeof(int));
+    novo.atraso[0] = atraso;
+    novo.num_atrasos = 1;
+    return novo;
+}
+
+void adicionar_atrasos(Atrasos *atrasos, int novo_atraso){
+    atrasos->atraso = realloc(atrasos->atraso, (atrasos->num_atrasos + 1) * sizeof(int));
+    atrasos->atraso[atrasos->num_atrasos] = novo_atraso;
+    atrasos->num_atrasos++; 
+}
+
 void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation){
     int wanted_flight_id_validation = 1, wanted_user_id_validation = 1;
     if (flight_validation==0){
@@ -317,6 +355,7 @@ void free_all(){
     free_reservation_invalid(reservation_array_invalid, num_linhas_invalid[2]); 
     free_user_invalid(user_array_invalid, num_linhas_invalid[3]); 
     free_contador(contador_array, num_linhas_contador);
+    free_Atrasos(Atrasos_array, num_Atrasos);
 }
 
 
@@ -483,6 +522,30 @@ void open_files(char* path){
                         Flight nova = create_flight(parametros);    //é criado um novo elemento do array com os parâmetros lidos
                         validate_flight(&nova, parametros, contador_array, num_linhas_contador);
                         if (nova.validation == 1){    //se essa linha for válida os seus parâmetros são armazenados no array de voos válidos
+                            char *Airport = nova.origin;
+                            toUpperCase(Airport);
+                            int found = 0;   //variável auxiliar para dizer se o aeroporto foi encontrado ou não
+                            if (num_linhas_valid[1] == 0){   //se for a primeira linha a ser lida
+                                Atrasos novo = create_atrasos(Airport, delay(parametros[6], parametros[8]));
+                                Atrasos_array = realloc(Atrasos_array, (num_Atrasos + 1) * sizeof(Atrasos));
+                                Atrasos_array[num_Atrasos] = novo;
+                                num_Atrasos++; 
+                            }
+                            else{
+                                for (int i = 0; i<num_Atrasos; i++){
+                                    if (strcmp(Airport, Atrasos_array[i].airport) == 0){    //caso esse aeoroporto lido já esteja no array de atrasos então é só inserir o respetivo atraso no aeroporto correspondente
+                                        adicionar_atrasos(&Atrasos_array[i], delay(parametros[6], parametros[8]));
+                                        found = 1;
+                                        break;
+                                    }
+                                }
+                                if (found==0){   //não encontrou o aeroporto no array de atrasos
+                                    Atrasos novo = create_atrasos(Airport, delay(parametros[6], parametros[8]));
+                                    Atrasos_array = realloc(Atrasos_array, (num_Atrasos + 1) * sizeof(Atrasos));
+                                    Atrasos_array[num_Atrasos] = novo;
+                                    num_Atrasos++;  
+                                }
+                            }
                             flight_array_valid = realloc(flight_array_valid, (num_linhas_valid[1]+1)*sizeof(Flight));   
                             flight_array_valid[num_linhas_valid[1]] = nova;        //esse novo elemento é adicionado ao array de válidos
                             num_linhas_valid[1]++;
@@ -497,7 +560,9 @@ void open_files(char* path){
                         l++;
                     }
                 }
-    
+                for (int i = 0; i<num_Atrasos; i++){
+                    insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
+                }
                 fclose(fflights);
                 break;
 

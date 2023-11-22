@@ -122,6 +122,17 @@ typedef struct {     // struct com os parâmetros dos voos entre duas datas para
     char *plane_model;
 } flight_date_aux;
 
+typedef struct{  //struct com os aeroportos e os respetivos atrasos dos voos com origem nesse aeroporto
+    char *airport;
+    int *atraso;
+    int num_atrasos;
+} Atrasos;
+
+typedef struct{
+    char *airport;
+    int mediana;
+} Mediana;
+
  
 
 #endif 

@@ -9,6 +9,7 @@
 
 
 int main(int argc, char* argv[]) {
+    if (argc < 3) perror("Error\n");
     setlocale(LC_COLLATE, "en_US.UTF-8");
     open_files(argv[1]);
     create_files(argv[1]);

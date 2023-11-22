@@ -162,6 +162,13 @@ void free_flight_date_aux (flight_date_aux *flight_date_aux_array, int num_fligh
     free (flight_date_aux_array);
 }
 
+void free_Mediana(Mediana *mediana_array, int num_medianas){
+    for (int i = 0; i<num_medianas; i++){
+        free(mediana_array[i].airport);
+    }
+    free(mediana_array);
+}
+
 Flight_id_passenger create_flight_id(char *flight_id){     
     Flight_id_passenger novo;                                          
     novo.flight_id = strdup(flight_id);
@@ -221,6 +228,13 @@ flight_date_aux create_flight_date_aux (char *id, char *schedule_departure_date,
     return novo;
 }
 
+Mediana create_mediana (char *airport, int mediana){
+    Mediana novo;
+    novo.airport = strdup(airport);
+    novo.mediana = mediana;
+    return novo;
+}
+
 char *only_date(char *schedule_departure_date){  //2023/02/10 03:24:09
     char *date = (char*)malloc(11 * sizeof(char));
     strncpy(date, schedule_departure_date, 10);
@@ -238,6 +252,24 @@ void insertionSort_flights(Flight_aux *flight_aux_array, int size){
         }  
         flight_aux_array[j + 1] = key;
     }
+}
+
+void insertionSort_medianas(Mediana *mediana_array, int num_medianas){
+    for (int i = 1; i < num_medianas; i++) {
+        Mediana key = mediana_array[i];
+        int j = i - 1;
+        while (j >= 0 && ((mediana_array[j].mediana<key.mediana) || (mediana_array[j].mediana==key.mediana && strcmp(mediana_array[j].airport, key.airport)>0))) {
+            mediana_array[j + 1] = mediana_array[j];
+            j--;
+        }  
+        mediana_array[j + 1] = key;
+    }
+}
+
+
+int calculate_mediana(int *atrasos, int num_atrasos){
+    if ((num_atrasos%2)==1) return atrasos[num_atrasos/2];
+    else return ((atrasos[num_atrasos/2] + atrasos[(num_atrasos/2) - 1]) / 2);
 }
 
 void query1(char *line, int i, int n){
@@ -931,6 +963,54 @@ void query6 (char *line, int i, int n) {
     free(date_t);
 }
 
+void query7(char *line, int i, int n){
+    int N = 0, index_line = i;
+
+    for (; line[index_line]==' ' || line[index_line]=='"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
+    int argument_length = 0;
+    for (int j=index_line; line[j]!='\0' && line[j]!='\n' && line[j]!='"'; j++, argument_length++);  //conta o tamanho do argumento
+    char argument[argument_length];
+    for (int k=0, j=index_line; k<argument_length; k++, j++) argument[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
+    argument[argument_length] = '\0';
+
+    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
+    if (n>=10 && n<100) filename_size++;
+    else if (n>=100) filename_size+=2;
+    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
+    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
+    output = fopen(filename, "w");
+
+    if (strlen(argument)>0){
+        N = atoi(argument);
+        int num_medianas = 0;
+        Mediana *mediana_array = NULL;    //array que irá guardar as medianas e o respetivo aeroporto
+        for (int i = 0; i<num_Atrasos; i++){
+            Mediana novo = create_mediana(Atrasos_array[i].airport, calculate_mediana(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos));
+            mediana_array = realloc(mediana_array, (num_medianas+1)*sizeof(Mediana));
+            mediana_array[num_medianas] = novo;
+            num_medianas++;
+        }
+
+        insertionSort_medianas(mediana_array, num_medianas);
+        
+        if(N>num_medianas) N = num_medianas;
+        for (int i = 0; i<N; i++){
+            if (index_line==2){   //7
+                fprintf(output, "%s;%d\n", mediana_array[i].airport, mediana_array[i].mediana);
+            }
+            else{   //7F
+                fprintf(output, "--- %d ---\n", i+1);
+                fprintf(output, "name: %s\n", mediana_array[i].airport);
+                fprintf(output, "median: %d\n", mediana_array[i].mediana);
+                if (i!=N-1) fprintf(output, "\n");
+            }
+        }
+        free_Mediana(mediana_array, num_medianas);
+    }
+    fclose(output);
+    free(filename);
+}
+
 void query9 (char *line, int i, int n) {
     int flag, ind, index_line = i;
     
@@ -1045,7 +1125,7 @@ void identify_query(char* path){
                         query6(line, i, n);
                     break;
                     case '7':  //7 ou 7F
-
+                        query7(line, i, n);
                     break;
                     case '8':  //8 ou 8F
 
