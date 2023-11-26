@@ -124,6 +124,9 @@ void query1(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 1
 
+int compare_date_time2(char *i, char *f);
+    //     |->função que compara duas datas para saber qual a mais antiga
+
 void query2(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 2

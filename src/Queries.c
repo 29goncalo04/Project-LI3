@@ -8,9 +8,9 @@
 #include "../include/Parser.h"
 #include "../include/Validation.h"
 #include "../include/Queries.h"
+#include "../include/Output_queries.h"
 
 FILE *input;  //ficheiro dos comandos das queries
-FILE *output;
 
 int delay(char *schedule, char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
     int atraso = 0, verdadeira = 0, prevista = 0;
@@ -273,23 +273,16 @@ int calculate_mediana(int *atrasos, int num_atrasos){
 }
 
 void query1(char *line, int i, int n){
-    int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1;
+    int wanted_id = -1, index_line = i, wanted_user_id = -1, wanted_id_2 = -1, generated_file = 0;
     char *breakfast;
     char *status;
     
     for (; line[index_line]==' ' || line[index_line]=='"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
-    for (int j=index_line; line[j]!='\0' && line[j]!='\n' && line[j]!='"'; j++, argument_length++);  //conta o tamanho do argumento
+    for (int j=index_line; line[j]!='\0' && line[j]!='\n' ; j++, argument_length++);  //conta o tamanho do argumento
     char argument[argument_length];
     for (int k=0, j=index_line; k<argument_length; k++, j++) argument[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
     argument[argument_length] = '\0';
-
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
 
     if (isdigit(line[index_line])){   //irá listar o resumo de um voo
         wanted_id = -1;
@@ -314,20 +307,8 @@ void query1(char *line, int i, int n){
                         break;
                     }
                 }
-                if (index_line==2){   //1
-                  fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", flight_array_valid[wanted_id].airline, flight_array_valid[wanted_id].plane_model, flight_array_valid[wanted_id].origin, flight_array_valid[wanted_id].destination, flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].schedule_arrival_date, contador_array[wanted_id_2].contador, delay(flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].real_departure_date));
-                }
-                else{   //1F
-                    fprintf(output, "--- 1 ---\n");
-                    fprintf(output, "airline: %s\n", flight_array_valid[wanted_id].airline);
-                    fprintf(output, "plane_model: %s\n", flight_array_valid[wanted_id].plane_model);
-                    fprintf(output, "origin: %s\n", flight_array_valid[wanted_id].origin);
-                    fprintf(output, "destination: %s\n", flight_array_valid[wanted_id].destination);
-                    fprintf(output, "schedule_departure_date: %s\n", flight_array_valid[wanted_id].schedule_departure_date);
-                    fprintf(output, "schedule_arrival_date: %s\n", flight_array_valid[wanted_id].schedule_arrival_date);
-                    fprintf(output, "passengers: %d\n", contador_array[wanted_id_2].contador);
-                    fprintf(output, "delay: %d\n", delay(flight_array_valid[wanted_id].schedule_departure_date, flight_array_valid[wanted_id].real_departure_date));
-                }
+                outputs_query1_flights(flight_array_valid, contador_array, wanted_id, wanted_id_2, index_line, n); ////voos
+                generated_file = 1;
             }
         }
     }
@@ -359,21 +340,9 @@ void query1(char *line, int i, int n){
                 else{
                     if (verify_breakfast(reservation_array_valid[wanted_id].includes_breakfast) == 1) breakfast = strdup("True");
                     else  breakfast = strdup("False");
-                    if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", reservation_array_valid[wanted_id].hotel_id, reservation_array_valid[wanted_id].hotel_name, reservation_array_valid[wanted_id].hotel_stars, reservation_array_valid[wanted_id].begin_date, reservation_array_valid[wanted_id].end_date, breakfast, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), total_price(reservation_array_valid[wanted_id].price_per_night, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), reservation_array_valid[wanted_id].city_tax));
-                    }
-                    else{   //1F
-                        fprintf(output, "--- 1 ---\n");
-                        fprintf(output, "hotel_id: %s\n", reservation_array_valid[wanted_id].hotel_id);
-                        fprintf(output, "hotel_name: %s\n", reservation_array_valid[wanted_id].hotel_name);
-                        fprintf(output, "hotel_stars: %s\n", reservation_array_valid[wanted_id].hotel_stars);
-                        fprintf(output, "begin_date: %s\n", reservation_array_valid[wanted_id].begin_date);
-                        fprintf(output, "end_date: %s\n", reservation_array_valid[wanted_id].end_date);
-                        fprintf(output, "includes_breakfast: %s\n", breakfast);
-                        fprintf(output, "nights: %d\n", nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date));
-                        fprintf(output, "total_price: %.3f\n", total_price(reservation_array_valid[wanted_id].price_per_night, nights(reservation_array_valid[wanted_id].begin_date,reservation_array_valid[wanted_id].end_date), reservation_array_valid[wanted_id].city_tax));
-                    }
+                    outputs_query1_reservations(reservation_array_valid, breakfast, wanted_id, index_line, n); //reservas
                     free(breakfast);
+                    generated_file = 1;
                 }
             }
         }
@@ -410,27 +379,14 @@ void query1(char *line, int i, int n){
                             total_spent += total_price(reservation_array_valid[k].price_per_night, nights(reservation_array_valid[k].begin_date,reservation_array_valid[k].end_date), reservation_array_valid[k].city_tax);
                         }
                     }
-                    if (index_line==2){   //1
-                        fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", user_array_valid[wanted_id].name, user_array_valid[wanted_id].sex, age_user(user_array_valid[wanted_id].birth_date),user_array_valid[wanted_id].country_code, user_array_valid[wanted_id].passport, number_of_flights(user_array_valid[wanted_id].id), reservations, total_spent);
-                    }
-                    else{   //1F
-                        fprintf(output, "--- 1 ---\n");
-                        fprintf(output, "name: %s\n", user_array_valid[wanted_id].name);
-                        fprintf(output, "sex: %s\n", user_array_valid[wanted_id].sex);
-                        fprintf(output, "age: %d\n", age_user(user_array_valid[wanted_id].birth_date));
-                        fprintf(output, "country_code: %s\n", user_array_valid[wanted_id].country_code);
-                        fprintf(output, "passport: %s\n", user_array_valid[wanted_id].passport);
-                        fprintf(output, "number_of_flights: %d\n", number_of_flights(user_array_valid[wanted_id].id));
-                        fprintf(output, "number_of_reservations: %d\n", reservations);
-                        fprintf(output, "total_spent: %.3f\n", total_spent);
-                    }
+                    outputs_query1_users(user_array_valid, total_spent, reservations, wanted_id, index_line, n); //utilizadores
+                    generated_file = 1;
                 }
                 free(status);
             }
         }  
     }
-    fclose(output);
-    free(filename);
+    if (generated_file==0) create_output(n, 0);
 }
 
 int compare_date_time2(char *i, char *f) {
@@ -438,7 +394,7 @@ int compare_date_time2(char *i, char *f) {
 }
 
 void query2(char *line, int i, int n){
-    int wanted_user_id = -1, index_line = i, exists_argument2 = 0;
+    int wanted_user_id = -1, index_line = i, exists_argument2 = 0, generated_file = 0;
     char *status;
   //  const char* type_f = "flight";
   //  const char* type_r = "reservation";
@@ -462,14 +418,6 @@ void query2(char *line, int i, int n){
         argument2 = strdup(argument2_aux);
         exists_argument2 = 1;
     }
-  //  printf("%s;%s\n", argument1, argument2);
-
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
 
     for (int i = 0; i<num_linhas_invalid[3]; i++){     //vai procurar o id do utilizador nos inválidos
         if (strcmp(argument1, user_array_invalid[i].id)==0){   //se encontrar o id desse utilizador
@@ -534,112 +482,8 @@ void query2(char *line, int i, int n){
                         }
                     }
                 }  
-                if (index_line==2){ //2
-                    if (strcmp(argument2, "flights")==0){  //só lista os voos
-                        for (int i = 0; i<num_flights_passenger_id; i++){
-                            fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
-                        }
-                    }
-                    else if(strcmp(argument2, "reservations")==0){  //só lista as reservas
-                            for (int i = 0; i<num_reservations; i++){
-                                fprintf(output, "%s;%s%s\n", reservation_aux_array[i].reservation_id, reservation_aux_array[i].begin_date, reservation_aux_array[i].type);
-                            }
-                        }
-                        else{
-                            for (int i = 0, j = 0; i<num_flights_passenger_id || j<num_reservations;){
-                                if(i==num_flights_passenger_id){   //já só há informações de reservas para serem impressas
-                                    fprintf(output, "%s;%s%s\n", reservation_aux_array[j].reservation_id, reservation_aux_array[j].begin_date, reservation_aux_array[j].type);
-                                    j++;
-                                }
-                                else if (j==num_reservations){   //já só há informações de voos para serem impressas
-                                    fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
-                                    i++;
-                                }
-                                    else{
-                                        if (strcmp(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)==0){
-                                            fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
-                                            i++;
-                                            fprintf(output, "%s;%s%s\n", reservation_aux_array[j].reservation_id, reservation_aux_array[j].begin_date, reservation_aux_array[j].type);
-                                            j++;
-                                        }
-                                        else if (compare_date_time2(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)>0){
-                                            fprintf(output, "%s;%s%s\n", flight_aux_array[i].flight_id, flight_aux_array[i].schedule_departure_date, flight_aux_array[i].type);
-                                            i++;
-                                        }
-                                            else if (compare_date_time2(flight_aux_array[i].schedule_departure_date, reservation_aux_array[j].begin_date)<0){
-                                                fprintf(output, "%s;%s%s\n", reservation_aux_array[j].reservation_id, reservation_aux_array[j].begin_date, reservation_aux_array[j].type);
-                                                j++;
-                                            }
-                                    }
-                            }
-                        }
-                }
-                else{  //2F
-                    if (strcmp(argument2, "flights")==0){  //só lista os voos
-                        for (int i = 1; i<=num_flights_passenger_id; i++){
-                            fprintf(output, "--- %d ---\n", i);
-                            fprintf(output, "id: %s\n", flight_aux_array[i-1].flight_id);
-                            fprintf(output, "date: %s\n", flight_aux_array[i-1].schedule_departure_date);
-                            if (i!=num_flights_passenger_id) fprintf(output, "\n");
-                        }
-                    }
-                    else if (strcmp(argument2, "reservations")==0){  //só lista as reservas
-                        for (int i = 1; i<=num_reservations; i++){
-                            fprintf(output, "--- %d ---\n", i);
-                            fprintf(output, "id: %s\n", reservation_aux_array[i-1].reservation_id);
-                            fprintf(output, "date: %s\n", reservation_aux_array[i-1].begin_date);
-                            if (i!=num_reservations) fprintf(output, "\n");
-                        }
-                    }
-                    else{  //lista voos e reservas
-                        for (int i = 1, j = 1; i<=num_flights_passenger_id || j<=num_reservations;){
-                            fprintf(output, "--- %d ---\n", (i+j-1));
-                            if(i==num_flights_passenger_id+1){   //já só há informações de reservas para serem impressas
-                                    fprintf(output, "id: %s\n", reservation_aux_array[j-1].reservation_id);
-                                    fprintf(output, "date: %s\n", reservation_aux_array[j-1].begin_date);
-                                    fprintf(output, "type: reservation\n");
-                                    if((i+j-1)!=(num_flights_passenger_id+num_reservations)) fprintf(output, "\n");
-                                    j++;
-                            }
-                            else if (j==num_reservations+1){   //já só há informações de voos para serem impressas
-                                    fprintf(output, "id: %s\n", flight_aux_array[i-1].flight_id);
-                                    fprintf(output, "date: %s\n", flight_aux_array[i-1].schedule_departure_date);
-                                    fprintf(output, "type: flight\n");
-                                    if((i+j-1)!=(num_flights_passenger_id+num_reservations)) fprintf(output, "\n");
-                                    i++;
-                            }
-                            else if (strcmp(flight_aux_array[i-1].schedule_departure_date, reservation_aux_array[j-1].begin_date)==0){
-                                fprintf(output, "id: %s\n", flight_aux_array[i-1].flight_id);
-                                fprintf(output, "date: %s\n", flight_aux_array[i-1].schedule_departure_date);
-                                fprintf(output, "type: flight\n");
-                                i++;
-                                fprintf(output, "\n");
-                                fprintf(output, "--- %d ---\n", (i+j-1));
-                                fprintf(output, "id: %s\n", reservation_aux_array[j-1].reservation_id);
-                                fprintf(output, "date: %s\n", reservation_aux_array[j-1].begin_date);
-                                fprintf(output, "type: reservation\n");
-                                if((i+j-1)!=(num_flights_passenger_id+num_reservations)) fprintf(output, "\n");
-                                j++;
-                            }
-                            else if (compare_date_time(flight_aux_array[i-1].schedule_departure_date, reservation_aux_array[j-1].begin_date)==0){
-                                //fprintf(output, "--- %d -ok--\n", (i+j-1));
-                                fprintf(output, "id: %s\n", flight_aux_array[i-1].flight_id);
-                                fprintf(output, "date: %s\n", flight_aux_array[i-1].schedule_departure_date);
-                                fprintf(output, "type: flight\n");
-                                if((i+j-1)!=(num_flights_passenger_id+num_reservations)) fprintf(output, "\n");
-                                i++;
-                            }
-                            else if (compare_date_time(flight_aux_array[i-1].schedule_departure_date, reservation_aux_array[j-1].begin_date)==1){
-                                fprintf(output, "--- %d ---\n", (i+j-1));        //////////////////////////////////////////////////////////////////////////////////////////
-                                fprintf(output, "id: %s\n", reservation_aux_array[j-1].reservation_id);
-                                fprintf(output, "date: %s\n", reservation_aux_array[j-1].begin_date);
-                                fprintf(output, "type: reservation\n");
-                                if((i+j-1)!=(num_flights_passenger_id+num_reservations)) fprintf(output, "\n");
-                                j++;
-                            }
-                        }
-                    }
-                }
+                outputs_query2(flight_aux_array, reservation_aux_array, index_line, argument2, num_flights_passenger_id, num_reservations, n);
+                generated_file = 1;
                 free_flight_id_passenger(flight_id_passenger_array, num_flights_passenger_id);
                 free_flight_aux(flight_aux_array, num_flights_passenger_id);
                 free_reservation_aux(reservation_aux_array, num_reservations);
@@ -647,30 +491,16 @@ void query2(char *line, int i, int n){
             free(status);
         }
     }
-    fclose(output);
-    free(filename);
     free(argument2);
+    if (generated_file==0) create_output(n, 0);
 }
 
 void query3(char *line, int i, int n) {
     double rating = 0, rating_t = 0, total = 0, media = 0;
+    int flag, generated_file = 0;
 
-    int flag;
     if (i == 2) flag = 1;
     else flag = 0;
-
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
-
-    if (output == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filename);
-        free(filename);
-        return;
-    }
  
     int index_line = i;
     for (; line[index_line]== ' ' || line[index_line] == '"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
@@ -692,40 +522,21 @@ void query3(char *line, int i, int n) {
 
         if (total != 0) {
             media = (double) (rating_t / total);
-
-            if (flag == 0)   //3
-                fprintf(output, "%.3f\n", media);
-            else {   //3F
-                fprintf(output, "--- 1 ---\n");
-                fprintf(output, "rating: %.3f\n", media);
-            }
+            outputs_query3(media, flag, n);
+            generated_file = 1;
         }
     }
-
-    fclose(output);
-    free(filename);
+    if (generated_file==0) create_output(n, 0);
 }
 
 void query4 (char *line, int i, int n) {
-    int index_line = i;  // i=1
+    int index_line = i, generated_file = 0;  // i=1
     for (; line[index_line] == ' ' || line[index_line] == '"'; index_line++);   // encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
     for (int j=index_line; line[j]!='\0' && line[j] != '\n'; j++, argument_length++);  // conta o tamanho do argumento
     char argument[argument_length + 1];  // array que vai guardar o argumento da query
     for (int k=0, j=index_line; k<argument_length; k++, j++) argument[k] = line[j];   // opia o argumento da query (id) para o array que guarda esse argumento
     argument[argument_length] = '\0';
-
-    int filename_size = strlen ("../trabalho-pratico/Resultados/command1_output.txt");  // calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc (filename_size + 1); // aloca memória dinamicamente para o nome do ficheiro
-    snprintf (filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  // formata o nome do arquivo
-    output = fopen (filename, "w");
-    if (output == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filename);
-        free(filename);
-        return;
-    }
 
     hotel_aux *hotel_aux_array = NULL;  // será um array para armazenar os campos do hotel pretendidos
     int num_hotels = 0;
@@ -739,25 +550,11 @@ void query4 (char *line, int i, int n) {
             }
         }
         qsort (hotel_aux_array, num_hotels, sizeof(hotel_aux), compare_hotels);
-    }
-    if (index_line==2) {  // 4
-        for (int j=0; j<num_hotels; j++) fprintf (output, "%s;%s;%s;%s;%s;%.3f\n", hotel_aux_array[j].id, hotel_aux_array[j].begin_date, hotel_aux_array[j].end_date, hotel_aux_array[j].user_id, hotel_aux_array[j].rating, hotel_aux_array[j].total_price);
-    }
-    else {  // 4F
-        for (int j=0; j<num_hotels; j++) {
-            fprintf(output, "--- %d ---\n", j+1);
-            fprintf(output, "id: %s\n", hotel_aux_array[j].id);
-            fprintf(output, "begin_date: %s\n", hotel_aux_array[j].begin_date);
-            fprintf(output, "end_date: %s\n", hotel_aux_array[j].end_date);
-            fprintf(output, "user_id: %s\n", hotel_aux_array[j].user_id);
-            fprintf(output, "rating: %s\n", hotel_aux_array[j].rating);
-            fprintf(output, "total_price: %.3f\n", hotel_aux_array[j].total_price);
-            if (j!=num_hotels-1) fprintf(output, "\n");
-        }
+        outputs_query4(hotel_aux_array, index_line, num_hotels, n);
+        generated_file = 1;
     }
     free_hotel_aux (hotel_aux_array, num_hotels);
-    fclose (output);
-    free (filename);
+    if (generated_file==0) create_output(n, 0);
 }
 
 void query5 (char *line, int i, int n) {
@@ -796,18 +593,6 @@ void query5 (char *line, int i, int n) {
     for (int k=0, j=index3_line; k<arg_end_date_length; k++, j++) arg_end_date[k] = line[j];   // copia o terceiro argumento da query para o array que guarda esse argumento
     arg_end_date[arg_end_date_length] = '\0';
 
-    
-    int filename_size = strlen ("../trabalho-pratico/Resultados/command1_output.txt");  // calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc (filename_size + 1); // aloca memória dinamicamente para o nome do ficheiro
-    snprintf (filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  // formata o nome do arquivo
-    output = fopen (filename, "w");
-    if (output == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filename);
-        free(filename);
-        return;
-    }
     flight_date_aux *flight_date_aux_array = NULL;  // será um array para armazenar os campos do voo pretendidos
     int num_flights = 0;
     if (arg_origin_length > 0) {
@@ -827,29 +612,9 @@ void query5 (char *line, int i, int n) {
         free (arg_origin_cpy);
         qsort (flight_date_aux_array, num_flights, sizeof(flight_date_aux), compare_flights);
     }
-    if (index1_line==2) {  // 4
-        for (int j=0; j<num_flights; j++) {
-            char *destination_cpy = flight_date_aux_array[j].destination;
-            toUpperCase(destination_cpy);
-            fprintf (output, "%s;%s;%s;%s;%s\n", flight_date_aux_array[j].id, flight_date_aux_array[j].schedule_departure_date, destination_cpy, flight_date_aux_array[j].airline, flight_date_aux_array[j].plane_model);
-        }
-    }
-    else {  // 4F
-        for (int j=0; j<num_flights; j++) {
-            char *destination_cpy = flight_date_aux_array[j].destination;
-            toUpperCase(destination_cpy);
-            fprintf(output, "--- %d ---\n", j+1);
-            fprintf(output, "id: %s\n", flight_date_aux_array[j].id);
-            fprintf(output, "schedule_departure_date: %s\n", flight_date_aux_array[j].schedule_departure_date);
-            fprintf(output, "destination: %s\n", destination_cpy);
-            fprintf(output, "airline: %s\n", flight_date_aux_array[j].airline);
-            fprintf(output, "plane_model: %s\n", flight_date_aux_array[j].plane_model);
-            if (j!=num_flights-1) fprintf(output, "\n");
-        }
-    }
+    
+    outputs_query5(flight_date_aux_array, index1_line, num_flights, n);
     free_flight_date_aux (flight_date_aux_array, num_flights);
-    fclose (output);
-    free (filename);
 }
 
 void query6 (char *line, int i, int n) {
@@ -859,23 +624,8 @@ void query6 (char *line, int i, int n) {
     
     if (i == 2) flag = 1;
     else flag = 0;
-
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size++;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
-
-    if (output == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filename);
-        free(filename);
-        return;
-    }
     
-    //int date = atoi(&line[2]);
     int top = atoi(&line[7]);
-    
     int index_line = i; // _2023 5
     for (; line[index_line] == ' '; index_line++);
     int l_date = 0, j;
@@ -941,30 +691,15 @@ void query6 (char *line, int i, int n) {
             
         }
     }
-    
-    if (flag == 0)   //3
-        for (index_pXa = 0; index_pXa < top; index_pXa++) {
-            fprintf(output, "%s;%d\n", passengersXairport_array[index_pXa].origin, passengersXairport_array[index_pXa].passengers);
-        }
-    
-    else {          //3F
-        for (index_pXa = 0; index_pXa < top; index_pXa++) {
-            fprintf(output, "--- %d ---\n",index_pXa+1);
-            fprintf(output, "name: %s\n", passengersXairport_array[index_pXa].origin);
-            fprintf(output, "passengers: %d\n", passengersXairport_array[index_pXa].passengers);
-            if (index_pXa+1 != top) fprintf(output, "\n");
-        }
-    }
-    
+
+    outputs_query6(passengersXairport_array, index_pXa, top, flag, n);
     free_PassengersXairport(passengersXairport_array, num_linhas_PassengersXairport);
     free(origin);
-    fclose(output);
-    free(filename);
     free(date_t);
 }
 
 void query7(char *line, int i, int n){
-    int N = 0, index_line = i;
+    int N = 0, index_line = i, generated_file = 0;
 
     for (; line[index_line]==' ' || line[index_line]=='"'; index_line++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
@@ -972,13 +707,6 @@ void query7(char *line, int i, int n){
     char argument[argument_length];
     for (int k=0, j=index_line; k<argument_length; k++, j++) argument[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
     argument[argument_length] = '\0';
-
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size+=2;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
 
     if (strlen(argument)>0){
         N = atoi(argument);
@@ -994,25 +722,15 @@ void query7(char *line, int i, int n){
         insertionSort_medianas(mediana_array, num_medianas);
         
         if(N>num_medianas) N = num_medianas;
-        for (int i = 0; i<N; i++){
-            if (index_line==2){   //7
-                fprintf(output, "%s;%d\n", mediana_array[i].airport, mediana_array[i].mediana);
-            }
-            else{   //7F
-                fprintf(output, "--- %d ---\n", i+1);
-                fprintf(output, "name: %s\n", mediana_array[i].airport);
-                fprintf(output, "median: %d\n", mediana_array[i].mediana);
-                if (i!=N-1) fprintf(output, "\n");
-            }
-        }
+        outputs_query7(mediana_array, index_line, N, n);
+        generated_file = 1;
         free_Mediana(mediana_array, num_medianas);
     }
-    fclose(output);
-    free(filename);
+    if (generated_file==0) create_output(n, 0);
 }
 
 void query9 (char *line, int i, int n) {
-    int flag, ind, index_line = i;
+    int flag, ind, index_line = i, generated_file = 0;
     
     if (i == 2) flag = 1;
     else flag = 0;
@@ -1024,66 +742,48 @@ void query9 (char *line, int i, int n) {
     for (int k=0, j=index_line; k<argument_length; k++, j++) name[k] = line[j];   //copia o argmento da query para um array que guarda esse argumento
     name[argument_length] = '\0';
 
-    int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
-    if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size++;
-    char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
-    snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
-    output = fopen(filename, "w");
-    free(filename);
-
-    char *status_cpy = NULL;
-    int num_linhas_idXname = 0;
-    idXname *idXname_array = NULL;
-    for (int k = 0; k < num_linhas_valid[3]; k++) {
-        status_cpy = strdup(user_array_valid[k].account_status);
-        toLowerCase (status_cpy);
-        if (strcmp(status_cpy,"active") == 0) {
-            for (ind = 0; name[ind] == user_array_valid[k].name[ind]; ind++);
-            if (name[ind] == '\0') {
-                idXname novo = create_IdXname (user_array_valid[k].id, user_array_valid[k].name);
-                idXname_array = realloc(idXname_array, (num_linhas_idXname + 1) * sizeof(idXname));
-                idXname_array[num_linhas_idXname] = novo;
-                num_linhas_idXname++;
+    if (strlen(name)>0){
+        char *status_cpy = NULL;
+        int num_linhas_idXname = 0;
+        idXname *idXname_array = NULL;
+        for (int k = 0; k < num_linhas_valid[3]; k++) {
+            status_cpy = strdup(user_array_valid[k].account_status);
+            toLowerCase (status_cpy);
+            if (strcmp(status_cpy,"active") == 0) {
+                for (ind = 0; name[ind] == user_array_valid[k].name[ind]; ind++);
+                if (name[ind] == '\0') {
+                    idXname novo = create_IdXname (user_array_valid[k].id, user_array_valid[k].name);
+                    idXname_array = realloc(idXname_array, (num_linhas_idXname + 1) * sizeof(idXname));
+                    idXname_array[num_linhas_idXname] = novo;
+                    num_linhas_idXname++;
+                }
             }
+            free(status_cpy);
         }
-        free(status_cpy);
-    }
 
-    for(int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
-        for (int index_idXn_prox = index_idXn + 1; index_idXn_prox < num_linhas_idXname; index_idXn_prox++) {
-            if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) > 0) { //comparar ignorando maiusculas e minusculas
-                // Uso da função para trocar strings
-                swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
-                swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
+        for(int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
+            for (int index_idXn_prox = index_idXn + 1; index_idXn_prox < num_linhas_idXname; index_idXn_prox++) {
+                if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) > 0) { //comparar ignorando maiusculas e minusculas
+                    // Uso da função para trocar strings
+                    swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
+                    swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
+                }
+                else
+                    if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) == 0) { //comparar ignorando maiusculas e minusculas
+                        if (strcoll(idXname_array[index_idXn].id,idXname_array[index_idXn_prox].id) > 0) { //comparar ignorando maiusculas e minusculas
+                            // Uso da função para trocar strings
+                            swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
+                            swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
+                        }
+                    }  
             }
-            else
-                if (strcoll(idXname_array[index_idXn].name,idXname_array[index_idXn_prox].name) == 0) { //comparar ignorando maiusculas e minusculas
-                    if (strcoll(idXname_array[index_idXn].id,idXname_array[index_idXn_prox].id) > 0) { //comparar ignorando maiusculas e minusculas
-                        // Uso da função para trocar strings
-                        swapStrings(&idXname_array[index_idXn].name, &idXname_array[index_idXn_prox].name);
-                        swapStrings(&idXname_array[index_idXn].id, &idXname_array[index_idXn_prox].id);
-                    }
-                }  
-        }
-    }  
+        }  
 
-    if (flag == 0)   //9
-        for (int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
-            fprintf(output, "%s;%s\n", idXname_array[index_idXn].id, idXname_array[index_idXn].name);
-        }
-    
-    else {          //9F
-        for (int index_idXn = 0; index_idXn < num_linhas_idXname; index_idXn++) {
-            fprintf(output, "--- %d ---\n",index_idXn+1);
-            fprintf(output, "id: %s\n", idXname_array[index_idXn].id);
-            fprintf(output, "name: %s\n", idXname_array[index_idXn].name);
-            if (index_idXn+1 != num_linhas_idXname) fprintf(output, "\n");
-        }
+        outputs_query9(idXname_array, num_linhas_idXname, flag, n);
+        generated_file = 1;
+        free_idXname(idXname_array, num_linhas_idXname);
     }
-
-    free_idXname(idXname_array, num_linhas_idXname);
-    fclose(output);
+    if (generated_file==0) create_output(n, 0);
 }
 
 void identify_query(char* path){
