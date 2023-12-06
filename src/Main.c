@@ -1,12 +1,9 @@
 #include <locale.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 
 #include "../include/Parser.h"
-#include "../include/Queries.h"
-
+#include "../include/Interpreter.h"
+#include "../include/Free.h"
+#include "../include/Main.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 3) perror("Error\n");

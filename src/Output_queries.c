@@ -1,13 +1,12 @@
-#include <locale.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include <stdlib.h>
+#include <stddef.h>
 
-#include "../include/Data_Types_&_Data_Structures.h"
 #include "../include/Output_queries.h"
-#include "../include/Validation.h"
+#include "../include/Aux_validation.h"
 #include "../include/Queries.h"
+#include "../include/Aux_functions.h"
 
 FILE *output;
 

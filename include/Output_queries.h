@@ -4,7 +4,9 @@
 #ifndef OUTPUT_QUERIES_H
 #define OUTPUT_QUERIES_H
 
-#include "../include/Data_Types_&_Data_Structures.h"
+#include "../include/Catalogs.h"
+#include "../include/Statistics.h"
+#include "../include/Aux_structs.h"
 
 void create_output(int n, int conteudo);
     //     |->função responsável por criar os outputs
