@@ -1,0 +1,1 @@
+Pasta contendo os ficheiros com as suas respetivas entradas inválidas
