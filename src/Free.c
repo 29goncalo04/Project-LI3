@@ -17,9 +17,9 @@ void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid) {
         free(flight_array_valid[i].schedule_arrival_date);
         free(flight_array_valid[i].real_departure_date);
         free(flight_array_valid[i].real_arrival_date);
-        free(flight_array_valid[i].pilot);
-        free(flight_array_valid[i].copilot);
-        free(flight_array_valid[i].notes);
+        //free(flight_array_valid[i].pilot);
+        //free(flight_array_valid[i].copilot);
+        //free(flight_array_valid[i].notes);
     }
     free(flight_array_valid);
 }
@@ -69,14 +69,14 @@ void free_reservation_valid(Reservation *reservation_array_valid, int num_linhas
         free(reservation_array_valid[i].hotel_name);
         free(reservation_array_valid[i].hotel_stars);
         free(reservation_array_valid[i].city_tax);
-        free(reservation_array_valid[i].address);
+        //free(reservation_array_valid[i].address);
         free(reservation_array_valid[i].begin_date);
         free(reservation_array_valid[i].end_date);
         free(reservation_array_valid[i].price_per_night);
         free(reservation_array_valid[i].includes_breakfast);
-        free(reservation_array_valid[i].room_details);
+        //free(reservation_array_valid[i].room_details);
         free(reservation_array_valid[i].rating);
-        free(reservation_array_valid[i].comment);
+        //free(reservation_array_valid[i].comment);
     }
     free(reservation_array_valid);
 }
@@ -105,18 +105,20 @@ void free_user_valid(User *user_array_valid, int num_linhas_valid) {
     for (int i = 0; i < num_linhas_valid; i++) {               
         free(user_array_valid[i].id);
         free(user_array_valid[i].name);
-        free(user_array_valid[i].email);
-        free(user_array_valid[i].phone_number);
+        //free(user_array_valid[i].email);
+        //free(user_array_valid[i].phone_number);
         free(user_array_valid[i].birth_date);
         free(user_array_valid[i].sex);
         free(user_array_valid[i].passport);
         free(user_array_valid[i].country_code);
-        free(user_array_valid[i].address);
+        //free(user_array_valid[i].address);
         free(user_array_valid[i].account_creation);
-        free(user_array_valid[i].pay_method);
+        //free(user_array_valid[i].pay_method);
         free(user_array_valid[i].account_status);
     }
     free(user_array_valid);
+    user_array_valid = NULL;
+    num_linhas_valid = 0;
 }
 
 void free_user_invalid(User *user_array_invalid, int num_linhas_invalid) {  
@@ -228,10 +230,10 @@ void free_all(){
     free_flight_valid(flight_array_valid, num_linhas_valid_flight);
     free_reservation_valid(reservation_array_valid, num_linhas_valid_reservation);
     free_user_valid(user_array_valid, num_linhas_valid_user);
-    free_passenger_invalid(passenger_array_invalid, num_linhas_invalid_passenger); 
-    free_flight_invalid(flight_array_invalid, num_linhas_invalid_flight);            
-    free_reservation_invalid(reservation_array_invalid, num_linhas_invalid_reservation); 
-    free_user_invalid(user_array_invalid, num_linhas_invalid_user); 
+    //free_passenger_invalid(passenger_array_invalid, num_linhas_invalid_passenger); 
+    //free_flight_invalid(flight_array_invalid, num_linhas_invalid_flight);            
+    //free_reservation_invalid(reservation_array_invalid, num_linhas_invalid_reservation); 
+    //free_user_invalid(user_array_invalid, num_linhas_invalid_user);
     free_contador(contador_array, num_linhas_contador);
     free_Atrasos(Atrasos_array, num_Atrasos);
 }

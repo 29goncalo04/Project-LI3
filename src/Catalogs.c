@@ -32,9 +32,13 @@ void create_array_users(char parametros[][FIELD_SIZE]){
     User nova = create_user(parametros);
     validate_user(&nova, parametros);
     if (nova.validation == 1){  //se essa linha for válida os seus parâmetros são armazenados no array de utilizadores válidos
-        user_array_valid = realloc(user_array_valid, (num_linhas_valid_user+1)*sizeof(User));
+        user_array_valid = realloc(user_array_valid, (num_linhas_valid_user+1)*sizeof(User));    
         user_array_valid[num_linhas_valid_user] = nova;
         num_linhas_valid_user++;
+        free(nova.email);
+        free(nova.phone_number);
+        free(nova.address);
+        free(nova.pay_method);
     }
     else{
         user_array_invalid = realloc(user_array_invalid, (num_linhas_invalid_user+1)*sizeof(User));
@@ -75,6 +79,9 @@ void create_array_reservations(char parametros[][FIELD_SIZE]){
         reservation_array_valid = realloc(reservation_array_valid, (num_linhas_valid_reservation+1)*sizeof(Reservation));
         reservation_array_valid[num_linhas_valid_reservation] = nova;
         num_linhas_valid_reservation++;
+        free(nova.address);
+        free(nova.room_details);
+        free(nova.comment);
     }
     else{
         reservation_array_invalid = realloc(reservation_array_invalid, (num_linhas_invalid_reservation+1)*sizeof(Reservation));
@@ -116,6 +123,9 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         flight_array_valid = realloc(flight_array_valid, (num_linhas_valid_flight+1)*sizeof(Flight));   
         flight_array_valid[num_linhas_valid_flight] = nova;        //esse novo elemento é adicionado ao array de válidos
         num_linhas_valid_flight++;
+        free(nova.pilot);
+        free(nova.copilot);
+        free(nova.notes);
     }
     else{
         flight_array_invalid = realloc(flight_array_invalid, (num_linhas_invalid_flight+1)*sizeof(Flight));   

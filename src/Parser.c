@@ -1,13 +1,18 @@
+#include <dirent.h>
+#include <unistd.h>
+
 #include "../include/Parser.h"
 #include "../include/Aux_functions.h"
 #include "../include/Catalogs.h"
 #include "../include/Statistics.h"
+#include "../include/Output_errors.h"
 
 FILE *fpassengers;
 FILE *freservations;
 FILE *fusers;
 FILE *fflights;
 FILE *arquivo;
+int path_error = 0;  //se o caminho é válido path_error = 0
 
 void open_files(char* path){
     char *line = NULL;
@@ -36,6 +41,10 @@ void open_files(char* path){
         switch (num_ficheiro){
             case 3: 
                 fpassengers = fopen(aux_passengers, "r");                                                    //ficheiro dos passageiros
+                if (fpassengers==NULL){
+                    path_error = 1;
+                    return;
+                }
                 while (getline(&line, &len, fpassengers) != -1) {
                     if (l != 0) {
                         char parametros[2][FIELD_SIZE];
@@ -61,9 +70,14 @@ void open_files(char* path){
                     }
                 }
                 fclose(fpassengers);
+                create_files_passengers();
                 break;
             case 1:   
                 fflights = fopen(aux_flights, "r");                                                      //ficheiro dos voos
+                if (fflights==NULL){
+                    path_error = 1;
+                    return;
+                }
                 while (getline(&line, &len, fflights) != -1) {               //o programa vai ler linha a linha do ficheiro aberto
                     if (l != 0) {
                         char parametros[13][FIELD_SIZE];                       //o número de parâmetros varia de ficheiro para ficheiro
@@ -98,10 +112,15 @@ void open_files(char* path){
                     insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
                 }
                 fclose(fflights);
+                create_files_flights();
                 break;
 
             case 2:  
                 freservations = fopen(aux_reservations, "r");                                                     //ficheiro das reservas
+                if (freservations==NULL){
+                    path_error = 1;
+                    return;
+                }
                 while (getline(&line, &len, freservations) != -1) {
                     if (l != 0) {
                         char parametros[14][FIELD_SIZE];
@@ -138,10 +157,15 @@ void open_files(char* path){
                     }
                 }
                 fclose(freservations);
+                create_files_reservations();
                 break;
 
             case 0:
                 fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                if (fusers==NULL){
+                    path_error = 1;
+                    return;
+                }
                 while (getline(&line, &len, fusers) != -1) {
                     if (l != 0) {
                         char parametros[12][FIELD_SIZE];
@@ -167,6 +191,7 @@ void open_files(char* path){
                     }
                 }
                 fclose(fusers); 
+                create_files_users();
                 break;           
         }
     }

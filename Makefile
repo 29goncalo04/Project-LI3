@@ -7,7 +7,7 @@ RESULTADOS:=Resultados/
 OBJFILES=$(CFILES:src/%.c=$(DIREC)%.o)
 
 run: $(OBJFILES)
-	$(CC) -o programa-principal $^ $(FLAGS) -lm
+	$(CC) -o programa-principal $^ $(FLAGS) -lncurses -lm
 
 
 compile: run

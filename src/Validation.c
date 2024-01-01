@@ -7,19 +7,20 @@
 #include "../include/Validation.h"
 
 void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation){
-    int wanted_flight_id_validation = 1, wanted_user_id_validation = 1;
+    int wanted_flight_id_validation = 0, wanted_user_id_validation = 0;
+    if (flight_validation==1) wanted_flight_id_validation = 1;
     if (flight_validation==0){
-        for (int k=0; k<num_linhas_invalid_flight; k++){   //procura esse id de voo no array que tem os voos inválidos guardados
-            if (strcmp(parametros[0], flight_array_invalid[k].id)==0){
-                wanted_flight_id_validation = 0;
+        for (int k=0; k<num_linhas_valid_flight; k++){   //procura esse id de voo no array que tem os voos válidos guardados
+            if (strcmp(parametros[0], flight_array_valid[k].id)==0){
+                wanted_flight_id_validation = 1;
                 break;
             }
         }
     }
     if (wanted_flight_id_validation==1){
-        for (int l=0; l<num_linhas_invalid_user; l++){   //procura esse id de utilizador no array que tem os utilizadores inválidos guardados
-            if (strcmp(parametros[1], user_array_invalid[l].id)==0){
-                wanted_user_id_validation = 0;
+        for (int l=0; l<num_linhas_valid_user; l++){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados
+            if (strcmp(parametros[1], user_array_valid[l].id)==0){
+                wanted_user_id_validation = 1;
                 break;
             }
         }
@@ -53,10 +54,10 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
 
 
 void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
-    int validation = 0, wanted_user_id_validation = 1;
-    for (int i = 0; i<num_linhas_invalid_user; i++){
-        if (strcmp(parametros[1], user_array_invalid[i].id)==0) {    //encontrou o id desse utilizador no array de utilizadores inválidos
-            wanted_user_id_validation = 0;
+    int validation = 0, wanted_user_id_validation = 0;
+    for (int i = 0; i<num_linhas_valid_user; i++){
+        if (strcmp(parametros[1], user_array_valid[i].id)==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
+            wanted_user_id_validation = 1;
             break;
         }
     }

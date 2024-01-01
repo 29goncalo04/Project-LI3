@@ -20,14 +20,15 @@ void query1(char *line, int i, int n){
 
     if (isdigit(line[index_line])){   //irá listar o resumo de um voo
         wanted_id = -1;
+        /*
         for (int k=0; k<num_linhas_invalid_flight; k++){   //procura esse id de voo no array que tem os voos inválidos guardados
             if (strcmp(argument, flight_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id desse voo
                 break;
             }
-        }
-        if (wanted_id != -1);//encontrou o id desse voo nos inválidos
-        else {   //esse id de voo é válido
+        }*/
+        //if (wanted_id != -1);//encontrou o id desse voo nos inválidos
+        //else {   //esse id de voo é válido
             for (int k=0; k<num_linhas_valid_flight; k++){   //procura esse id de voo no array que tem os voos válidos guardados
                 if (strcmp(argument, flight_array_valid[k].id)==0){
                     wanted_id = k;  //encontrou o id desse voo
@@ -44,19 +45,20 @@ void query1(char *line, int i, int n){
                 outputs_query1_flights(flight_array_valid, contador_array, wanted_id, wanted_id_2, index_line, n); ////voos
                 generated_file = 1;
             }
-        }
+        //}
     }
     
     else if (line[index_line]=='B' && line[index_line+1]=='o' && line[index_line+2]=='o' && line[index_line+3]=='k'){  //irá listar o resumo de uma reserva
         wanted_id = -1;
+        /*
         for (int k=0; k<num_linhas_invalid_reservation; k++){   //procura esse id da reserva no array que tem as reservas inválidas guardadas
             if (strcmp(argument, reservation_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id dessa reserva
                 break;
             }
-        }
-        if (wanted_id != -1);//encontrou o id dessa reserva nas inválidas 
-        else {   //esse id de reserva é válido
+        }*/
+        //if (wanted_id != -1);//encontrou o id dessa reserva nas inválidas 
+        //else {   //esse id de reserva é válido
             for (int k=0; k<num_linhas_valid_reservation; k++){   //procura esse id da reserva no array que tem as reservas válidas guardadas
                 if (strcmp(argument, reservation_array_valid[k].id)==0){
                     wanted_id = k;  //encontrou o id dessa reserva
@@ -79,18 +81,19 @@ void query1(char *line, int i, int n){
                     generated_file = 1;
                 }
             }
-        }
+        //}
     }
     else{  //irá listar o resumo de um utilizador
         wanted_id = -1;
+        /*
         for (int k=0; k<num_linhas_invalid_user; k++){   //procura esse id do utilizador no array que tem os utilizadores inválidos guardados
             if (strcmp(argument, user_array_invalid[k].id)==0){
                 wanted_id = k;  //encontrou o id desse utilizador
                 break;
             }
-        }
-        if (wanted_id != -1);//encontrou o id desse utilizador nos inválidos  
-        else{
+        }*/
+        //if (wanted_id != -1);//encontrou o id desse utilizador nos inválidos  
+        //else{
             for (int k=0; k<num_linhas_valid_user; k++){   //procura esse id do utilizador no array que tem os utilizadores válidos guardados
                 if (strcmp(argument, user_array_valid[k].id)==0){
                     wanted_id = k;  //encontrou o id desse utilizador
@@ -118,7 +121,7 @@ void query1(char *line, int i, int n){
                 }
                 free(status);
             }
-        }  
+        //}  
     }
     free(argument);
     if (generated_file==0) create_output(n, 0);
@@ -130,14 +133,14 @@ void query2(char *line, int i, int n){
     char *argument2 = NULL;
     
     char* argument1 = arguments_query2(line, i, &exists_argument2, &argument2, &index_line);
-
+    /*
     for (int i = 0; i<num_linhas_invalid_user; i++){     //vai procurar o id do utilizador nos inválidos
         if (strcmp(argument1, user_array_invalid[i].id)==0){   //se encontrar o id desse utilizador
             wanted_user_id = i;
             break;
         }
-    }
-    if (wanted_user_id==-1){   //caso o utilizador seja válido
+    }*/
+    //if (wanted_user_id==-1){   //caso o utilizador seja válido
         for (int i = 0; i<num_linhas_valid_user; i++){     //vai procurar o id do utilizador nos válidos
             if (strcmp(argument1, user_array_valid[i].id)==0){   //se encontrar o id desse utilizador
                 wanted_user_id = i;
@@ -202,7 +205,7 @@ void query2(char *line, int i, int n){
             }
             free(status);
         }
-    }
+    //}
     free(argument1);
     free(argument2);
     if (generated_file==0) create_output(n, 0);

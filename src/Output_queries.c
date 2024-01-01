@@ -7,6 +7,7 @@
 #include "../include/Aux_validation.h"
 #include "../include/Queries.h"
 #include "../include/Aux_functions.h"
+#include "../include/Interpreter.h"
 
 FILE *output;
 
@@ -25,7 +26,10 @@ void create_output(int n, int conteudo){    //conteudo = 1 se existir conteudo p
         return;
     }
 
-    if (conteudo==0) fclose(output);
+    if (conteudo==0){
+        command_error = 1;
+        fclose(output);
+    }
 }
 
 void outputs_query1_flights (Flight *flight_array_valid, Contador_id *contador_array, int wanted_id, int wanted_id_2, int index_line, int n) {
