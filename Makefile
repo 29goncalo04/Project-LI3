@@ -8,10 +8,12 @@ OBJFILES=$(CFILES:src/%.c=$(DIREC)%.o)
 
 run: $(OBJFILES)
 	$(CC) -o programa-principal $^ $(FLAGS) -lncurses -lm
+	$(CC) -o programa-testes $^ $(FLAGS) -lncurses -lm
 
 
 compile: run
 	./programa-principal
+	./programa-testes
 
 
 valgrind: ./programa-principal
@@ -26,4 +28,4 @@ $(DIREC)%.o: src/%.c | objetos
 	$(CC) $(FLAGS) -o "$@" -c "$<"  
 
 clean:
-	rm -rf $(DIREC) $(RESULTADOS)*.csv $(RESULTADOS)*.txt programa-principal *.o
+	rm -rf $(DIREC) $(RESULTADOS)*.csv $(RESULTADOS)*.txt programa-principal programa-testes *.o
