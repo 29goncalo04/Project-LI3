@@ -1,7 +1,7 @@
 CC = gcc
 CFILES=$(wildcard src/*.c)
 PNTH=$(wildcard include/*.h)
-FLAGS= -Iinclude -Wall -Wextra -pedantic -O2 -g
+FLAGS= -Iinclude -Wall -Wextra -pedantic -O3 -g
 DIREC:=objetos/
 RESULTADOS:=Resultados/
 OBJFILES=$(CFILES:src/%.c=$(DIREC)%.o)

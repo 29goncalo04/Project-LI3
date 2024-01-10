@@ -92,7 +92,7 @@ void outputs_query2_reservations(int *list, int tam, int flag, int check, int n)
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
                 fprintf(output, "id: %s\n", reservation_array_valid[ind].init->reservation.id);
-                if (i == 0) fprintf(output, "date: %s", reservation_array_valid[ind].init->reservation.begin_date);
+                if (i == 0) fprintf(output, "date: %s\n", reservation_array_valid[ind].init->reservation.begin_date);
                 else {
                     fprintf(output, "date: %s\n", reservation_array_valid[ind].init->reservation.begin_date);
                     fprintf(output, "\n");
@@ -120,19 +120,23 @@ void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
                 fprintf(output, "id: %s\n", flight_array_valid[ind].init->flight.id);
-                if (i == 0) fprintf(output, "date: %s", only_date(flight_array_valid[ind].init->flight.schedule_departure_date));
+                char *only_date_aux = only_date(flight_array_valid[ind].init->flight.schedule_departure_date);
+                if (i == 0) fprintf(output, "date: %s\n", only_date_aux);
                 else {
-                    fprintf(output, "date: %s\n", only_date(flight_array_valid[ind].init->flight.schedule_departure_date));
+                    fprintf(output, "date: %s\n", only_date_aux);
                     fprintf(output, "\n");
                 }
+                free(only_date_aux);
             }
         }
         else {
             int ind;
             for (int i = tam - 1; 0 <= i; i--) {
                 ind = list[i];
-                if (i == 0) fprintf(output, "%s;%s", flight_array_valid[ind].init->flight.id, only_date(flight_array_valid[ind].init->flight.schedule_departure_date));
-                else fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date(flight_array_valid[ind].init->flight.schedule_departure_date));
+                char *only_date_aux = only_date(flight_array_valid[ind].init->flight.schedule_departure_date);
+                if (i == 0) fprintf(output, "%s;%s", flight_array_valid[ind].init->flight.id, only_date_aux);
+                else fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date_aux);
+                free(only_date_aux);
             }
         }
         fclose(output);
@@ -143,7 +147,6 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
     create_output(check, n);
     if (check == 1) {
         int check_date, ind_f, ind_r, i = tam_r - 1, j = tam_f - 1, num = 1;
-        //printf("tamaño de reservas: %d y tamaño de vuelos: %d\n", tam_r, tam_f);
         if (flag == 1) {
             while (0 <= i || 0 <= j) {
                 if (0<=i && j==-1) {
@@ -154,9 +157,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                         fprintf(output, "date: %s\n", reservation_array_valid[ind_r].init->reservation.begin_date);
                         fprintf(output, "type: reservation\n");
                         if(i != 0) fprintf(output, "\n");
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);
                     }
-                    //printf("termino el %d\n", n);
                     fclose(output);
                     return;
                 }
@@ -166,21 +167,21 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                         ind_f = list_f[j];
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
-                        fprintf(output, "date: %s\n", only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
+                        char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                        fprintf(output, "date: %s\n", only_date_aux);
+                        free(only_date_aux);
                         fprintf(output, "type: flight\n");
                         if(j != 0) fprintf(output, "\n");
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
                     }
-                    //printf("termino el %d\n", n);
                     fclose(output);
                     return;
                 }
 
                 ind_f = list_f[j];
                 ind_r = list_r[i];
-                // compare_date_time(i, f) == 0 i ocurre despues de f ||||| compare_date_time(i, f) == 1 i ocurre antes de f
-                if (strcmp(only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date), reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
-                    check_date = compare_date_time(only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date), reservation_array_valid[ind_r].init->reservation.begin_date);
+                char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
+                    check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
                     if (check_date == 1) {
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", reservation_array_valid[ind_r].init->reservation.id);
@@ -188,27 +189,24 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
                         i--;
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);
                     }
                     else {
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
-                        fprintf(output, "date: %s\n", only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
+                        fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
                         j--;
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
                     }
                 } 
                 else {
                     if (atoi(flight_array_valid[ind_f].init->flight.id) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
-                        fprintf(output, "date: %s\n", only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
+                        fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
                         j--;
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
                     }
                     else{
                         fprintf(output, "--- %d ---\n", num);
@@ -217,12 +215,11 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
                         i--;
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);
                     }
                 }
+                free(only_date_aux);
                 num++;
             }
-            //printf("termino el %d\n", n);
             fclose(output);
             return;
         }
@@ -232,9 +229,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     for (; 0 <= i; i--, num++) {
                         ind_r = list_r[i];
                         fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);              
                     }
-                    //printf("termino el %d\n", n);
                     fclose(output);
                     return;
                 }
@@ -242,45 +237,41 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 if (0<=j && i==-1) {
                     for (; 0 <= j; j--, num++) {
                         ind_f = list_f[j];
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
+                        char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
+                        free(only_date_aux);
                     }
-                    //printf("termino el %d\n", n);
                     fclose(output);
                     return;
                 }
                 
                 ind_r = list_r[i];
                 ind_f = list_f[j];
-                // compare_date_time(i, f) == 0 i ocurre despues de f ||||| compare_date_time(i, f) == 1 i ocurre antes de f
-                if (strcmp(only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date), reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
-                    check_date = compare_date_time(only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date), reservation_array_valid[ind_r].init->reservation.begin_date);
+                char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
+                    check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
                     if (check_date == 1) {
                         fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
                         i--;
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);
                     }
                     else {
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
+                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
                         j--;
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
                     }
                 } 
                 else {
                     if (atoi(flight_array_valid[ind_f].init->flight.id) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date));
+                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
                         j--;
-                        //printf("coloco vuelo - valor de j despues de restar: %d\n", j);
                     }
                     else{
                         fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
                         i--;
-                        //printf("coloco reserva - valor de i despues de restar: %d\n", i);
                     }
                 }
+                free(only_date_aux);
                 num++;
             }
-            //printf("termino el %d\n", n);
             fclose(output);
             return;
         }

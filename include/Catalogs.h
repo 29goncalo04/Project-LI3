@@ -10,15 +10,11 @@
 typedef struct User{            //struct com os parâmetros dos utilizadores
     char *id;
     char *name;
-    char *email;
-    char *phone_number;
     char *birth_date;
     char *sex;
     char *passport;
     char *country_code;
-    char *address;
     char *account_creation;
-    char *pay_method;
     char *account_status;
     int reservations;
     int *list_reservations;
@@ -38,10 +34,8 @@ typedef struct {
     int tam;
 } UList;
 
-extern int num_linhas_valid_user;
-extern int num_linhas_invalid_user;
-extern UList *user_array_valid;
-extern User *user_array_invalid;
+#define NUM_LINHAS_VALID_USER 1000000
+extern UList user_array_valid[NUM_LINHAS_VALID_USER]; //um milhão de users validos no pior caso
 
 User create_user(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de utilizadores
@@ -57,14 +51,11 @@ typedef struct {           //struct com os parâmetros das reservas
     char *hotel_name;
     char *hotel_stars;
     char *city_tax;
-    char *address;
     char *begin_date;
     char *end_date;
     char *price_per_night;
     char *includes_breakfast;
-    char *room_details;
     char *rating;
-    char *comment;
     int validation;
 } Reservation;
 
@@ -78,10 +69,8 @@ typedef struct {
     int tam;
 } RList;
 
-extern int num_linhas_valid_reservation;
-extern int num_linhas_invalid_reservation;
-extern RList *reservation_array_valid;
-extern Reservation *reservation_array_invalid;
+#define NUM_LINHAS_VALID_RESERVATION 6000000
+extern RList reservation_array_valid[NUM_LINHAS_VALID_RESERVATION];
 
 Reservation create_reservation(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de reservas
@@ -92,18 +81,15 @@ void create_array_reservations(char parametros[][FIELD_SIZE]);
 
 typedef struct Flight{           //struct com os parâmetros dos voos
     char *id;
-    char *airline; //este
-    char *plane_model; //este
+    char *airline;
+    char *plane_model;
     char *total_seats;
-    char *origin; //este
-    char *destination; //este
-    char *schedule_departure_date; //este
-    char *schedule_arrival_date; //este
+    char *origin; 
+    char *destination; 
+    char *schedule_departure_date;
+    char *schedule_arrival_date;
     char *real_departure_date;
     char *real_arrival_date;
-    char *pilot;
-    char *copilot;
-    char *notes;
     int passengers;
     int delay_time;
     int validation;
@@ -119,10 +105,8 @@ typedef struct {
     int tam;
 } FList;
 
-extern int num_linhas_valid_flight;
-extern int num_linhas_invalid_flight;
-extern FList *flight_array_valid;
-extern Flight *flight_array_invalid;
+#define NUM_LINHAS_VALID_FLIGHT 200000
+extern FList flight_array_valid[NUM_LINHAS_VALID_FLIGHT];
 
 Flight create_flight(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de voos
@@ -130,8 +114,6 @@ Flight create_flight(char parametros[][FIELD_SIZE]);
     //        aloca a memória necessária que cada parâmetro ocupa e escreve-o
 
 void create_array_flights(char parametros[][FIELD_SIZE]);
-
-
 
 typedef struct {       //struct com os parâmetros dos passageiros
     char *flight_id;
@@ -141,9 +123,7 @@ typedef struct {       //struct com os parâmetros dos passageiros
 } Passenger;
 
 extern int num_linhas_valid_passenger;
-extern int num_linhas_invalid_passenger;
 extern Passenger *passenger_array_valid;
-extern Passenger *passenger_array_invalid;
 
 Passenger create_passenger(char parametros[][FIELD_SIZE]);
     //     |->função que cria um elemento individual do array de passageiros

@@ -449,7 +449,6 @@
 // }
 
 void query1 (char *argument, int flag, int n) {
-    //printf("%d\n", n);
 	int generated_file = 0;
     if (argument[strlen(argument)-1] == '\n') argument[strlen(argument)-1] = '\0';
     if (isdigit(argument[0])) {
@@ -515,47 +514,40 @@ void query2 (char *str, int flag, int n) {
     int ind_u, l;
     char *id = strtok(str, " ");
     char *argument = strtok(NULL, " ");
-    //printf("inicio\n");
     if (argument != NULL) {
         l = strlen(argument);
         argument[l-1] = '\0';
         if (strcmp("reservations", argument) == 0) {
-            //printf("id: %s argument: %s\n", id, argument);
-            //printf("inicio reserva\n");
             ind_u = found_index_users(id);
-            //printf("%d\n", ind_u);
             UNo *upointer = user_array_valid[ind_u].init;
             while (upointer != NULL) {
-                //printf("%s\n", upointer->user.id);
                 if (strcmp(id, upointer->user.id) == 0) {
-                    if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
+                    if (strcmp(upointer->user.account_status, "active") == 0) {
+                        outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
+                    }
                     else {
-                        //printf("entramos en la funcion\n");
                         outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);   
                     }
-                    break;
+                    return;
                 }
                 else upointer = upointer->prox;
             }
+            create_output(0, n);
         }
         if (strcmp("flights", argument) == 0) {
-            //printf("id: %s argument: %s\n", id, argument);
-            //printf("inicio reserva\n");
             ind_u = found_index_users(id);
-            //printf("%d\n", ind_u);
             UNo *upointer = user_array_valid[ind_u].init;
             while (upointer != NULL) {
-                //printf("%s\n", upointer->user.id);
                 if (strcmp(id, upointer->user.id) == 0) {
                     if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 1, n);
                     else {
-                        //printf("entramos en la funcion\n");
                         outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 0, n);   
                     }
-                    break;
+                    return;
                 }
                 else upointer = upointer->prox;
             }
+            create_output(0, n);
         }
     }
     else {
@@ -567,48 +559,10 @@ void query2 (char *str, int flag, int n) {
             if (strcmp(id, upointer->user.id) == 0) {
                 if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
                 else outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);
-                break;
+                return;
             }
             else upointer = upointer->prox;
         }
+        create_output(0, n);
     }
-
-
-    // if (argument == NULL) {
-    //     ind_u = found_index_users(id);
-    //     UNo *upointer = user_array_valid[ind_u].init;
-    //     while (upointer != NULL) {
-    //         if (strcmp(id, upointer->user.id) == 0) {
-    //             // if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_both(upointer->user.list_flights, upointer->user.list_reservations, flag, 1, n);
-    //             // else outputs_query2_both(upointer->user.list_flights, upointer->user.list_reservations, flag, 0, n);
-    //         }
-    //     }
-    // }
-    // else {
-            // l = strlen(argument);
-            // argument[l-1] = '\0';
-    //     if (strcmp("flights", argument) == 0) {
-    //         ind_u = found_index_users(id);
-    //         UNo *upointer = user_array_valid[ind_u].init;
-    //         while (upointer != NULL) {
-    //             if (strcmp(id, upointer->user.id) == 0) {
-    //                 // if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_flights(upointer->user.list_flights, flag, 1, n);
-    //                 // else outputs_query2_flights(upointer->user.list_flights, flag, 0, n);
-    //             }
-    //         }
-    //     }
-        //else { //n sei se seria melhor fazer o strcmp com reservations
-            // printf("inicio reserva\n");
-            // ind_u = found_index_users(id);
-            // UNo *upointer = user_array_valid[ind_u].init;
-            // while (upointer != NULL) {
-            //     if (strcmp(id, upointer->user.id) == 0) {
-            //         if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
-            //         else outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);
-                        //break;
-            //     }
-            //     else upointer = upointer->prox;
-            // }
-        //}
-    //}
 }

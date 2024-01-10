@@ -11,11 +11,10 @@ int found_index_flights(char *key);
 int found_index_reservations(char *key);
 int found_index_users(char *key);
 
-void init_user_array(UList *user_array_valid, int num_linhas_valid_user, int m_users);
-void init_flight_array(FList *flight_array_valid, int num_linhas_valid_flight, int m_flights);
-void init_reservation_array(RList *reservation_array_valid, int num_linhas_valid_reservation, int m_reservations);
+void init_user_array(UList *user_array);
+void init_flight_array(FList *flight_array_valid);
+void init_reservation_array(RList *reservation_array);
 
-void users_hash_sort();
-void flights_hash_sort();
-void reservations_hash_sort();
-
+void users_hash_sort(UList *user_array_valid, UList list);
+void flights_hash_sort(FList *flight_array_valid, FList list);
+void reservations_hash_sort(RList *reservation_array_valid, RList list);

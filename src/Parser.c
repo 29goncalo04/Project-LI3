@@ -42,6 +42,7 @@ void open_files(char* path){
         switch (num_ficheiro){
             case 3: 
                 fpassengers = fopen(aux_passengers, "r");
+                start_files_passengers();
                 if (fpassengers==NULL){
                     path_error = 1;
                     return;
@@ -70,31 +71,14 @@ void open_files(char* path){
                         l++;
                     }
                 }
-                // for (int i = 0; i < num_linhas_valid_user; i++) {
-                //     UNo *pointer = user_array_valid[i].init;
-                //     while(pointer != NULL) {
-                //         printf("%s\n",pointer->user.id);
-                //         for (int j = 0; j < pointer->user.flights; j++) {
-                //             printf("%d ", pointer->user.list_flights[j]);
-                //         }
-                //         printf("\n");
-                //         pointer = pointer->prox;
-                //     }
-                //     //printf("%d ", upointer->user.list_flights[i]);
-                // }
                 fclose(fpassengers);
-                create_files_passengers();
                 printf("pasajeros listo\n");
-                // int ind = found_index_users("JéssiTavares910");
-                // UNo *pointer = user_array_valid[ind].init;
-                // int tamanho = user_array_valid[ind].tam;
-                // for (int i = 0; i < tamanho; i++, pointer = pointer->prox) {
-                //     if (strcmp(pointer->user.id, "JéssiTavares910") == 0) printf("%d\n", pointer->user.flights);
-                // }
                 break;
             
             case 1:   
+                init_flight_array(flight_array_valid);
                 fflights = fopen(aux_flights, "r");
+                start_files_flights();
                 if (fflights==NULL){
                     path_error = 1;
                     return;
@@ -134,13 +118,13 @@ void open_files(char* path){
                     insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
                 }
                 fclose(fflights);
-                flights_hash_sort();
-                create_files_flights();
                 printf("vuelos listo\n");
                 break;
 
             case 2:  
-                freservations = fopen(aux_reservations, "r");                                                     //ficheiro das reservas
+                init_reservation_array(reservation_array_valid);
+                freservations = fopen(aux_reservations, "r"); 
+                start_files_reservations();                                         //ficheiro das reservas
                 if (freservations==NULL){
                     path_error = 1;
                     return;
@@ -181,13 +165,13 @@ void open_files(char* path){
                     }
                 }
                 fclose(freservations);
-                reservations_hash_sort();
-                create_files_reservations();
                 printf("reservas listo\n");
                 break;
             
             case 0:
+                init_user_array(user_array_valid);
                 fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                start_files_users();
                 if (fusers==NULL){
                     path_error = 1;
                     return;
@@ -217,8 +201,6 @@ void open_files(char* path){
                     }
                 }
                 fclose(fusers);
-                users_hash_sort();
-                create_files_users();
                 printf("users listo\n");
                 break;          
         }
