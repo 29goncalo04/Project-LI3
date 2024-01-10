@@ -103,7 +103,7 @@ void outputs_query2_reservations(int *list, int tam, int flag, int check, int n)
             int ind;
             for (int i = tam - 1; 0 <= i; i--) {
                 ind = list[i];
-                if (i == 0) fprintf(output, "%s;%s", reservation_array_valid[ind].init->reservation.id, reservation_array_valid[ind].init->reservation.begin_date);
+                if (i == 0) fprintf(output, "%s;%s\n", reservation_array_valid[ind].init->reservation.id, reservation_array_valid[ind].init->reservation.begin_date);
                 else fprintf(output, "%s;%s\n", reservation_array_valid[ind].init->reservation.id, reservation_array_valid[ind].init->reservation.begin_date);
             }
         }
@@ -134,7 +134,7 @@ void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
             for (int i = tam - 1; 0 <= i; i--) {
                 ind = list[i];
                 char *only_date_aux = only_date(flight_array_valid[ind].init->flight.schedule_departure_date);
-                if (i == 0) fprintf(output, "%s;%s", flight_array_valid[ind].init->flight.id, only_date_aux);
+                if (i == 0) fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date_aux);
                 else fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date_aux);
                 free(only_date_aux);
             }
