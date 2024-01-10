@@ -5,7 +5,7 @@
 
 char* arguments_query1(char *line, int i, int *index_line){
     *index_line = i;
-    for (; line[*index_line]==' ' || line[*index_line]=='"'; (*index_line)++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
+    for (; line[*index_line]== ' ' || line[*index_line]=='"'; (*index_line)++);   //encontra o indice do primeiro argumento ignorando os espaços e as aspas
     int argument_length = 0;
     for (int j = *index_line; line[j]!='\0' && line[j]!='\n' ; j++, argument_length++);  //conta o tamanho do argumento
     char *argument = (char*)malloc((argument_length + 1) * sizeof(char));

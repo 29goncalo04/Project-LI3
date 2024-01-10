@@ -1,36 +1,41 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../include/Catalogs.h"
 #include "../include/Aux_validation.h"
 #include "../include/Statistics.h"
 #include "../include/Validation.h"
+#include "../include/Hash.h"
 
-void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation){
-    int wanted_flight_id_validation = 0, wanted_user_id_validation = 0;
-    if (flight_validation==1) wanted_flight_id_validation = 1;
-    if (flight_validation==0){
-        for (int k=0; k<num_linhas_valid_flight; k++){   //procura esse id de voo no array que tem os voos válidos guardados
-            if (strcmp(parametros[0], flight_array_valid[k].id)==0){
-                wanted_flight_id_validation = 1;
-                break;
-            }
+int validate_passenger(char parametros[][FIELD_SIZE]) {
+    int wanted_flight_id_validation = 0, wanted_user_id_validation = 0, tam, ind_u, ind_f;
+    FNo *fnodo;
+    ind_f = found_index_flights(parametros[0]); //id_voo
+    tam = flight_array_valid[ind_f].tam;
+    fnodo = flight_array_valid[ind_f].init;
+    for (int i = 0; i < tam; i++, fnodo = fnodo->prox){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
+        if (strcmp(parametros[0], fnodo->flight.id)==0){
+            wanted_flight_id_validation = 1;
+            break;
         }
     }
     if (wanted_flight_id_validation==1){
-        for (int l=0; l<num_linhas_valid_user; l++){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados
-            if (strcmp(parametros[1], user_array_valid[l].id)==0){
+        UNo *unodo;
+        ind_u = found_index_users(parametros[1]); //id_user
+        tam = user_array_valid[ind_u].tam;
+        unodo = user_array_valid[ind_u].init;
+        for (int i = 0; i < tam; i++, unodo = unodo->prox){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
+            if (strcmp(parametros[1], unodo->user.id)==0){
                 wanted_user_id_validation = 1;
                 break;
             }
         }
     }
-    nova->validation_flight = wanted_flight_id_validation;
-    nova->validation = wanted_flight_id_validation && wanted_user_id_validation;
+    return (wanted_flight_id_validation && wanted_user_id_validation);
 }
 
-
-void validate_flight(Flight *nova, char parametros[][FIELD_SIZE], Contador_id *contador_array, int num_linhas_contador){
+void validate_flight(Flight *nova, char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) &&
                  check_length (parametros[3]) && check_length (parametros[6]) && check_length (parametros[7]) &&
                  check_length(parametros[10]) && check_length(parametros[11]) &&
@@ -54,14 +59,18 @@ void validate_user(User *nova, char parametros[][FIELD_SIZE]){
 
 
 void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
-    int validation = 0, wanted_user_id_validation = 0;
-    for (int i = 0; i<num_linhas_valid_user; i++){
-        if (strcmp(parametros[1], user_array_valid[i].id)==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
+    int validation = 0, wanted_user_id_validation = 0, tam, ind;
+    UNo *unodo;
+    ind = found_index_users(parametros[1]);
+    unodo = user_array_valid[ind].init;
+    tam = user_array_valid[ind].tam;
+    for (int j = 0; j < tam; j++, unodo = unodo->prox) {
+        if (strcmp(parametros[1], unodo->user.id)==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
             wanted_user_id_validation = 1;
             break;
         }
     }
-    if (wanted_user_id_validation==1){
+    if (wanted_user_id_validation==1) {
         validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) && check_length(parametros[3]) &&
         verify_hotel_stars(parametros[4]) && check_length (parametros[5]) && verify_city_tax(parametros[5]) && check_length(parametros[6]) &&
         check_date(parametros[7]) && check_date(parametros[8]) && check_length (parametros[9]) && check_price_per_night(parametros[9]) && 
@@ -69,6 +78,6 @@ void validate_reservation(Reservation *nova, char parametros[][FIELD_SIZE]){
         check_reserva_rating(parametros[12]) && compare_date_time(parametros[7], parametros[8]);
     }
     nova->validation = validation;
-    free(nova->includes_breakfast);
-    nova->includes_breakfast = strdup(parametros[10]);
+    // free(nova->includes_breakfast);
+    // nova->includes_breakfast = strdup(parametros[10]);
 }

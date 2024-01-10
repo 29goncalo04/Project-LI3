@@ -8,7 +8,9 @@
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
 
-void free_flight_valid(Flight *flight_array_valid, int num_linhas_valid);
+void free_list_flight(FNo *nodo);
+
+void free_flight_valid(FList *flight_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de voos, e libera elemento a elemento
 
@@ -24,7 +26,9 @@ void free_passenger_invalid(Passenger *passenger_array_invalid, int num_linhas_i
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de passageiros, e libera elemento a elemento
 
-void free_reservation_valid(Reservation *reservation_array_valid, int num_linhas_valid);
+void free_list_reservation(RNo *nodo);
+
+void free_reservation_valid(RList *reservation_array_valid, int num_linhas_valid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de reservas, e libera elemento a elemento
 
@@ -32,7 +36,7 @@ void free_reservation_invalid(Reservation *reservation_array_invalid, int num_li
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de reservas, e libera elemento a elemento
 
-void free_user_valid(User *user_array_valid, int num_linhas_valid);
+void free_user_valid();
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de utilizadores, e libera elemento a elemento
 

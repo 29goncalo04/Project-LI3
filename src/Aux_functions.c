@@ -144,3 +144,37 @@ int calculate_mediana(int *atrasos, int num_atrasos){
 int compare_date_time2(char *i, char *f) {
     return strcmp(i, f);
 }
+
+int is_prime(int num) {
+    if (num < 2) {
+        return 0;
+    }
+
+    for (int i = 2; i * i <= num; ++i) {
+        if (num % i == 0) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+int find_near_prime(int num) {
+    if (num < 2) {
+        return 2;  // O numero primo mais perto é o 2
+    }
+
+    int previous_prime = num - 1;
+    int posterior_prime = num + 1;
+
+    while (1) {
+        if (is_prime(previous_prime)) {
+            return previous_prime;
+        } else if (is_prime(posterior_prime)) {
+            return posterior_prime;
+        } else {
+            previous_prime--;
+            posterior_prime++;
+        }
+    }
+}

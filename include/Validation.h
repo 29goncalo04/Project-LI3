@@ -6,11 +6,11 @@
 #include "../include/Statistics.h"
 #include "../include/Catalogs.h"
 
-void validate_passenger(Passenger *nova, char parametros[][FIELD_SIZE], int flight_validation);
+int validate_passenger(char parametros[][FIELD_SIZE]);
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de passageiros, e caso algum elemento seja inválido
     //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 
-void validate_flight(Flight *nova, char parametros[][FIELD_SIZE], Contador_id *contador_array, int num_linhas_contador);
+void validate_flight(Flight *nova, char parametros[][FIELD_SIZE]);
     //    |->função que verifica parâmetro a parâmetro de cada elemento do array de voos, e caso algum elemento seja inválido
     //       a função altera o parâmetro que indica se esse elemento é válido ou não para 0
 

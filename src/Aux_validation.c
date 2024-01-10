@@ -6,7 +6,7 @@
 #include "../include/Aux_validation.h"
 
 int compare_date_time (char *i, char *f){     //i de evento inicial, f de evento final
-    int tamanho = strlen(i);                    //1979/11/27      2016/09/10 17:34:41
+    int tamanho = strlen(i);                    //1979/11/27      2016/09/10 17:34:41   2020/01/24  2020/01/23
     for (int k = 0; k<tamanho; k++){
         if (i[k]-f[k]>0) return 0;  //não é válido
         else if (i[k]-f[k]<0) return 1;   //é válido
@@ -76,14 +76,9 @@ void toUpperCase(char *str) {
 }
 
 int verify_breakfast(char *breakfast){
-    int result;
-    if (breakfast[0] != ' ') toLowerCase(breakfast);
-    if (strcmp (breakfast, "t")==0 || strcmp (breakfast, "true")==0 || strcmp (breakfast, "1")==0) result = 1;    //parâmetro válido
-    else {
-        if (strcmp (breakfast, "f")==0 || strcmp (breakfast, "false")==0 || strcmp (breakfast, "0")==0 || strcmp (breakfast, " ")==0) result = 2;
-        else result = 0;  //caso em que é inválido
-    }
-    return result; 
+    if (strcmp (breakfast, "T")==0 || strcmp (breakfast, "TRUE")==0 || strcmp (breakfast, "t")==0 || strcmp (breakfast, "true")==0 || strcmp (breakfast, "1")==0) return 1;    //parâmetro válido
+    if (strcmp (breakfast, "F")==0 || strcmp (breakfast, "FALSE")==0 || strcmp (breakfast, "f")==0 || strcmp (breakfast, "false")==0 || strcmp (breakfast, "0")==0 || strcmp (breakfast, " ")==0) return 2; //parâmetro válido
+    return 0;
 }
 
 int verify_country_code (char *c) { 

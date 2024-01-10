@@ -60,4 +60,11 @@ int calculate_mediana(int *atrasos, int num_atrasos);
 int compare_date_time2(char *i, char *f);
     //     |->função que compara duas datas para saber qual a mais antiga
 
+int is_prime(int num);
+    //     |->função que verifica se num é primo
+
+int find_near_prime(int num);
+    //     |->função que procura o numero primo mais perto de num
+
+
 #endif 

@@ -7,7 +7,7 @@
 
 #define FIELD_SIZE 100
 
-typedef struct {            //struct com os parâmetros dos utilizadores
+typedef struct User{            //struct com os parâmetros dos utilizadores
     char *id;
     char *name;
     char *email;
@@ -20,12 +20,27 @@ typedef struct {            //struct com os parâmetros dos utilizadores
     char *account_creation;
     char *pay_method;
     char *account_status;
+    int reservations;
+    int *list_reservations;
+    int flights;
+    int *list_flights;
+    double total_spent;
     int validation;
 } User;
 
+typedef struct UNo {
+    User user;
+    struct UNo *prox;
+} UNo;
+
+typedef struct {
+    UNo *init;
+    int tam;
+} UList;
+
 extern int num_linhas_valid_user;
 extern int num_linhas_invalid_user;
-extern User *user_array_valid;
+extern UList *user_array_valid;
 extern User *user_array_invalid;
 
 User create_user(char parametros[][FIELD_SIZE]);
@@ -34,7 +49,6 @@ User create_user(char parametros[][FIELD_SIZE]);
     //        aloca a memória necessária que cada parâmetro ocupa e escreve-o
 
 void create_array_users(char parametros[][FIELD_SIZE]);
-
 
 typedef struct {           //struct com os parâmetros das reservas
     char *id;
@@ -54,9 +68,19 @@ typedef struct {           //struct com os parâmetros das reservas
     int validation;
 } Reservation;
 
+typedef struct RNo {
+    Reservation reservation;
+    struct RNo *prox;
+} RNo;
+
+typedef struct {
+    RNo *init;
+    int tam;
+} RList;
+
 extern int num_linhas_valid_reservation;
 extern int num_linhas_invalid_reservation;
-extern Reservation *reservation_array_valid;
+extern RList *reservation_array_valid;
 extern Reservation *reservation_array_invalid;
 
 Reservation create_reservation(char parametros[][FIELD_SIZE]);
@@ -66,29 +90,38 @@ Reservation create_reservation(char parametros[][FIELD_SIZE]);
 
 void create_array_reservations(char parametros[][FIELD_SIZE]);
 
-
-
-
-typedef struct {           //struct com os parâmetros dos voos
+typedef struct Flight{           //struct com os parâmetros dos voos
     char *id;
-    char *airline;
-    char *plane_model;
+    char *airline; //este
+    char *plane_model; //este
     char *total_seats;
-    char *origin;
-    char *destination;
-    char *schedule_departure_date;
-    char *schedule_arrival_date;
+    char *origin; //este
+    char *destination; //este
+    char *schedule_departure_date; //este
+    char *schedule_arrival_date; //este
     char *real_departure_date;
     char *real_arrival_date;
     char *pilot;
     char *copilot;
     char *notes;
+    int passengers;
+    int delay_time;
     int validation;
 } Flight;
 
+typedef struct FNo {
+    Flight flight;
+    struct FNo *prox;
+} FNo;
+
+typedef struct {
+    FNo *init;
+    int tam;
+} FList;
+
 extern int num_linhas_valid_flight;
 extern int num_linhas_invalid_flight;
-extern Flight *flight_array_valid;
+extern FList *flight_array_valid;
 extern Flight *flight_array_invalid;
 
 Flight create_flight(char parametros[][FIELD_SIZE]);
