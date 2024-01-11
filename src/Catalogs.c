@@ -195,9 +195,7 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
 
                 //maybe seria bom fazer isto noutro modulo
                 ind_f = found_index_flights(parametros[0]);
-                char *aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
-                ordena_list_flights(ind_f, aux, parametros[0], &(upointer->user.list_flights), upointer->user.flights);
-                free(aux);
+                ordena_list_flights(ind_f, flight_array_valid[ind_f].init->flight.schedule_departure_date, parametros[0], &(upointer->user.list_flights), upointer->user.flights);
                 break;
             }
             else upointer = upointer->prox;

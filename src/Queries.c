@@ -481,16 +481,16 @@ void query1 (char *argument, int flag, int n) {
                 }
 
                 if (upointer != NULL) {
-                    if (verify_account_status(upointer->user.account_status) != 2) { //não imprime nada caso a conta do utilizador esteja inativa
+                    //if (verify_account_status(upointer->user.account_status) != 2) { //não imprime nada caso a conta do utilizador esteja inativa
                         char *breakfast;
                         if (verify_breakfast(rpointer->reservation.includes_breakfast) == 1) breakfast = strdup("True");
                         else  breakfast = strdup("False");
                         outputs_query1_reservations(rpointer, breakfast, flag, n); //reservas UNo *pointer, int flag, int check, int n
                         free(breakfast);
                         generated_file = 1;
-                    }
+                    //}
                 }
-            } 
+            }
         }
         else {
             int ind = found_index_users(argument);
@@ -500,7 +500,7 @@ void query1 (char *argument, int flag, int n) {
                 else pointer = pointer->prox;
             }
             if (pointer != NULL) {
-                if (strcmp(pointer->user.account_status, "active") == 0) outputs_query1_users(pointer, flag, 1, n);
+                if (verify_account_status(pointer->user.account_status) != 2) outputs_query1_users(pointer, flag, 1, n);
                 else outputs_query1_users(pointer, flag, 0, n);
                 generated_file = 1;
             }
@@ -522,7 +522,7 @@ void query2 (char *str, int flag, int n) {
             UNo *upointer = user_array_valid[ind_u].init;
             while (upointer != NULL) {
                 if (strcmp(id, upointer->user.id) == 0) {
-                    if (strcmp(upointer->user.account_status, "active") == 0) {
+                    if (verify_account_status(upointer->user.account_status) != 2) {
                         outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
                     }
                     else {
@@ -539,7 +539,7 @@ void query2 (char *str, int flag, int n) {
             UNo *upointer = user_array_valid[ind_u].init;
             while (upointer != NULL) {
                 if (strcmp(id, upointer->user.id) == 0) {
-                    if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 1, n);
+                    if (verify_account_status(upointer->user.account_status) != 2) outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 1, n);
                     else {
                         outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 0, n);   
                     }
@@ -557,7 +557,7 @@ void query2 (char *str, int flag, int n) {
         UNo *upointer = user_array_valid[ind_u].init;
         while (upointer != NULL) {
             if (strcmp(id, upointer->user.id) == 0) {
-                if (strcmp(upointer->user.account_status, "active") == 0) outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
+                if (verify_account_status(upointer->user.account_status) != 2) outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
                 else outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);
                 return;
             }

@@ -8,8 +8,6 @@
 #include <math.h>
 #include <unistd.h>
 
-#define Null 0
-
 void ordena_list_reservations(int ind, char *date_ind, char *id_r, int **list, int n) {
     int j, check;
     for (int i = 0; i < n; i++) {
@@ -31,7 +29,7 @@ void ordena_list_reservations(int ind, char *date_ind, char *id_r, int **list, i
                 }
             } 
             else { //Book00903905
-                if (atoi(pointer->reservation.id + 4) - atoi(id_r + 4) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                if (atoi(pointer->reservation.id + 4) - atoi(id_r + 4) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                     for (int k = n-1; i < k; k--) {
                         (*list)[k] = (*list)[k-1];
                     }
@@ -54,42 +52,43 @@ void ordena_list_flights(int ind, char *date_ind, char *id_f, int **list, int n)
         else {
             j = (*list)[i];
             FNo *pointer = flight_array_valid[j].init;
-            char *date = only_date(pointer->flight.schedule_departure_date);
-            if (strcmp(date_ind, date) != 0) {
-                char *aux = only_date(pointer->flight.schedule_departure_date);
-                check = compare_date_time(date_ind, aux);
-                free(aux);
+            if (strcmp(date_ind, pointer->flight.schedule_departure_date) != 0) {
+                check = compare_date_time(date_ind, pointer->flight.schedule_departure_date);
                 if (check == 1) {
                     for (int k = n-1; i < k; k--) {
                         (*list)[k] = (*list)[k-1];
                     }
                     (*list)[i] = ind;
-                    free(date);
                     return;
                 }
             } 
             else { //00903905
-                if (atoi(pointer->flight.id) - atoi(id_f) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                    for (int k = n-1; i < k; k--) {
+                if (atoi(pointer->flight.id) - atoi(id_f) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                    for (int k = n-1; i <= k; k--) {
                         (*list)[k] = (*list)[k-1];
                     }
                     (*list)[i] = ind;
-                    free(date);
                     return;
                 }
             }
-            free(date);
         }
     }
     return;
 }
 
-int found_index_users(char *key) { // por alguna razon con el id: JúSá retorna un numero negativo: -130. Por que? tube que poner el abs para que coloque el modulo y no de segmentipn fault
-    int ind = 0;
-    for (int i = 0; key[i] != '\0'; i++)
-        ind += key[i];
-    ind = abs(ind % NUM_LINHAS_VALID_USER);
-    return ind;
+unsigned long hash_djb2(char *key) {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *key++)) {
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    }
+
+    return hash % NUM_LINHAS_VALID_USER;
+}
+
+int found_index_users(char *key) {
+    return hash_djb2(key);
 }
 
 int found_index_flights(char *key) {

@@ -34,7 +34,7 @@ typedef struct {
     int tam;
 } UList;
 
-#define NUM_LINHAS_VALID_USER 1000000
+#define NUM_LINHAS_VALID_USER 2000003
 extern UList user_array_valid[NUM_LINHAS_VALID_USER]; //um milhão de users validos no pior caso
 
 User create_user(char parametros[][FIELD_SIZE]);

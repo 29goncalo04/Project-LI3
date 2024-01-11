@@ -14,7 +14,7 @@ void find_equal_files(char* path3){
     while ((entry_path3 = readdir(dir_path3)) != NULL){   //vai percorrer todos os ficheiros da pasta dos outputs corretos
         if (entry_path3->d_type == DT_REG) {  // Verificar se é um arquivo regular
             char file_path3[500];
-            snprintf(file_path3, sizeof(file_path3), "%s/%s", path3, entry_path3->d_name);
+            snprintf(file_path3, sizeof(file_path3), "%s%s", path3, entry_path3->d_name);
             char file_resultados[500];
             snprintf(file_resultados, sizeof(file_resultados), "../trabalho-pratico/Resultados/%s", entry_path3->d_name);
             FILE *file_resultados_check = fopen(file_resultados, "r");
@@ -22,7 +22,10 @@ void find_equal_files(char* path3){
                 fclose(file_resultados_check);
                 char *result = compare_files(file_path3, file_resultados);
                 if (result == NULL) fprintf(output_tests, "File '%s' is correct.\n", entry_path3->d_name);
-                else fprintf(output_tests, "File '%s' differ on the line -> %s", entry_path3->d_name, result);
+                else {
+                    if (strcmp(result, "File is empty")==0) fprintf(output_tests, "File '%s' is empty.\n", entry_path3->d_name);
+                    else fprintf(output_tests, "File '%s' differ on the line -> %s", entry_path3->d_name, result);
+                }
                 free(result);
             }
         }
@@ -36,6 +39,14 @@ void find_equal_files(char* path3){
 char* compare_files(const char *file1, const char *file2){
     FILE *f1 = fopen(file1, "r");
     FILE *f2 = fopen(file2, "r");
+    // Verifica se o output de resultado está indevidamente vazio
+    int firstChar1 = fgetc(f1);
+    int firstChar2 = fgetc(f2);
+    if (firstChar1 != EOF && firstChar2 == EOF) {
+        fclose(f1);
+        fclose(f2);
+        return strdup("File is empty");
+    }
     char line1[200], line2[200];
     int line = 1;
 

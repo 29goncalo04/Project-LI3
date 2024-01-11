@@ -14,7 +14,7 @@ FILE *output;
 void create_output(int check, int n){    //conteudo = 1 se existir conteudo para escrever nesse ficheiro, e conteudo = 0 se for para criar um ficheiro vazio
     int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
     if (n>=10 && n<100) filename_size++;
-    else if (n>=100) filename_size++;
+    else if (n>=100) filename_size = filename_size + 2;
     char *filename = (char *)malloc(filename_size + 1); //aloca memória dinamicamente para o nome do ficheiro
     snprintf(filename, filename_size + 1, "../trabalho-pratico/Resultados/command%d_output.txt", n);  //formata o nome do arquivo
     output = fopen(filename, "w");
