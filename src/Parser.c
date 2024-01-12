@@ -76,7 +76,7 @@ void open_files(char* path){
                 break;
             
             case 1:   
-                init_flight_array(flight_array_valid);
+                //init_flight_array(flight_array_valid);
                 fflights = fopen(aux_flights, "r");
                 start_files_flights();
                 if (fflights==NULL){

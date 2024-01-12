@@ -25,8 +25,9 @@ void adicionar_atrasos(Atrasos *atrasos, int novo_atraso){    //para o módulo d
     atrasos->num_atrasos++; 
 }
 
-void create_array_atrasos(Flight nova, int num_linhas_valid_flight, char parametros[][FIELD_SIZE]){
-    char *Airport = nova.origin;
+void create_array_atrasos(FNo* nova, int num_linhas_valid_flight, char parametros[][FIELD_SIZE]){
+    const char *Airport_aux = get_flight_origin(nova);
+    char *Airport = strdup(Airport_aux);
     toUpperCase(Airport);
     int found = 0;   //variável auxiliar para dizer se o aeroporto foi encontrado ou não
     if (num_linhas_valid_flight == 0){   //se for a primeira linha a ser lida
@@ -50,45 +51,5 @@ void create_array_atrasos(Flight nova, int num_linhas_valid_flight, char paramet
             num_Atrasos++;  
         }
     }
-}
-
-
-Contador_id *contador_array = NULL;
-int num_linhas_contador = 0;
-
-Contador_id create_contador(char parametros[][FIELD_SIZE]){     
-    Contador_id novo;                                          
-    novo.id_flight = strdup(parametros[0]);
-    novo.contador = 0;
-    return novo;
-}
-
-void create_array_contador(Passenger nova, char parametros[][FIELD_SIZE]){
-    if (num_linhas_contador==0){ // Se for a primeira iteração, apenas adicione o novo elemento ao contador_array
-        Contador_id novo = create_contador(parametros);
-        contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-        contador_array[num_linhas_contador] = novo;
-        num_linhas_contador++;
-    }
-    else{
-        if (atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight)>1){ //se o ID anterior não é o estritamente anterior ao ID da linha atual  (por exemplo: atual->003, anterior->001)
-            int array_vazio = atoi(nova.flight_id)-atoi(contador_array[num_linhas_contador-1].id_flight);
-            for (int k = 0; k<array_vazio; k++){
-                contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-                contador_array[num_linhas_contador].id_flight = strdup("");
-                contador_array[num_linhas_contador].contador = 0;
-                num_linhas_contador++;
-            }
-        }
-        if (strcmp(nova.flight_id, contador_array[num_linhas_contador-1].id_flight)==0){  //se o ID anterior é igual ao da linha atual 
-            // Se o ID do voo é o mesmo, apenas atualiza o contador do elemento existente
-            if (contador_array[num_linhas_contador - 1].contador == 0) contador_array[num_linhas_contador - 1].contador++;
-            contador_array[num_linhas_contador - 1].contador++;
-        } else{  // Se o ID do voo é diferente, cria um novo elemento Contador_id e adiciona ao contador_array
-        Contador_id novo = create_contador(parametros);
-        contador_array = realloc(contador_array, (num_linhas_contador + 1) * sizeof(Contador_id));
-        contador_array[num_linhas_contador] = novo;
-        num_linhas_contador++;
-        }
-    }
+    free(Airport);
 }

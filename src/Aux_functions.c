@@ -18,7 +18,7 @@ void insertionSort_atrasos(int *atrasos, int num_atrasos){
     }
 }
 
-int delay(char *schedule, char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
+int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
     int atraso = 0, verdadeira = 0, prevista = 0;
     verdadeira = (real[11]-'0')*36000 + (real[12]-'0')*3600 + (real[14]-'0')*600 + (real[15]-'0')*60 + (real[17]-'0')*10 + (real[18]-'0');
     prevista = (schedule[11]-'0')*36000 + (schedule[12]-'0')*3600 + (schedule[14]-'0')*600 + (schedule[15]-'0')*60 + (schedule[17]-'0')*10 + (schedule[18]-'0');
@@ -32,6 +32,18 @@ int nights(char *begin, char *end){  //2021/07/01   !!!!!   2021/07/03
     fim = (end[8]-'0')*10 + (end[9]-'0');
     noites = fim-inicio;
     return noites;
+}
+
+int nights_between (char *begin_res, char* end_res, char* begin_arg, char* end_arg) {
+    if (strcmp (begin_arg, end_arg) > 0 || strcmp (begin_arg, end_res) > 0 || strcmp (end_arg, begin_res) < 0) return 0;   // deve retornar 0 ou dizer q o input da query foi inválido (no modo interativo)???
+    if (strcmp (begin_arg, begin_res) >= 0) {
+        if (strcmp (end_arg, end_res) < 0) return nights (begin_arg, end_arg) + 1;
+        return nights (begin_arg, end_res);
+    }
+    else {
+        if (strcmp (end_arg, end_res) < 0) return nights (begin_res, end_arg) + 1;
+        return nights (begin_res, end_res);
+    }
 }
 
 double total_price(char *price_per_night, int nights, char *city_tax){
@@ -48,14 +60,6 @@ int age_user(char *birth_date){  //1979/11/27
     age = (2023-ano);
     if (10 < mes || (10 == mes && 1 < dia)) age--;
     return age;
-}
-
-int number_of_flights(char *user){
-    int flights = 0;
-    for (int l = 0; l<num_linhas_valid_passenger; l++){   //procura o id do utilizador no array dos passageiros para ver em quantos voos ele andou 
-        if (strcmp(user, passenger_array_valid[l].user_id)==0) flights++;
-    }
-    return flights;
 }
 
 int compare_hotels (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
@@ -106,6 +110,13 @@ void swapStrings(char **str1, char **str2) {
 }
 
 char *only_date(char *schedule_departure_date){  //2023/02/10 03:24:09
+    char *date = (char*)malloc(11 * sizeof(char));
+    strncpy(date, schedule_departure_date, 10);
+    date[10] = '\0'; 
+    return date;
+}
+
+char *only_date2(const char *schedule_departure_date){  //2023/02/10 03:24:09
     char *date = (char*)malloc(11 * sizeof(char));
     strncpy(date, schedule_departure_date, 10);
     date[10] = '\0'; 

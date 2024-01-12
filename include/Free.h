@@ -8,23 +8,8 @@
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
 
-void free_list_flight(FNo *nodo);
-
-void free_flight_valid(FList *flight_array_valid, int num_linhas_valid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de voos, e libera elemento a elemento
-
-void free_flight_invalid(Flight *flight_array_invalid, int num_linhas_invalid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de voos, e libera elemento a elemento
-
-void free_passenger_valid(Passenger *passenger_array_valid, int num_linhas_valid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de passageiros, e libera elemento a elemento
-
-void free_passenger_invalid(Passenger *passenger_array_invalid, int num_linhas_invalid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de passageiros, e libera elemento a elemento
+void free_list_hotel(HNo *nodo);
+void free_hotel_valid(HList *hotel_array_valid, int num_linhas_valid);
 
 void free_list_reservation(RNo *nodo);
 
@@ -43,10 +28,6 @@ void free_user_valid();
 void free_user_invalid(User *user_array_invalid, int num_linhas_invalid);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de utilizadores, e libera elemento a elemento
-
-void free_contador(Contador_id *contador_array, int num_linhas_contador);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de contador de passageiros num voo, e libera elemento a elemento
 
 void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos);
     //     |->função que libera a memória que foi alocada para criar cada

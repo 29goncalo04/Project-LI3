@@ -29,18 +29,18 @@ void create_output(int check, int n){    //conteudo = 1 se existir conteudo para
 void outputs_query1_flights (FNo *pointer, int flag, int n) {
     create_output(1, n);
     if (flag==0){   //1
-        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", pointer->flight.airline, pointer->flight.plane_model, pointer->flight.origin, pointer->flight.destination, pointer->flight.schedule_departure_date, pointer->flight.schedule_arrival_date, pointer->flight.passengers, delay(pointer->flight.schedule_departure_date, pointer->flight.real_departure_date));
+        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", get_flight_airline(pointer), get_flight_plane_model(pointer), get_flight_origin(pointer), get_flight_destination(pointer), get_flight_schedule_departure_date(pointer), get_flight_schedule_arrival_date(pointer), get_flight_passengers(pointer), delay(get_flight_schedule_departure_date(pointer), get_flight_real_departure_date(pointer)));
     }
     else{   //1F
         fprintf(output, "--- 1 ---\n");
-        fprintf(output, "airline: %s\n", pointer->flight.airline);
-        fprintf(output, "plane_model: %s\n", pointer->flight.plane_model);
-        fprintf(output, "origin: %s\n", pointer->flight.origin);
-        fprintf(output, "destination: %s\n", pointer->flight.destination);
-        fprintf(output, "schedule_departure_date: %s\n", pointer->flight.schedule_departure_date);
-        fprintf(output, "schedule_arrival_date: %s\n", pointer->flight.schedule_arrival_date);
-        fprintf(output, "passengers: %d\n", pointer->flight.passengers);
-        fprintf(output, "delay: %d\n", delay(pointer->flight.schedule_departure_date, pointer->flight.real_departure_date));
+        fprintf(output, "airline: %s\n", get_flight_airline(pointer));
+        fprintf(output, "plane_model: %s\n", get_flight_plane_model(pointer));
+        fprintf(output, "origin: %s\n", get_flight_origin(pointer));
+        fprintf(output, "destination: %s\n", get_flight_destination(pointer));
+        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(pointer));
+        fprintf(output, "schedule_arrival_date: %s\n", get_flight_schedule_arrival_date(pointer));
+        fprintf(output, "passengers: %d\n", get_flight_passengers(pointer));
+        fprintf(output, "delay: %d\n", delay(get_flight_schedule_departure_date(pointer), get_flight_real_departure_date(pointer)));
     }
     
     fclose(output);
@@ -119,8 +119,8 @@ void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
             for (int i = tam - 1, num = 1; 0 <= i; i--, num++) {
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
-                fprintf(output, "id: %s\n", flight_array_valid[ind].init->flight.id);
-                char *only_date_aux = only_date(flight_array_valid[ind].init->flight.schedule_departure_date);
+                fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
+                char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
                 if (i == 0) fprintf(output, "date: %s\n", only_date_aux);
                 else {
                     fprintf(output, "date: %s\n", only_date_aux);
@@ -133,9 +133,9 @@ void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
             int ind;
             for (int i = tam - 1; 0 <= i; i--) {
                 ind = list[i];
-                char *only_date_aux = only_date(flight_array_valid[ind].init->flight.schedule_departure_date);
-                if (i == 0) fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date_aux);
-                else fprintf(output, "%s;%s\n", flight_array_valid[ind].init->flight.id, only_date_aux);
+                char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
+                if (i == 0) fprintf(output, "%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), only_date_aux);
+                else fprintf(output, "%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), only_date_aux);
                 free(only_date_aux);
             }
         }
@@ -166,8 +166,8 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     for (; 0 <= j; j--, num++) {
                         ind_f = list_f[j];
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
-                        char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))));
+                        char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
                         fprintf(output, "date: %s\n", only_date_aux);
                         free(only_date_aux);
                         fprintf(output, "type: flight\n");
@@ -179,7 +179,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
 
                 ind_f = list_f[j];
                 ind_r = list_r[i];
-                char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
                 if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
                     check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
                     if (check_date == 1) {
@@ -192,7 +192,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     }
                     else {
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))));
                         fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
@@ -200,9 +200,9 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     }
                 } 
                 else {
-                    if (atoi(flight_array_valid[ind_f].init->flight.id) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", flight_array_valid[ind_f].init->flight.id);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))));
                         fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
@@ -237,8 +237,8 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 if (0<=j && i==-1) {
                     for (; 0 <= j; j--, num++) {
                         ind_f = list_f[j];
-                        char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
+                        char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
+                        fprintf(output, "%s;%s;flight\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
                         free(only_date_aux);
                     }
                     fclose(output);
@@ -247,7 +247,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 
                 ind_r = list_r[i];
                 ind_f = list_f[j];
-                char *only_date_aux = only_date(flight_array_valid[ind_f].init->flight.schedule_departure_date);
+                char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
                 if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
                     check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
                     if (check_date == 1) {
@@ -255,13 +255,13 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                         i--;
                     }
                     else {
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
+                        fprintf(output, "%s;%s;flight\n",get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
                         j--;
                     }
                 } 
                 else {
-                    if (atoi(flight_array_valid[ind_f].init->flight.id) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                        fprintf(output, "%s;%s;flight\n", flight_array_valid[ind_f].init->flight.id, only_date_aux);
+                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                        fprintf(output, "%s;%s;flight\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
                         j--;
                     }
                     else{
@@ -277,6 +277,30 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
         }
     }
     return;
+}
+
+void outputs_query3(double med, int flag, int check, int n) {
+    create_output(check, n);
+    if (check == 1) {
+        if (flag == 0) fprintf(output, "%.3f\n", med);//3
+        else {   //3F
+            fprintf(output, "--- 1 ---\n");
+            fprintf(output, "rating: %.3f\n", med);
+        }
+        fclose(output);
+    }
+}
+
+void outputs_query8 (int revenue, int flag, int n) {
+    create_output (1, n);
+    if (flag == 0) {   // 8
+        fprintf (output, "%d\n", revenue);
+    }
+    else {   // 8F
+        fprintf (output, "--- 1 ---\n");
+        fprintf (output, "revenue: %d\n", revenue);
+    }
+    fclose (output);
 }
 
 // void outputs_query2 (Flight_aux *flight_aux_array, Reservation_aux *reservation_aux_array, int index_line, char *argument2, int num_flights_passenger_id, int num_reservations, int n) {

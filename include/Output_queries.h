@@ -27,7 +27,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
 void outputs_query2 (Flight_aux *flight_aux_array, Reservation_aux *reservation_aux_array, int index_line, char *argument2, int num_flights_passenger_id, int num_reservations, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 2
 
-void outputs_query3 (double media, int flag, int n);
+void outputs_query3(double med, int flag, int check, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 3
 
 void outputs_query4 (hotel_aux *hotel_aux_array, int index_line, int num_hotels, int n);
@@ -41,6 +41,9 @@ void outputs_query6 (PassengersXairport *passengersXairport_array, int index_pXa
 
 void outputs_query7 (Mediana *mediana_array, int index_line, int N, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 7
+
+void outputs_query8(int revenue, int flag, int n);
+    //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 8
 
 void outputs_query9 (idXname *idXname_array, int num_linhas_idXname, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 9

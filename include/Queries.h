@@ -58,6 +58,10 @@ void query7(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 7
 
+void query8(char *line, int i, int n);
+    //     |->função responsável por criar o output pedido sempre
+    //        que o id da query for 8
+
 void query9(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 9

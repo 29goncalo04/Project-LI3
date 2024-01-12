@@ -453,10 +453,10 @@ void query1 (char *argument, int flag, int n) {
     if (argument[strlen(argument)-1] == '\n') argument[strlen(argument)-1] = '\0';
     if (isdigit(argument[0])) {
         int ind = found_index_flights(argument);
-        FNo *pointer = flight_array_valid[ind].init;
+        FNo *pointer = getFListInit(get_flight_array_valid(ind));
         while (pointer != NULL) {
-            if (strcmp(argument, pointer->flight.id) == 0) break;
-            else pointer = pointer->prox;
+            if (strcmp(argument, get_flight_id(pointer)) == 0) break;
+            else pointer = get_flight_prox(pointer);
         }
         if (pointer != NULL) {
             outputs_query1_flights (pointer, flag, n);
@@ -565,4 +565,37 @@ void query2 (char *str, int flag, int n) {
         }
         create_output(0, n);
     }
+}
+
+void query3 (char *id, int flag, int n) {
+    int l = strlen(id), ind;
+    double rt = 0, total = 0, med;
+    id[l-1] = '\0';
+    ind = found_index_hotels(id);
+    HNo *pointer;
+    for (pointer = hotel_array_valid[ind].init; pointer != NULL; pointer = pointer->prox) {
+        rt += pointer->hotel.rating;
+        total++;
+    }
+    med = (double) (rt / total);
+    outputs_query3(med, flag, 1, n);
+}
+
+void query8 (char *str, int flag, int n) {
+    int l_arg_end_date, ind_h, revenue = 0;
+    char *id = strtok (str, " ");
+    char *arg_begin_date = strtok (NULL, " ");
+    char *arg_end_date = strtok (NULL, " ");
+    l_arg_end_date = strlen (arg_end_date);
+    arg_end_date[l_arg_end_date-1] = '\0';
+    ind_h = found_index_hotels(id);
+    HNo *h_pointer = hotel_array_valid[ind_h].init;
+    while (h_pointer != NULL) {
+        if (strcmp (id, h_pointer->hotel.id) == 0) {
+            revenue += nights_between (h_pointer->hotel.begin_date, h_pointer->hotel.end_date, arg_begin_date, arg_end_date) * h_pointer->hotel.price_per_night;
+        }
+        h_pointer = h_pointer->prox;
+    }
+    outputs_query8 (revenue, flag, n);
+    return;
 }

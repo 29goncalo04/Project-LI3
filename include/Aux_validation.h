@@ -8,6 +8,8 @@
 int compare_date_time (char *i, char *f);
     //    |->função que compara duas datas e retorna 1 caso a primeira data seja a mais antiga
 
+int compare_date_time3 (const char *i, const char *f);
+
 int verify_email (char *e);
     //    |->função que verifica se um email que lhe é passado como argumento é válido ou não de acordo com as regras especificadas
 
@@ -28,9 +30,6 @@ int verify_breakfast(char *breakfast);
 
 int verify_country_code (char *c);
     //    |->função que verifica se o country_code é constituído por exatamente duas letras
-
-int count_passengers (Contador_id *contador_array, int num_linhas_contador, char parametros[][FIELD_SIZE]);
-    //    |->função que indica o número de passageiros de um voo
 
 int compare_seats_passengers (char *seats, int num_passengers);
     //    |->função que compara o número de assentos num avião com o número de passageiros nesse mesmo avião

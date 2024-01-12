@@ -12,8 +12,8 @@ int validate_passenger(char parametros[][FIELD_SIZE]) {
     int wanted_flight_id_validation = 0, wanted_user_id_validation = 0, ind_u, ind_f;
     FNo *fnodo;
     ind_f = found_index_flights(parametros[0]); //id_voo
-    for (fnodo = flight_array_valid[ind_f].init; fnodo != NULL; fnodo = fnodo->prox){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
-        if (strcmp(parametros[0], fnodo->flight.id)==0){
+    for (fnodo = getFListInit(get_flight_array_valid(ind_f)); fnodo != NULL; fnodo = get_flight_prox(fnodo)){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
+        if (strcmp(parametros[0], get_flight_id(fnodo))==0){
             wanted_flight_id_validation = 1;
             break;
         }
@@ -36,7 +36,7 @@ int validate_flight(char parametros[][FIELD_SIZE]){
     int validation = check_length(parametros[0]) && check_length(parametros[1]) && check_length(parametros[2]) &&
                  check_length (parametros[3]) && check_length (parametros[6]) && check_length (parametros[7]) &&
                  check_length(parametros[10]) && check_length(parametros[11]) &&
-                 compare_seats_passengers(parametros[3], count_passengers(contador_array, num_linhas_contador, &parametros[3])) &&
+                 compare_seats_passengers(parametros[3], 1) &&
                  verify_airport(parametros[4]) && verify_airport(parametros[5]) && compare_date_time(parametros[6], parametros[7]) &&
                  compare_date_time(parametros[8], parametros[9]) && check_dateWtime(parametros[6]) && check_dateWtime(parametros[7]) && 
                  check_dateWtime(parametros[8]) && check_dateWtime(parametros[9]);

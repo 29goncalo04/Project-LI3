@@ -73,7 +73,7 @@ void show_output(){
       char *line = NULL;
       for (int i = 0; i < end_line; ++i) {
         if (getline(&line, &line_length, output) != -1) {
-            if (i >= start_line && i < end_line) printw("%s", line);
+          if (i >= start_line && i < end_line) printw("%s", line);
         }
         else break;
       }

@@ -9,7 +9,7 @@
 void insertionSort_atrasos(int *atrasos, int num_atrasos);
     //     |->função que ordena o array de atrasos de um aeroporto
 
-int delay(char *schedule, char *real);
+int delay(const char *schedule, const char *real);
     //     |->função responsável por calcular a diferença de segundos entre
     //        a hora estimada de partida e a hora real de partida do voo
 
@@ -17,15 +17,15 @@ int nights(char *begin, char *end);
     //     |->função responsável por calcular o número de noites
     //        disponíveis na reserva de um utilizador
 
+int nights_between (char *begin_res, char* end_res, char* begin_arg, char* end_arg);
+    //     |->função responsável por calcular o número de noites
+    //        de uma reserva entre duas datas
+
 double total_price(char *price_per_night, int nights, char *city_tax);
     //     |->função responsável por calcular os gastos numa reserva
 
 int age_user(char *birth_date);
     //     |->função responsável por calcular a idade de um utilizador
-
-int number_of_flights(char *user);
-    //     |->função responsável por calcular o número de voos
-    //        em que um utilizador andou
 
 int compare_hotels (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array das reservas
@@ -45,6 +45,8 @@ void swapStrings(char **str1, char **str2);
 char *only_date(char *schedule_departure_date);
     //     |->função responsável por retornar apenas a data após ler a data 
     //        prevista de partida que inicialmente também contém as horas
+
+char *only_date2(const char *schedule_departure_date);
 
 void insertionSort_flights(Flight_aux *flight_aux_array, int size);
     //     |->função responsável por ordenar o array que tem as informações 

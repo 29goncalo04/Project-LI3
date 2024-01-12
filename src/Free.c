@@ -1,42 +1,29 @@
 #include <stdlib.h>
 
+#include "../include/Free.h"
 #include "../include/Catalogs.h"
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
-#include "../include/Free.h"
 
-void free_list_flight(FNo *nodo) {
-    if (nodo == NULL) return;
-    else {
-        free_list_flight(nodo->prox);
-        free(nodo->flight.id);
-        free(nodo->flight.airline);
-        free(nodo->flight.plane_model);
-        free(nodo->flight.total_seats);
-        free(nodo->flight.origin);
-        free(nodo->flight.destination);
-        free(nodo->flight.schedule_departure_date);
-        free(nodo->flight.schedule_arrival_date);
-        free(nodo->flight.real_departure_date);
-        free(nodo->flight.real_arrival_date);
-    } 
+void free_list_hotel(HNo *nodo) {
+    HNo *atual = nodo;
+    HNo *next;
+    while (atual!=NULL){
+        next = atual->prox;
+        free(atual->hotel.id);
+        free(atual->hotel.begin_date);
+        free(atual->hotel.end_date);
+        free(atual);
+        atual = next;
+    }
 }
 
-void free_flight_valid(FList *flight_array_valid, int num_linhas_valid) {
-    FNo *list;
+void free_hotel_valid(HList *hotel_array_valid, int num_linhas_valid) {
+    HNo *list;
     for (int i = 0; i < num_linhas_valid; i++) {
-        list = flight_array_valid[i].init;
-        free_list_flight(list);
-        free(flight_array_valid[i].init);
+        list = hotel_array_valid[i].init;
+        free_list_hotel(list);
     }
-}
-
-void free_passenger_valid(Passenger *passenger_array_valid, int num_linhas_valid) {
-    for (int i = 0; i < num_linhas_valid; i++) {                               
-        free(passenger_array_valid[i].flight_id);
-        free(passenger_array_valid[i].user_id);
-    }
-    free(passenger_array_valid);
 }
 
 void free_list_reservation(RNo *nodo) {
@@ -94,13 +81,6 @@ void free_user_valid(UList *user_array_valid, int num_linhas_valid) {
         list = user_array_valid[i].init;
         free_list_user(list);
     }
-}
-
-void free_contador(Contador_id *contador_array, int num_linhas_contador) {
-    for (int i = 0; i < num_linhas_contador; i++) {                         
-        free(contador_array[i].id_flight);
-    }
-    free(contador_array);
 }
 
 void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos){
@@ -182,10 +162,9 @@ void free_Mediana(Mediana *mediana_array, int num_medianas){
 }
 
 void free_all() {
-    free_passenger_valid(passenger_array_valid, num_linhas_valid_passenger); //array_pass_valid n vai ser usado, vai para o lixo
-    free_flight_valid(flight_array_valid, NUM_LINHAS_VALID_FLIGHT);
+    free_flight_valid(get_all_flight_array(), NUM_LINHAS_VALID_FLIGHT);
     free_reservation_valid(reservation_array_valid, NUM_LINHAS_VALID_RESERVATION);
     free_user_valid(user_array_valid, NUM_LINHAS_VALID_USER);
-    free_contador(contador_array, num_linhas_contador); //array_contador_valid n vai ser usado, vai para o lixo
+    free_hotel_valid(hotel_array_valid, NUM_LINHAS_VALID_HOTEL);
     free_Atrasos(Atrasos_array, num_Atrasos); //array_atrasos_valid acho que n vai ser usado, vai para o lixo
 }
