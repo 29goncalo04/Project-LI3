@@ -27,10 +27,10 @@ int main(int argc, char* argv[]) {
             start_time(&start);
             open_files(argv[1]);
             identify_query_tests_mode(argv[2]);
-            find_equal_files(argv[3]);
             free_all();
-
             end_time(&end);
+            find_equal_files(argv[3]);
+
             application_time(start, end);
             memory_used();
         }

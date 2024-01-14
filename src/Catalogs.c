@@ -12,6 +12,16 @@
 #include "../include/Output_errors.h"
 
 ////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+////////////////////////USERS///////////////////////////
+
 struct UNo{
     char *id;
     char *name;
@@ -218,37 +228,33 @@ void free_user_valid() {
 
 
 
+
+
+
+
+
+
 ////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+////////////////////////HOTELS///////////////////////////
+
 struct HNo {
-    char *id;
-    int stars;
-    char *begin_date;
-    char *end_date;
-    int price_per_night;
-    int rating;
-    struct HNo *prox;
+    int reservations;
+    int *list_reservations;
 };
 
-void set_hotel_id(HNo* HNo, const char* id){
-    HNo->id = strdup(id);
+void set_hotel_reservations(HNo* HNo, int reservations){
+    HNo->reservations = reservations;
 }
-void set_hotel_stars(HNo* HNo, int stars){
-    HNo->stars = stars;
-}
-void set_hotel_begin_date(HNo* HNo, const char* begin_date){
-    HNo->begin_date = strdup(begin_date);
-}
-void set_hotel_end_date(HNo* HNo, const char* end_date){
-    HNo->end_date = strdup(end_date);
-}
-void set_hotel_price_per_night(HNo* HNo, int price_per_night){
-    HNo->price_per_night = price_per_night;
-}
-void set_hotel_rating(HNo* HNo, int rating){
-    HNo->rating = rating;
-}
-void set_hotel_prox(HNo* HNo){
-    HNo->prox = NULL;
+void set_hotel_list_reservations(HNo* HNo){
+    HNo->list_reservations = NULL;
 }
 
 struct HList{
@@ -263,72 +269,27 @@ const HList* get_hotel_array_valid(int pos) {
 const HNo* getHListInit(const HList* HList){
     return HList->init;
 }
-
-HNo* create_hotel(char *hotel_id, int stars, char *begin_date, char *end_date, int price_per_night, int rating) {
-    HNo* nova = malloc(sizeof(struct HNo));
-    set_hotel_id(nova, hotel_id);
-    set_hotel_stars(nova, stars);
-    set_hotel_begin_date(nova, begin_date);
-    set_hotel_end_date(nova, end_date);
-    set_hotel_price_per_night(nova, price_per_night);
-    set_hotel_rating(nova, rating);
-    set_hotel_prox(nova);
-    return nova;
+const int* get_hotel_list_reservations(const HNo* HNo){
+    return HNo->list_reservations;
+}
+int get_hotel_reservations(const HNo* HNo){
+    return HNo->reservations;
 }
 
-const char* get_hotel_id(const HNo* HNo){
-    return HNo->id;
-}
-int get_hotel_stars(const HNo* HNo){
-    return HNo->stars;
-}
-const char* get_hotel_begin_date(const HNo* HNo){
-    return HNo->begin_date;
-}
-const char* get_hotel_end_date(const HNo* HNo){
-    return HNo->end_date;
-}
-int get_hotel_price_per_night(const HNo* HNo){
-    return HNo->price_per_night;
-}
-int get_hotel_rating(const HNo* HNo){
-    return HNo->rating;
-}
-const HNo* get_hotel_prox(const HNo* HNo){
-    return HNo->prox;
-}
-
-void hotels_hash_sort (HList *hotel_array_valid, HList list) {
-    char* aux = strdup(get_hotel_id(list.init));
-    int ind = found_index_hotels(aux);
-    free(aux);
-    if (hotel_array_valid[ind].init == NULL) { //esta tudo NULL (vacio)
-        hotel_array_valid[ind] = list;
+void create_array_hotels() {
+    for (int i = 0; i < NUM_LINHAS_VALID_HOTEL; i++) { 
+        HNo* nova = malloc(sizeof(struct HNo));
+        set_hotel_reservations(nova, 0);                                           
+        set_hotel_list_reservations(nova);
+        hotel_array_valid[i].init = nova;
     }
-    else {
-        list.init->prox = hotel_array_valid[ind].init;
-        hotel_array_valid[ind] = list;
-    }
-}
-
-void create_array_hotels(char *hotel_id, int stars, char *begin_date, char *end_date, int price_per_night, int rating) {
-    HNo* nova = create_hotel(hotel_id, stars, begin_date, end_date, price_per_night, rating);
-    HList list;
-    list.init = nova;
-    hotels_hash_sort(hotel_array_valid, list);
+    return;
 }
 
 void free_list_hotel(const HNo *nodo) {
-    const HNo *atual = nodo;
-    const HNo *next;
-    while (atual!=NULL){
-        next = atual->prox;
-        free((char*)atual->id);
-        free((char*)atual->begin_date);
-        free((char*)atual->end_date);
-        free((char*)atual);
-        atual = next;
-    }
+    const HNo* atual = nodo;
+    free((int*)atual->list_reservations);
+    free((char*)atual);
 }
 
 void perform_operation_on_hotel_array(void (*operation)(HList *)) {
@@ -348,19 +309,35 @@ void free_hotel_valid() {
 
 
 
+
+
+
+
+
+
 ////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+////////////////////////RESERVATIONS///////////////////////////
+
 struct RNo {
     char *id;
     char *user_id;
     char *hotel_id;
     char *hotel_name;
-    char *hotel_stars;
-    char *city_tax;
+    int hotel_stars;
+    int city_tax;
     char *begin_date;
     char *end_date;
-    char *price_per_night;
+    int price_per_night;
     char *includes_breakfast;
-    char *rating;
+    int rating;
     int validation;
     struct RNo *prox;
 };
@@ -377,11 +354,11 @@ void set_reservation_hotel_id(RNo* RNo, const char* hotel_id){
 void set_reservation_hotel_name(RNo* RNo, const char* hotel_name){
     RNo->hotel_name = strdup(hotel_name);
 }
-void set_reservation_hotel_stars(RNo* RNo, const char* hotel_stars){
-    RNo->hotel_stars = strdup(hotel_stars);
+void set_reservation_hotel_stars(RNo* RNo, int hotel_stars){
+    RNo->hotel_stars = hotel_stars;
 }
-void set_reservation_city_tax(RNo* RNo, const char* city_tax){
-    RNo->city_tax = strdup(city_tax);
+void set_reservation_city_tax(RNo* RNo, int city_tax){
+    RNo->city_tax = city_tax;
 }
 void set_reservation_begin_date(RNo* RNo, const char* begin_date){
     RNo->begin_date = strdup(begin_date);
@@ -389,14 +366,14 @@ void set_reservation_begin_date(RNo* RNo, const char* begin_date){
 void set_reservation_end_date(RNo* RNo, const char* end_date){
     RNo->end_date = strdup(end_date);
 }
-void set_reservation_price_per_night(RNo* RNo, const char* price_per_night){
-    RNo->price_per_night = strdup(price_per_night);
+void set_reservation_price_per_night(RNo* RNo, int price_per_night){
+    RNo->price_per_night = price_per_night;
 }
 void set_reservation_includes_breakfast(RNo* RNo, const char* includes_breakfast){
     RNo->includes_breakfast = strdup(includes_breakfast);
 }
-void set_reservation_rating(RNo* RNo, const char* rating){
-    RNo->rating = strdup(rating);
+void set_reservation_rating(RNo* RNo, int rating){
+    RNo->rating = rating;
 }
 void set_reservation_validation(RNo* RNo, int validation){
     RNo->validation = validation;
@@ -424,13 +401,13 @@ RNo* create_reservation(char parametros[][FIELD_SIZE]) {
     set_reservation_user_id(nova, parametros[1]);                                           
     set_reservation_hotel_id(nova, parametros[2]);                                           
     set_reservation_hotel_name(nova, parametros[3]);                                           
-    set_reservation_hotel_stars(nova, parametros[4]);                                           
-    set_reservation_city_tax(nova, parametros[5]);                                           
+    set_reservation_hotel_stars(nova, atoi(parametros[4]));                                           
+    set_reservation_city_tax(nova, atoi(parametros[5]));                                           
     set_reservation_begin_date(nova, parametros[7]);                                           
     set_reservation_end_date(nova, parametros[8]);                                           
-    set_reservation_price_per_night(nova, parametros[9]);                                           
+    set_reservation_price_per_night(nova, atoi(parametros[9]));                                           
     set_reservation_includes_breakfast(nova, parametros[10]);                                           
-    set_reservation_rating(nova, parametros[12]);                                           
+    set_reservation_rating(nova, atoi(parametros[12]));                                           
     set_reservation_validation(nova, 1);                                           
     set_reservation_prox(nova);                                           
     return nova;
@@ -448,10 +425,10 @@ const char* get_reservation_hotel_id(const RNo* RNo){
 const char* get_reservation_hotel_name(const RNo* RNo){
     return RNo->hotel_name;
 }
-const char* get_reservation_hotel_stars(const RNo* RNo){
+int get_reservation_hotel_stars(const RNo* RNo){
     return RNo->hotel_stars;
 }
-const char* get_reservation_city_tax(const RNo* RNo){
+int get_reservation_city_tax(const RNo* RNo){
     return RNo->city_tax;
 }
 const char* get_reservation_begin_date(const RNo* RNo){
@@ -460,13 +437,13 @@ const char* get_reservation_begin_date(const RNo* RNo){
 const char* get_reservation_end_date(const RNo* RNo){
     return RNo->end_date;
 }
-const char* get_reservation_price_per_night(const RNo* RNo){
+int get_reservation_price_per_night(const RNo* RNo){
     return RNo->price_per_night;
 }
 const char* get_reservation_includes_breakfast(const RNo* RNo){
     return RNo->includes_breakfast;
 }
-const char* get_reservation_rating(const RNo* RNo){
+int get_reservation_rating(const RNo* RNo){
     return RNo->rating;
 }
 int get_reservation_validation(const RNo* RNo){
@@ -538,9 +515,7 @@ void create_array_reservations(char parametros[][FIELD_SIZE]){
         RNo* nova = create_reservation(parametros);
         RList list;
         list.init = nova;
-        char* aux = strdup(get_reservation_user_id(list.init));
-        int ind = found_index_users(aux); 
-        free(aux);
+        int ind = found_index_users(parametros[1]);
         UNo *pointer = user_array_valid[ind].init;
         while (pointer != NULL) {
             if (strcmp(get_reservation_user_id(list.init), get_user_id(pointer)) == 0) {
@@ -552,9 +527,12 @@ void create_array_reservations(char parametros[][FIELD_SIZE]){
             }
             else pointer = pointer->prox;
         }
-        
+        int ind_hotel = found_index_hotels(parametros[2]), id_reservation_table = found_index_reservations(parametros[0]);
+        HNo *pointer_h = hotel_array_valid[ind_hotel].init;
+        pointer_h->list_reservations = realloc(pointer_h->list_reservations, (pointer_h->reservations+1)*sizeof(int));
+        pointer_h->list_reservations[pointer_h->reservations] = id_reservation_table;
+        pointer_h->reservations++;
         reservations_hash_sort(reservation_array_valid, list);
-        create_array_hotels(parametros[2], atoi(parametros[4]), parametros[7], parametros[8], atoi(parametros[9]), atoi(parametros[12]));
     }
     else{
         complete_files_reservations(parametros);
@@ -570,13 +548,9 @@ void free_list_reservation(const RNo *nodo) {
         free((char*)atual->user_id);
         free((char*)atual->hotel_id);
         free((char*)atual->hotel_name);
-        free((char*)atual->hotel_stars);
-        free((char*)atual->city_tax);
         free((char*)atual->begin_date);
         free((char*)atual->end_date);
-        free((char*)atual->price_per_night);
         free((char*)atual->includes_breakfast);
-        free((char*)atual->rating);
         free((char*)atual);
         atual = next;
     }
@@ -599,7 +573,134 @@ void free_reservation_valid() {
 
 
 
+
+
+
+
+
+
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+////////////////////////AIRPORT///////////////////////////
+
+
+struct ANo {
+    int flights;
+    int *list_flights;
+};
+
+void set_airport_flights(ANo* ANo, int flights){
+    ANo->flights = flights;
+}
+void set_airport_list_flights(ANo* ANo){
+    ANo->list_flights = NULL;
+}
+
+struct AList {
+    ANo *init;
+};
+
+AList airport_array_valid[NUM_LINHAS_VALID_AIRPORT];
+
+const AList* get_airport_array_valid(int pos) {
+    return &airport_array_valid[pos];
+}
+const ANo* getAListInit(const AList* AList){
+    return AList->init;
+}
+const int* get_airport_list_flights(const ANo* ANo){
+    return ANo->list_flights;
+}
+int get_airport_flights(const ANo* ANo){
+    return ANo->flights;
+}
+
+void create_array_airport() {
+    for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) { 
+        ANo* nova = malloc(sizeof(struct ANo));
+        set_airport_flights(nova, 0);                                           
+        set_airport_list_flights(nova);
+        airport_array_valid[i].init = nova;
+    }
+    return;
+}
+
+void ordena_list_airport_flights(int ind_f, char *data_estimada, char *id_f, int **list, int n) {
+    int j, check;
+    for (int i = 0; i < n; i++) {
+        if ((*list)[i] == -1) {
+            (*list)[i] = ind_f;
+            break;
+        }
+        else {
+            j = (*list)[i];
+            const FNo *pointer = getFListInit(get_flight_array_valid(j));
+            if (strcmp(data_estimada, get_flight_schedule_departure_date(pointer)) != 0) {
+                check = compare_date_time3(data_estimada, get_flight_schedule_departure_date(pointer));
+                if (check == 1) {
+                    for (int k = n-1; i < k; k--) {
+                        (*list)[k] = (*list)[k-1];
+                    }
+                    (*list)[i] = ind_f;
+                    break;
+                }
+            } 
+            else { //00903905
+                if (atoi(get_flight_id(pointer)) - atoi(id_f) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                    for (int k = n-1; i <= k; k--) {
+                        (*list)[k] = (*list)[k-1];
+                    }
+                    (*list)[i] = ind_f;
+                    break;
+                }
+            }
+        }
+    }
+    return;
+}
+
+void free_list_airport(const ANo *nodo) {
+    const ANo* atual = nodo;
+    free((int*)atual->list_flights);
+    free((char*)atual);
+}
+
+void perform_operation_on_airport_array(void (*operation)(AList *)) {
+    for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) {
+        operation(&airport_array_valid[i]);
+    }
+}
+
+void free_airport_element(AList *airport_element) {
+    free_list_airport(getAListInit(airport_element));
+}
+
+void free_airport_valid() {
+    perform_operation_on_airport_array(free_airport_element);
+}
+
+
+
+
+
 ////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+////////////////////////FLIGHTS///////////////////////////
+
 struct FNo {
     char *id;
     char *airline;
@@ -751,6 +852,15 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         FNo* nova = create_flight(parametros);
         FList list;
         list.init = nova;
+        char *origin_cpy = strdup (parametros[4]);
+        toUpperCase (origin_cpy);
+        int ind = found_index_airport(origin_cpy), ind_f = found_index_flights(parametros[0]);
+        free (origin_cpy);
+        ANo *pointer = airport_array_valid[ind].init;
+        pointer->list_flights = realloc(pointer->list_flights, (pointer->flights+1)*sizeof(int));
+        pointer->list_flights[pointer->flights] = -1;
+        pointer->flights++;
+        ordena_list_airport_flights(ind_f, parametros[6], parametros[0], &(pointer->list_flights), pointer->flights);
         create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }
@@ -795,6 +905,23 @@ void free_flight_valid() {
 
 
 
+
+
+
+
+
+
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
+////////////////////////PASSENGERS///////////////////////////
 ////////////////////////PASSENGERS///////////////////////////
 void ordena_list_flights(int ind, const char *date_ind, char *id_f, int **list, int n) {
     int j, check;

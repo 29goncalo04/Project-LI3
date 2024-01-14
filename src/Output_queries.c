@@ -49,13 +49,13 @@ void outputs_query1_flights (const FNo *pointer, int flag, int n) {
 void outputs_query1_reservations (const RNo *pointer,  char *breakfast, int flag, int n) {
     create_output(1, n);
     if (flag==0){   //1
-        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", get_reservation_hotel_id(pointer), get_reservation_hotel_name(pointer), get_reservation_hotel_stars(pointer), get_reservation_begin_date(pointer), get_reservation_end_date(pointer), breakfast, nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), total_price(get_reservation_price_per_night(pointer), nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), get_reservation_city_tax(pointer)));
+        fprintf(output, "%s;%s;%d;%s;%s;%s;%d;%.3f\n", get_reservation_hotel_id(pointer), get_reservation_hotel_name(pointer), get_reservation_hotel_stars(pointer), get_reservation_begin_date(pointer), get_reservation_end_date(pointer), breakfast, nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), total_price(get_reservation_price_per_night(pointer), nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), get_reservation_city_tax(pointer)));
     }
     else{   //1F
         fprintf(output, "--- 1 ---\n");
         fprintf(output, "hotel_id: %s\n", get_reservation_hotel_id(pointer));
         fprintf(output, "hotel_name: %s\n", get_reservation_hotel_name(pointer));
-        fprintf(output, "hotel_stars: %s\n", get_reservation_hotel_stars(pointer));
+        fprintf(output, "hotel_stars: %d\n", get_reservation_hotel_stars(pointer));
         fprintf(output, "begin_date: %s\n", get_reservation_begin_date(pointer));
         fprintf(output, "end_date: %s\n", get_reservation_end_date(pointer));
         fprintf(output, "includes_breakfast: %s\n", breakfast);
@@ -291,6 +291,78 @@ void outputs_query3(double med, int flag, int check, int n) {
     }
 }
 
+void outputs_query4(const int *list, int num_reservations, int flag, int check, int n) {
+    create_output(check, n);
+    if (check == 1) {
+        if (flag == 0) {
+            for (int i = 0; i<num_reservations; i++){
+                int ind = list[i];
+                fprintf (output, "%s;%s;%s;%s;%d;%.3f\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))), get_reservation_end_date(getRListInit(get_reservation_array_valid(ind))), get_reservation_user_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_rating(getRListInit(get_reservation_array_valid(ind))), total_price(get_reservation_price_per_night(getRListInit(get_reservation_array_valid(ind))), nights(get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))), get_reservation_end_date(getRListInit(get_reservation_array_valid(ind)))), get_reservation_city_tax(getRListInit(get_reservation_array_valid(ind)))));
+            }
+        }
+        else {   //4F
+            for (int i = 0; i<num_reservations; i++) {
+                int ind = list[i];
+                fprintf(output, "--- %d ---\n", i+1);
+                fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))));
+                fprintf(output, "begin_date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
+                fprintf(output, "end_date: %s\n", get_reservation_end_date(getRListInit(get_reservation_array_valid(ind))));
+                fprintf(output, "user_id: %s\n",  get_reservation_user_id(getRListInit(get_reservation_array_valid(ind))));
+                fprintf(output, "rating: %d\n", get_reservation_rating(getRListInit(get_reservation_array_valid(ind))));
+                fprintf(output, "total_price: %.3f\n", total_price(get_reservation_price_per_night(getRListInit(get_reservation_array_valid(ind))), nights(get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))), get_reservation_end_date(getRListInit(get_reservation_array_valid(ind)))), get_reservation_city_tax(getRListInit(get_reservation_array_valid(ind)))));
+                if (i!=num_reservations-1) fprintf(output, "\n");
+            }
+        }
+        fclose(output);
+    }
+}
+
+
+//Um voo está entre <begin_date> e <end_date> caso a
+//sua respetiva data estimada de partida esteja entre <begin_date> e <end_date> (ambos inclusivos).
+
+//is_date_between (char *date, char *i, char *f) retorna 1 si esta entre las dos
+void outputs_query5 (char *arg_begin_date, char *arg_end_date, const int *list, int num_flights, int flag, int check, int n) {
+    create_output(check, n);
+    if (check == 1) {
+        int check_date, ind, is_first_line = 1;
+        if (flag == 1) {
+            for (int i = num_flights-1, j=0; 0 <= i; i--, j++) {
+                ind = list[i];
+                check_date = is_date_between (get_flight_schedule_arrival_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                if (check_date == 1) {
+                    char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                    toUpperCase(destination_cpy);
+                    if (!is_first_line) fprintf(output, "\n");
+                    fprintf(output, "--- %d ---\n", j+1);
+                    fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
+                    fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
+                    fprintf(output, "destination: %s\n", destination_cpy);
+                    fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind))));
+                    fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                    free(destination_cpy);
+                    is_first_line = 0;
+                }
+                else j--;
+            }
+        }
+        else {
+            for (int i = num_flights-1; 0 <= i; i--) {
+                ind = list[i];
+                check_date = is_date_between (get_flight_schedule_arrival_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                if (check_date == 1) {
+                    char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                    toUpperCase(destination_cpy);
+                    fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                    free(destination_cpy);
+                }
+            }
+        }
+    }
+    fclose (output);
+}
+
+
 void outputs_query8 (int revenue, int flag, int n) {
     create_output (1, n);
     if (flag == 0) {   // 8
@@ -302,6 +374,7 @@ void outputs_query8 (int revenue, int flag, int n) {
     }
     fclose (output);
 }
+
 
 // void outputs_query2 (Flight_aux *flight_aux_array, Reservation_aux *reservation_aux_array, int index_line, char *argument2, int num_flights_passenger_id, int num_reservations, int n) {
 //     create_output(n, 1);

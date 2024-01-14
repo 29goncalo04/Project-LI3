@@ -8,6 +8,8 @@
 int compare_date_time (char *i, char *f);
     //    |->função que compara duas datas e retorna 1 caso a primeira data seja a mais antiga
 
+int compare_date (const char *i, const char *f);
+
 int compare_date_time3 (const char *i, const char *f);
 
 int verify_email (char *e);

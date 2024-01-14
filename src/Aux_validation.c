@@ -15,6 +15,15 @@ int compare_date_time (char *i, char *f){     //i de evento inicial, f de evento
     return 0;
 }
 
+int compare_date (const char *i, const char *f){     //i de evento inicial, f de evento final
+    int tamanho = strlen(i);                    //1979/11/27      2016/09/10   2020/01/24
+    for (int k = 0; k<tamanho; k++){
+        if (i[k]-f[k]>0) return 1;  //não é válido
+        else if (i[k]-f[k]<0) return -1;   //é válido
+    }
+    return 0;
+}
+
 int compare_date_time3 (const char *i, const char *f){     //i de evento inicial, f de evento final
     int tamanho = strlen(i);                    //1979/11/27      2016/09/10 17:34:41   2020/01/24  2020/01/23
     for (int k = 0; k<tamanho; k++){

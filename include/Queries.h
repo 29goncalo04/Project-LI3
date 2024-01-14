@@ -42,11 +42,11 @@ void query3(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 3
 
-void query4(char *line, int i, int n);
+void query4 (char *id, int flag, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 4
 
-void query5 (char *line, int i, int n);
+void query5 (char *str, int flag, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 5
 

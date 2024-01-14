@@ -46,14 +46,14 @@ void identify_query(char* path){
                     if (line[1]== 'F') query3(line + i + 1, 1, n);//3F
                     else query3(line + i + 1, 0, n);//3
                 break;
-                // case '4':  //4 ou 4F
-                //     query4(line, i, n);
-
-                // break;
-                // case '5':  //5 ou 5F
-                //     query5(line, i, n);
-
-                // break;
+                case '4':  //4 ou 4F
+                    if (line[1]== 'F') query4(line + i + 1, 1, n);//4F
+                    else query4(line + i + 1, 0, n);//4
+                break;
+                case '5':  //5 ou 5F
+                    if (line[1]== 'F') query5(line + i + 1, 1, n);//5F
+                    else query5(line + i + 1, 0, n);//5
+                break;
                 // case '6':  //6 ou 6F
                 //     query6(line, i, n);
                 // break;
@@ -144,18 +144,34 @@ void identify_query_tests_mode(char* path){
                         elapsed_query3 += calculate_time(start, end);
                     }
                 break;
-                // case '4':  //4 ou 4F
-                //     start_time(&start);
-                //     query4(line, i, n);
-                //     end_time(&end);
-                //     elapsed_query4 += calculate_time(start, end);
-                // break;
-                // case '5':  //5 ou 5F
-                //     start_time(&start);
-                //     query5(line, i, n);
-                //     end_time(&end);
-                //     elapsed_query5 += calculate_time(start, end);
-                // break;
+                case '4':  //4 ou 4F
+                    if (line[1]== 'F'){
+                        start_time(&start);
+                        query4(line + i + 1, 1, n);//4F
+                        end_time(&end);
+                        elapsed_query4 += calculate_time(start, end);
+                    }
+                    else {
+                        start_time(&start);
+                        query4(line + i + 1, 0, n);//4F
+                        end_time(&end);
+                        elapsed_query4 += calculate_time(start, end);
+                    }
+                break;
+                case '5':  //5 ou 5F
+                    if (line[1]== 'F'){
+                        start_time(&start);
+                        query5(line + i + 1, 1, n);//5F
+                        end_time(&end);
+                        elapsed_query5 += calculate_time(start, end);
+                    }
+                    else {
+                        start_time(&start);
+                        query5(line + i + 1, 0, n);//5F
+                        end_time(&end);
+                        elapsed_query5 += calculate_time(start, end);
+                    }
+                break;
                 // case '6':  //6 ou 6F
                 //     start_time(&start);
                 //     query6(line, i, n);
@@ -177,7 +193,7 @@ void identify_query_tests_mode(char* path){
                     }
                     else {
                         start_time(&start);
-                        query8(line + i + 1, 0, n);//8
+                        query8(line + i + 1, 0, n);//8F
                         end_time(&end);
                         elapsed_query8 += calculate_time(start, end);
                     }
@@ -195,8 +211,8 @@ void identify_query_tests_mode(char* path){
     query1_time(elapsed_query1);
     query2_time(elapsed_query2);
     query3_time(elapsed_query3);
-    // query4_time(elapsed_query4);
-    // query5_time(elapsed_query5);
+    query4_time(elapsed_query4);
+    query5_time(elapsed_query5);
     // query6_time(elapsed_query6);
     // query7_time(elapsed_query7);
     query8_time(elapsed_query8);
@@ -234,14 +250,14 @@ void identify_single_query(char* line){
                 if (line[1]== 'F') query3(line + i + 1, 1, 0);//3F
                 else query3(line + i + 1, 0, 0);//3
             break;
-            // case '4':  //4 ou 4F
-            //     query4(line, i, n);
-
-            // break;
-            // case '5':  //5 ou 5F
-            //     query5(line, i, n);
-
-            // break;
+            case '4':  //4 ou 4F
+                if (line[1]== 'F') query4(line + i + 1, 1, 0);//4F
+                else query4(line + i + 1, 0, 0);//4
+            break;
+            case '5':  //5 ou 5F
+                if (line[1]== 'F') query5(line + i + 1, 1, 0);//5F
+                else query5(line + i + 1, 0, 0);//5
+            break;
             // case '6':  //6 ou 6F
             //     query6(line, i, n);
             // break;

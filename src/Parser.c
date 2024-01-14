@@ -77,6 +77,7 @@ void open_files(char* path){
             
             case 1:   
                 //init_flight_array(flight_array_valid);
+                create_array_airport();
                 fflights = fopen(aux_flights, "r");
                 start_files_flights();
                 if (fflights==NULL){
@@ -123,6 +124,7 @@ void open_files(char* path){
 
             case 2:  
                 //init_reservation_array(reservation_array_valid);
+                create_array_hotels();
                 freservations = fopen(aux_reservations, "r"); 
                 start_files_reservations();                                         //ficheiro das reservas
                 if (freservations==NULL){

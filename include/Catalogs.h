@@ -62,13 +62,13 @@ void set_reservation_id(RNo* RNo, const char* id);
 void set_reservation_user_id(RNo* RNo, const char* user_id);
 void set_reservation_hotel_id(RNo* RNo, const char* hotel_id);
 void set_reservation_hotel_name(RNo* RNo, const char* hotel_name);
-void set_reservation_hotel_stars(RNo* RNo, const char* hotel_stars);
-void set_reservation_city_tax(RNo* RNo, const char* city_tax);
+void set_reservation_hotel_stars(RNo* RNo, int hotel_stars);
+void set_reservation_city_tax(RNo* RNo, int city_tax);
 void set_reservation_begin_date(RNo* RNo, const char* begin_date);
 void set_reservation_end_date(RNo* RNo, const char* end_date);
-void set_reservation_price_per_night(RNo* RNo, const char* price_per_night);
+void set_reservation_price_per_night(RNo* RNo, int price_per_night);
 void set_reservation_includes_breakfast(RNo* RNo, const char* includes_breakfast);
-void set_reservation_rating(RNo* RNo, const char* rating);
+void set_reservation_rating(RNo* RNo, int rating);
 void set_reservation_validation(RNo* RNo, int validation);
 void set_reservation_prox(RNo* RNo);
 const RList* get_reservation_array_valid(int pos);
@@ -78,13 +78,13 @@ const char* get_reservation_id(const RNo* RNo);
 const char* get_reservation_user_id(const RNo* RNo);
 const char* get_reservation_hotel_id(const RNo* RNo);
 const char* get_reservation_hotel_name(const RNo* RNo);
-const char* get_reservation_hotel_stars(const RNo* RNo);
-const char* get_reservation_city_tax(const RNo* RNo);
+int get_reservation_hotel_stars(const RNo* RNo);
+int get_reservation_city_tax(const RNo* RNo);
 const char* get_reservation_begin_date(const RNo* RNo);
 const char* get_reservation_end_date(const RNo* RNo);
-const char* get_reservation_price_per_night(const RNo* RNo);
+int get_reservation_price_per_night(const RNo* RNo);
 const char* get_reservation_includes_breakfast(const RNo* RNo);
-const char* get_reservation_rating(const RNo* RNo);
+int get_reservation_rating(const RNo* RNo);
 int get_reservation_validation(const RNo* RNo);
 const RNo* get_reservation_prox(const RNo* RNo);
 void ordena_list_reservations(int ind, const char *date_ind, const char *id_r, int **list, int n);
@@ -102,33 +102,37 @@ void free_reservation_valid();
 typedef struct HNo HNo;
 typedef struct HList HList;
 #define NUM_LINHAS_VALID_HOTEL 6000000
-void set_hotel_id(HNo* HNo, const char* id);
-void set_hotel_stars(HNo* HNo, int stars);
-void set_hotel_begin_date(HNo* HNo, const char* begin_date);
-void set_hotel_end_date(HNo* HNo, const char* end_date);
-void set_hotel_price_per_night(HNo* HNo, int price_per_night);
-void set_hotel_rating(HNo* HNo, int rating);
-void set_hotel_prox(HNo* HNo);
+void set_hotel_reservations(HNo* HNo, int reservations);
+void set_hotel_list_reservations(HNo* HNo);
 const HList* get_hotel_array_valid(int pos);
 const HNo* getHListInit(const HList* HList);
-HNo* create_hotel(char *hotel_id, int stars, char *begin_date, char *end_date, int price_per_night, int rating);
-    //     |->função que cria um elemento individual do array de hotels
-    //        com todos os respetivos parâmetros, e a função "strdup"
-    //        aloca a memória necessária que cada parâmetro ocupa e escreve-o
-const char* get_hotel_id(const HNo* HNo);
-int get_hotel_stars(const HNo* HNo);
-const char* get_hotel_begin_date(const HNo* HNo);
-const char* get_hotel_end_date(const HNo* HNo);
-int get_hotel_price_per_night(const HNo* HNo);
-int get_hotel_rating(const HNo* HNo);
-const HNo* get_hotel_prox(const HNo* HNo);
+const int* get_hotel_list_reservations(const HNo* HNo);
+int get_hotel_reservations(const HNo* HNo);
+const HNo** ordena_hotels(const HNo *pointer);
 void hotels_hash_sort (HList *hotel_array_valid, HList list);
-void create_array_hotels(char *hotel_id, int stars, char *begin_date, char *end_date, int price_per_night, int rating);
+void create_array_hotels();
+void ordena_list_hotel_reservations(int id_reservation_table, char *begin_date, char *id_reservation, int **list, int n);
 void free_list_hotel(const HNo *nodo);
 void free_hotel_valid();
 
 
 
+
+////////////////////////AIRPORT///////////////////////////
+
+typedef struct ANo ANo;
+typedef struct AList AList;
+#define NUM_LINHAS_VALID_AIRPORT 366
+void set_airport_flights(ANo* ANo, int flights);
+void set_airport_list_flights(ANo* ANo);
+const AList* get_airport_array_valid(int pos);
+const ANo* getAListInit(const AList* AList);
+const int* get_airport_list_flights(const ANo* ANo);
+int get_airport_flights(const ANo* ANo);
+void create_array_airport();
+void ordena_list_airport_flights(int ind_f, char *data_estimada, char *id_f, int **list, int n);
+void free_list_airport(const ANo *nodo);
+void free_airport_valid();
 
 ////////////////////////FLIGHTS///////////////////////////
 typedef struct FNo FNo;

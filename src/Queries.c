@@ -12,6 +12,7 @@
 #include "../include/Arguments_of_inputs.h"
 #include "../include/Queries.h"
 #include "../include/Hash.h"
+#include "../include/Catalogs.h"
 
 
 // void query1(char *argument, int i, int n){
@@ -576,13 +577,42 @@ void query3 (char *id, int flag, int n) {
     double rt = 0, total = 0, med;
     id[l-1] = '\0';
     ind = found_index_hotels(id);
-    const HNo *pointer;
-    for (pointer = getHListInit(get_hotel_array_valid(ind)); pointer != NULL; pointer = get_hotel_prox(pointer)) {
-        rt += get_hotel_rating(pointer);
+    const int *list = get_hotel_list_reservations(getHListInit(get_hotel_array_valid(ind)));
+    for (int i = 0; i<get_hotel_reservations((getHListInit(get_hotel_array_valid(ind)))); i++) {
+        rt += get_reservation_rating(getRListInit(get_reservation_array_valid(list[i])));
         total++;
     }
     med = (double) (rt / total);
     outputs_query3(med, flag, 1, n);
+}
+
+void query4 (char *id, int flag, int n) {
+    int ind = found_index_hotels(id); 
+    const HNo *pointer = getHListInit(get_hotel_array_valid(ind));
+    int tam = get_hotel_reservations(pointer);
+    int* list_reservations = (int* )malloc(tam * sizeof(int));
+    for (int j = 0; j<tam; j++) {
+        list_reservations[j] = get_hotel_list_reservations(pointer)[j];
+    }
+    qsort(list_reservations, tam, sizeof(int), compare_hotels);
+    if (pointer == NULL) outputs_query4(list_reservations, get_hotel_reservations(pointer), flag, 0, n);
+    else outputs_query4(list_reservations, get_hotel_reservations(pointer), flag, 1, n);
+    free(list_reservations);
+}
+
+void query5 (char *str, int flag, int n) {
+    int l_arg_end_date, ind_airport;
+    char *origin = strtok(str, " ");
+    char *arg_begin_date = strtok(NULL, "\"");
+    strtok(NULL, "\"");
+    char *arg_end_date = strtok(NULL, "\n");
+    l_arg_end_date = strlen (arg_end_date);
+    arg_end_date[l_arg_end_date-1] = '\0';
+    ind_airport = found_index_airport(origin);
+
+    const ANo *pointer = getAListInit(get_airport_array_valid(ind_airport));
+    outputs_query5(arg_begin_date, arg_end_date, get_airport_list_flights(pointer), get_airport_flights(pointer), flag, 1, n);
+    return;
 }
 
 void query8 (char *str, int flag, int n) {
@@ -593,12 +623,11 @@ void query8 (char *str, int flag, int n) {
     l_arg_end_date = strlen (arg_end_date);
     arg_end_date[l_arg_end_date-1] = '\0';
     ind_h = found_index_hotels(id);
-    const HNo *h_pointer = getHListInit(get_hotel_array_valid(ind_h));
-    while (h_pointer != NULL) {
-        if (strcmp (id, get_hotel_id(h_pointer)) == 0) {
-            revenue += nights_between (get_hotel_begin_date(h_pointer), get_hotel_end_date(h_pointer), arg_begin_date, arg_end_date) * get_hotel_price_per_night(h_pointer);
+    const int *list = get_hotel_list_reservations(getHListInit(get_hotel_array_valid(ind_h)));
+    for (int i = 0; i<get_hotel_reservations(getHListInit(get_hotel_array_valid(ind_h))); i++) {
+        if (strcmp (id, get_reservation_hotel_id(getRListInit(get_reservation_array_valid(list[i])))) == 0) {
+            revenue += nights_between (get_reservation_begin_date(getRListInit(get_reservation_array_valid(list[i]))), get_reservation_end_date(getRListInit(get_reservation_array_valid(list[i]))), arg_begin_date, arg_end_date) * get_reservation_price_per_night(getRListInit(get_reservation_array_valid(list[i])));
         }
-        h_pointer = get_hotel_prox(h_pointer);
     }
     outputs_query8 (revenue, flag, n);
     return;

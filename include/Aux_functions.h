@@ -21,7 +21,7 @@ int nights_between (const char *begin_res, const char* end_res, char* begin_arg,
     //     |->função responsável por calcular o número de noites
     //        de uma reserva entre duas datas
 
-double total_price(const char *price_per_night, int nights, const char *city_tax);
+double total_price(int price_per_night, int nights, int city_tax);
     //     |->função responsável por calcular os gastos numa reserva
 
 int age_user(const char *birth_date);
@@ -31,7 +31,7 @@ int compare_hotels (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array das reservas
     //        para o ordenar por data de início (ou id, caso a data seja igual)
 
-int is_date_between (char *date, char *i, char *f);
+int is_date_between (const char *date, const char *i, const char *f);
     //     |->função que verifica se uma data (date) está entre duas outras datas (i e f)
 
 int compare_flights (const void *a, const void *b);

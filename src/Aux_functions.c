@@ -46,9 +46,9 @@ int nights_between (const char *begin_res, const char* end_res, char* begin_arg,
     }
 }
 
-double total_price(const char *price_per_night, int nights, const char *city_tax){
+double total_price(int price_per_night, int nights, int city_tax){
     double price = 0;
-    price = (double)(atof(price_per_night)*nights) + ((double)(atof(price_per_night)*nights*atof(city_tax)) / 100) ;
+    price = (double)((price_per_night)*nights) + ((double)((price_per_night)*nights*(city_tax)) / 100) ;
     return price;
 }
 
@@ -63,18 +63,38 @@ int age_user(const char *birth_date){  //1979/11/27
 }
 
 int compare_hotels (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
-    char *beginA = ((hotel_aux *) a)->begin_date;
-    char *beginB = ((hotel_aux *) b)->begin_date;
-    if (strcmp (beginA, beginB) < 0) return 1;
-    if (strcmp (beginA, beginB) > 0) return -1;
-    char *idA = ((hotel_aux *) a)->id;
-    char *idB = ((hotel_aux *) b)->id;
-    if (strcmp (idA, idB) < 0) return -1;
-    if (strcmp (idA, idB) > 0) return 1;
+    char *beginA = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)a))));
+    char *beginB = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)b))));
+    if (strcmp (beginA, beginB) < 0){
+        free(beginA);
+        free(beginB);
+        return 1;
+    }
+    if (strcmp (beginA, beginB) > 0){
+        free(beginA);
+        free(beginB);
+        return -1;
+    }
+    char *idA = strdup(get_reservation_id(getRListInit(get_reservation_array_valid(*(const int*)a))));
+    char *idB = strdup(get_reservation_id(getRListInit(get_reservation_array_valid(*(const int*)b))));
+    if (strcmp (idA, idB) < 0){
+        free(beginA);
+        free(beginB);
+        free(idA);
+        free(idB);
+        return -1;
+    }
+    if (strcmp (idA, idB) > 0){
+        free(beginA);
+        free(beginB);
+        free(idA);
+        free(idB);
+        return 1;
+    }
     return 0;
 }
 
-int is_date_between (char *date, char *i, char *f) {  // date é a que queremos verificar, i é a data inicial e f a data final
+int is_date_between (const char *date, const char *i, const char *f) {  // date é a que queremos verificar, i é a data inicial e f a data final
     if (strcmp (date, i) < 0) return 0;  // date é menor que i, logo não está entre as datas
     if (strcmp (date, f) > 0) return 0;  // date é maior que f, não está entre as datas
     return 1;  // date está entre i e f
