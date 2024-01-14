@@ -453,7 +453,7 @@ void query1 (char *argument, int flag, int n) {
     if (argument[strlen(argument)-1] == '\n') argument[strlen(argument)-1] = '\0';
     if (isdigit(argument[0])) {
         int ind = found_index_flights(argument);
-        FNo *pointer = getFListInit(get_flight_array_valid(ind));
+        const FNo *pointer = getFListInit(get_flight_array_valid(ind));
         while (pointer != NULL) {
             if (strcmp(argument, get_flight_id(pointer)) == 0) break;
             else pointer = get_flight_prox(pointer);
@@ -466,25 +466,29 @@ void query1 (char *argument, int flag, int n) {
 	else {
         if (argument[0] == 'B' && argument[1] == 'o' && argument[2] == 'o' && argument[3] == 'k') {
             int ind_r = found_index_reservations(argument);
-            RNo *rpointer = reservation_array_valid[ind_r].init;
+            const RNo *rpointer = getRListInit(get_reservation_array_valid(ind_r));
             while (rpointer != NULL) {
-                if (strcmp(argument, rpointer->reservation.id) == 0) break;
-                else rpointer = rpointer->prox;
+                if (strcmp(argument, get_reservation_id(rpointer)) == 0) break;
+                else rpointer = get_reservation_prox(rpointer);
             }
 
             if (rpointer != NULL) {
-                int ind_u = found_index_users(rpointer->reservation.user_id);
-                UNo *upointer = user_array_valid[ind_u].init;
+                char* aux = strdup(get_reservation_user_id(rpointer));
+                int ind_u = found_index_users(aux);
+                free(aux);
+                const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
                 while (upointer != NULL) {
-                    if (strcmp(rpointer->reservation.user_id, upointer->user.id) == 0) break;
-                    else upointer = upointer->prox;
+                    if (strcmp(get_reservation_user_id(rpointer), get_user_id(upointer)) == 0) break;
+                    else upointer = get_user_prox(upointer);
                 }
 
                 if (upointer != NULL) {
                     //if (verify_account_status(upointer->user.account_status) != 2) { //não imprime nada caso a conta do utilizador esteja inativa
                         char *breakfast;
-                        if (verify_breakfast(rpointer->reservation.includes_breakfast) == 1) breakfast = strdup("True");
+                        char* aux_breakfast = strdup(get_reservation_includes_breakfast(rpointer));
+                        if (verify_breakfast(aux_breakfast) == 1) breakfast = strdup("True");
                         else  breakfast = strdup("False");
+                        free(aux_breakfast);
                         outputs_query1_reservations(rpointer, breakfast, flag, n); //reservas UNo *pointer, int flag, int check, int n
                         free(breakfast);
                         generated_file = 1;
@@ -494,13 +498,13 @@ void query1 (char *argument, int flag, int n) {
         }
         else {
             int ind = found_index_users(argument);
-            UNo *pointer = user_array_valid[ind].init;
+            const UNo *pointer = getUListInit(get_user_array_valid(ind));
             while (pointer != NULL) {
-                if (strcmp(argument, pointer->user.id) == 0) break;
-                else pointer = pointer->prox;
+                if (strcmp(argument, get_user_id(pointer)) == 0) break;
+                else pointer = get_user_prox(pointer);
             }
             if (pointer != NULL) {
-                if (verify_account_status(pointer->user.account_status) != 2) outputs_query1_users(pointer, flag, 1, n);
+                if (verify_account_status(get_user_account_status(pointer)) != 2) outputs_query1_users(pointer, flag, 1, n);
                 else outputs_query1_users(pointer, flag, 0, n);
                 generated_file = 1;
             }
@@ -519,33 +523,33 @@ void query2 (char *str, int flag, int n) {
         argument[l-1] = '\0';
         if (strcmp("reservations", argument) == 0) {
             ind_u = found_index_users(id);
-            UNo *upointer = user_array_valid[ind_u].init;
+            const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
             while (upointer != NULL) {
-                if (strcmp(id, upointer->user.id) == 0) {
-                    if (verify_account_status(upointer->user.account_status) != 2) {
-                        outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
+                if (strcmp(id, get_user_id(upointer)) == 0) {
+                    if (verify_account_status(get_user_account_status(upointer)) != 2) {
+                        outputs_query2_reservations(get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 1, n);
                     }
                     else {
-                        outputs_query2_reservations(upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);   
+                        outputs_query2_reservations(get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 0, n);   
                     }
                     return;
                 }
-                else upointer = upointer->prox;
+                else upointer = get_user_prox(upointer);
             }
             create_output(0, n);
         }
         if (strcmp("flights", argument) == 0) {
             ind_u = found_index_users(id);
-            UNo *upointer = user_array_valid[ind_u].init;
+            const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
             while (upointer != NULL) {
-                if (strcmp(id, upointer->user.id) == 0) {
-                    if (verify_account_status(upointer->user.account_status) != 2) outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 1, n);
+                if (strcmp(id, get_user_id(upointer)) == 0) {
+                    if (verify_account_status(get_user_account_status(upointer)) != 2) outputs_query2_flights(get_user_list_flights(upointer), get_user_flights(upointer), flag, 1, n);
                     else {
-                        outputs_query2_flights(upointer->user.list_flights, upointer->user.flights, flag, 0, n);   
+                        outputs_query2_flights(get_user_list_flights(upointer), get_user_flights(upointer), flag, 0, n);   
                     }
                     return;
                 }
-                else upointer = upointer->prox;
+                else upointer = get_user_prox(upointer);
             }
             create_output(0, n);
         }
@@ -554,14 +558,14 @@ void query2 (char *str, int flag, int n) {
         l = strlen(id);
         id[l-1] = '\0';
         ind_u = found_index_users(id);
-        UNo *upointer = user_array_valid[ind_u].init;
+        const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
         while (upointer != NULL) {
-            if (strcmp(id, upointer->user.id) == 0) {
-                if (verify_account_status(upointer->user.account_status) != 2) outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 1, n);
-                else outputs_query2_both(upointer->user.list_flights, upointer->user.flights, upointer->user.list_reservations, upointer->user.reservations, flag, 0, n);
+            if (strcmp(id, get_user_id(upointer)) == 0) {
+                if (verify_account_status(get_user_account_status(upointer)) != 2) outputs_query2_both(get_user_list_flights(upointer), get_user_flights(upointer), get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 1, n);
+                else outputs_query2_both(get_user_list_flights(upointer), get_user_flights(upointer), get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 0, n);
                 return;
             }
-            else upointer = upointer->prox;
+            else upointer = get_user_prox(upointer);
         }
         create_output(0, n);
     }
@@ -572,9 +576,9 @@ void query3 (char *id, int flag, int n) {
     double rt = 0, total = 0, med;
     id[l-1] = '\0';
     ind = found_index_hotels(id);
-    HNo *pointer;
-    for (pointer = hotel_array_valid[ind].init; pointer != NULL; pointer = pointer->prox) {
-        rt += pointer->hotel.rating;
+    const HNo *pointer;
+    for (pointer = getHListInit(get_hotel_array_valid(ind)); pointer != NULL; pointer = get_hotel_prox(pointer)) {
+        rt += get_hotel_rating(pointer);
         total++;
     }
     med = (double) (rt / total);
@@ -589,12 +593,12 @@ void query8 (char *str, int flag, int n) {
     l_arg_end_date = strlen (arg_end_date);
     arg_end_date[l_arg_end_date-1] = '\0';
     ind_h = found_index_hotels(id);
-    HNo *h_pointer = hotel_array_valid[ind_h].init;
+    const HNo *h_pointer = getHListInit(get_hotel_array_valid(ind_h));
     while (h_pointer != NULL) {
-        if (strcmp (id, h_pointer->hotel.id) == 0) {
-            revenue += nights_between (h_pointer->hotel.begin_date, h_pointer->hotel.end_date, arg_begin_date, arg_end_date) * h_pointer->hotel.price_per_night;
+        if (strcmp (id, get_hotel_id(h_pointer)) == 0) {
+            revenue += nights_between (get_hotel_begin_date(h_pointer), get_hotel_end_date(h_pointer), arg_begin_date, arg_end_date) * get_hotel_price_per_night(h_pointer);
         }
-        h_pointer = h_pointer->prox;
+        h_pointer = get_hotel_prox(h_pointer);
     }
     outputs_query8 (revenue, flag, n);
     return;

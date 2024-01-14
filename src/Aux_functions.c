@@ -26,7 +26,7 @@ int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  
     return atraso;
 }
 
-int nights(char *begin, char *end){  //2021/07/01   !!!!!   2021/07/03
+int nights(const char *begin, const char *end){  //2021/07/01   !!!!!   2021/07/03
     int noites = 0, inicio = 0, fim = 0;
     inicio = (begin[8]-'0')*10 + (begin[9]-'0');
     fim = (end[8]-'0')*10 + (end[9]-'0');
@@ -34,7 +34,7 @@ int nights(char *begin, char *end){  //2021/07/01   !!!!!   2021/07/03
     return noites;
 }
 
-int nights_between (char *begin_res, char* end_res, char* begin_arg, char* end_arg) {
+int nights_between (const char *begin_res, const char* end_res, char* begin_arg, char* end_arg) {
     if (strcmp (begin_arg, end_arg) > 0 || strcmp (begin_arg, end_res) > 0 || strcmp (end_arg, begin_res) < 0) return 0;   // deve retornar 0 ou dizer q o input da query foi inválido (no modo interativo)???
     if (strcmp (begin_arg, begin_res) >= 0) {
         if (strcmp (end_arg, end_res) < 0) return nights (begin_arg, end_arg) + 1;
@@ -46,13 +46,13 @@ int nights_between (char *begin_res, char* end_res, char* begin_arg, char* end_a
     }
 }
 
-double total_price(char *price_per_night, int nights, char *city_tax){
+double total_price(const char *price_per_night, int nights, const char *city_tax){
     double price = 0;
     price = (double)(atof(price_per_night)*nights) + ((double)(atof(price_per_night)*nights*atof(city_tax)) / 100) ;
     return price;
 }
 
-int age_user(char *birth_date){  //1979/11/27
+int age_user(const char *birth_date){  //1979/11/27
     int ano = 0, mes = 0, dia = 0, age = 0;
     ano = (birth_date[0]-'0')*1000 + (birth_date[1]-'0')*100 + (birth_date[2]-'0')*10 + (birth_date[3]-'0');
     mes = (birth_date[5]-'0')*10 + (birth_date[6]-'0');

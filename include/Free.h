@@ -8,27 +8,6 @@
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
 
-void free_list_hotel(HNo *nodo);
-void free_hotel_valid(HList *hotel_array_valid, int num_linhas_valid);
-
-void free_list_reservation(RNo *nodo);
-
-void free_reservation_valid(RList *reservation_array_valid, int num_linhas_valid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de reservas, e libera elemento a elemento
-
-void free_reservation_invalid(Reservation *reservation_array_invalid, int num_linhas_invalid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de reservas, e libera elemento a elemento
-
-void free_user_valid();
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de utilizadores, e libera elemento a elemento
-
-void free_user_invalid(User *user_array_invalid, int num_linhas_invalid);
-    //     |->função que libera a memória que foi alocada para criar cada
-    //        elemento do array de utilizadores, e libera elemento a elemento
-
 void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos);
     //     |->função que libera a memória que foi alocada para criar cada
     //        elemento do array de atrasos, e libera elemento a elemento

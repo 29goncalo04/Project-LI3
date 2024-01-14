@@ -10,7 +10,7 @@
 
 int validate_passenger(char parametros[][FIELD_SIZE]) {
     int wanted_flight_id_validation = 0, wanted_user_id_validation = 0, ind_u, ind_f;
-    FNo *fnodo;
+    const FNo *fnodo;
     ind_f = found_index_flights(parametros[0]); //id_voo
     for (fnodo = getFListInit(get_flight_array_valid(ind_f)); fnodo != NULL; fnodo = get_flight_prox(fnodo)){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
         if (strcmp(parametros[0], get_flight_id(fnodo))==0){
@@ -19,11 +19,11 @@ int validate_passenger(char parametros[][FIELD_SIZE]) {
         }
     }
     if (wanted_flight_id_validation==1){
-        UNo *unodo;
+        const UNo *unodo;
         ind_u = found_index_users(parametros[1]); //id_user
-        unodo = user_array_valid[ind_u].init;
-        for (unodo = user_array_valid[ind_u].init; unodo != NULL; unodo = unodo->prox){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
-            if (strcmp(parametros[1], unodo->user.id)==0){
+        unodo = getUListInit(get_user_array_valid(ind_u));
+        for (unodo = getUListInit(get_user_array_valid(ind_u)); unodo != NULL; unodo = get_user_prox(unodo)){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
+            if (strcmp(parametros[1], get_user_id(unodo))==0){
                 wanted_user_id_validation = 1;
                 break;
             }
@@ -54,11 +54,11 @@ int validate_user(char parametros[][FIELD_SIZE]){
 
 int validate_reservation(char parametros[][FIELD_SIZE]){
     int validation = 0, wanted_user_id_validation = 0, ind;
-    UNo *unodo;
+    const UNo *unodo;
     ind = found_index_users(parametros[1]);
-    unodo = user_array_valid[ind].init;
-    for (unodo = user_array_valid[ind].init; unodo != NULL; unodo = unodo->prox) {
-        if (strcmp(parametros[1], unodo->user.id)==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
+    unodo = getUListInit(get_user_array_valid(ind));
+    for (unodo = getUListInit(get_user_array_valid(ind)); unodo != NULL; unodo = get_user_prox(unodo)) {
+        if (strcmp(parametros[1], get_user_id(unodo))==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
             wanted_user_id_validation = 1;
             break;
         }

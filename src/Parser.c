@@ -122,7 +122,7 @@ void open_files(char* path){
                 break;
 
             case 2:  
-                init_reservation_array(reservation_array_valid);
+                //init_reservation_array(reservation_array_valid);
                 freservations = fopen(aux_reservations, "r"); 
                 start_files_reservations();                                         //ficheiro das reservas
                 if (freservations==NULL){
@@ -169,7 +169,7 @@ void open_files(char* path){
                 break;
             
             case 0:
-                init_user_array(user_array_valid);
+                //init_user_array(user_array_valid);
                 fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
                 start_files_users();
                 if (fusers==NULL){

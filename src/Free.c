@@ -5,84 +5,6 @@
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
 
-void free_list_hotel(HNo *nodo) {
-    HNo *atual = nodo;
-    HNo *next;
-    while (atual!=NULL){
-        next = atual->prox;
-        free(atual->hotel.id);
-        free(atual->hotel.begin_date);
-        free(atual->hotel.end_date);
-        free(atual);
-        atual = next;
-    }
-}
-
-void free_hotel_valid(HList *hotel_array_valid, int num_linhas_valid) {
-    HNo *list;
-    for (int i = 0; i < num_linhas_valid; i++) {
-        list = hotel_array_valid[i].init;
-        free_list_hotel(list);
-    }
-}
-
-void free_list_reservation(RNo *nodo) {
-    RNo *atual = nodo;
-    RNo *next;
-    while (atual!=NULL){
-        next = atual->prox;
-        free(atual->reservation.id);
-        free(atual->reservation.user_id);
-        free(atual->reservation.hotel_id);
-        free(atual->reservation.hotel_name);
-        free(atual->reservation.hotel_stars);
-        free(atual->reservation.city_tax);
-        free(atual->reservation.begin_date);
-        free(atual->reservation.end_date);
-        free(atual->reservation.price_per_night);
-        free(atual->reservation.includes_breakfast);
-        free(atual->reservation.rating);
-        free(atual);
-        atual = next;
-    }
-}
-
-void free_reservation_valid(RList *reservation_array_valid, int num_linhas_valid) {
-    RNo *list;
-    for (int i = 0; i < num_linhas_valid; i++) {
-        list = reservation_array_valid[i].init;
-        free_list_reservation(list);
-    }
-}
-
-void free_list_user(UNo *nodo) {
-    UNo *atual = nodo;
-    UNo *next;
-    while (atual!=NULL){
-        next = atual->prox;
-        free(atual->user.id);
-        free(atual->user.name);
-        free(atual->user.birth_date);
-        free(atual->user.sex);
-        free(atual->user.passport);
-        free(atual->user.country_code);
-        free(atual->user.account_creation);
-        free(atual->user.account_status);
-        free(atual->user.list_reservations);
-        free(atual->user.list_flights);
-        free(atual);
-        atual = next;
-    }
-}
-
-void free_user_valid(UList *user_array_valid, int num_linhas_valid) {
-    UNo *list;
-    for (int i = 0; i < num_linhas_valid; i++) {
-        list = user_array_valid[i].init;
-        free_list_user(list);
-    }
-}
-
 void free_Atrasos(Atrasos *Atrasos_array, int num_Atrasos){
     for (int i = 0; i<num_Atrasos; i++){
         free(Atrasos_array[i].airport);
@@ -162,9 +84,9 @@ void free_Mediana(Mediana *mediana_array, int num_medianas){
 }
 
 void free_all() {
-    free_flight_valid(get_all_flight_array(), NUM_LINHAS_VALID_FLIGHT);
-    free_reservation_valid(reservation_array_valid, NUM_LINHAS_VALID_RESERVATION);
-    free_user_valid(user_array_valid, NUM_LINHAS_VALID_USER);
-    free_hotel_valid(hotel_array_valid, NUM_LINHAS_VALID_HOTEL);
+    free_flight_valid();
+    free_reservation_valid();
+    free_user_valid();
+    free_hotel_valid();
     free_Atrasos(Atrasos_array, num_Atrasos); //array_atrasos_valid acho que n vai ser usado, vai para o lixo
 }

@@ -52,7 +52,7 @@ int verify_email (char *e){    //<username>@<domain>.<TLD>
 }
 
 
-int verify_account_status(char *status){
+int verify_account_status(const char *status){
     int tamanho = strlen(status), i = 0, result = 2;
     char *status2 = malloc(tamanho + 1); //o +1 é para guardar o '\0'
     while (i<tamanho){

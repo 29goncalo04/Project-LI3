@@ -13,7 +13,7 @@ int compare_date_time3 (const char *i, const char *f);
 int verify_email (char *e);
     //    |->função que verifica se um email que lhe é passado como argumento é válido ou não de acordo com as regras especificadas
 
-int verify_account_status(char *status);
+int verify_account_status(const char *status);
     //    |->função que verifica se o status de um utilizador é ativo (1) ou inativo (0) ou for inválido (2)
 
 int verify_airport (char *airport);

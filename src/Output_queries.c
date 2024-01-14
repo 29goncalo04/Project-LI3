@@ -26,7 +26,7 @@ void create_output(int check, int n){    //conteudo = 1 se existir conteudo para
     if (check == 0) fclose(output);
 }
 
-void outputs_query1_flights (FNo *pointer, int flag, int n) {
+void outputs_query1_flights (const FNo *pointer, int flag, int n) {
     create_output(1, n);
     if (flag==0){   //1
         fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%d\n", get_flight_airline(pointer), get_flight_plane_model(pointer), get_flight_origin(pointer), get_flight_destination(pointer), get_flight_schedule_departure_date(pointer), get_flight_schedule_arrival_date(pointer), get_flight_passengers(pointer), delay(get_flight_schedule_departure_date(pointer), get_flight_real_departure_date(pointer)));
@@ -46,44 +46,44 @@ void outputs_query1_flights (FNo *pointer, int flag, int n) {
     fclose(output);
 }
 
-void outputs_query1_reservations (RNo *pointer,  char *breakfast, int flag, int n) {
+void outputs_query1_reservations (const RNo *pointer,  char *breakfast, int flag, int n) {
     create_output(1, n);
     if (flag==0){   //1
-        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", pointer->reservation.hotel_id, pointer->reservation.hotel_name, pointer->reservation.hotel_stars, pointer->reservation.begin_date, pointer->reservation.end_date, breakfast, nights(pointer->reservation.begin_date,pointer->reservation.end_date), total_price(pointer->reservation.price_per_night, nights(pointer->reservation.begin_date,pointer->reservation.end_date), pointer->reservation.city_tax));
+        fprintf(output, "%s;%s;%s;%s;%s;%s;%d;%.3f\n", get_reservation_hotel_id(pointer), get_reservation_hotel_name(pointer), get_reservation_hotel_stars(pointer), get_reservation_begin_date(pointer), get_reservation_end_date(pointer), breakfast, nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), total_price(get_reservation_price_per_night(pointer), nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), get_reservation_city_tax(pointer)));
     }
     else{   //1F
         fprintf(output, "--- 1 ---\n");
-        fprintf(output, "hotel_id: %s\n", pointer->reservation.hotel_id);
-        fprintf(output, "hotel_name: %s\n", pointer->reservation.hotel_name);
-        fprintf(output, "hotel_stars: %s\n", pointer->reservation.hotel_stars);
-        fprintf(output, "begin_date: %s\n", pointer->reservation.begin_date);
-        fprintf(output, "end_date: %s\n", pointer->reservation.end_date);
+        fprintf(output, "hotel_id: %s\n", get_reservation_hotel_id(pointer));
+        fprintf(output, "hotel_name: %s\n", get_reservation_hotel_name(pointer));
+        fprintf(output, "hotel_stars: %s\n", get_reservation_hotel_stars(pointer));
+        fprintf(output, "begin_date: %s\n", get_reservation_begin_date(pointer));
+        fprintf(output, "end_date: %s\n", get_reservation_end_date(pointer));
         fprintf(output, "includes_breakfast: %s\n", breakfast);
-        fprintf(output, "nights: %d\n", nights(pointer->reservation.begin_date,pointer->reservation.end_date));
-        fprintf(output, "total_price: %.3f\n", total_price(pointer->reservation.price_per_night, nights(pointer->reservation.begin_date,pointer->reservation.end_date), pointer->reservation.city_tax));
+        fprintf(output, "nights: %d\n", nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)));
+        fprintf(output, "total_price: %.3f\n", total_price(get_reservation_price_per_night(pointer), nights(get_reservation_begin_date(pointer),get_reservation_end_date(pointer)), get_reservation_city_tax(pointer)));
     }
     fclose(output);
 }
 
-void outputs_query1_users (UNo *pointer, int flag, int check, int n) {
+void outputs_query1_users (const UNo *pointer, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
         if (flag == 1) {
             fprintf(output, "--- 1 ---\n");
-            fprintf(output, "name: %s\n", pointer->user.name);
-            fprintf(output, "sex: %s\n", pointer->user.sex);
-            fprintf(output, "age: %d\n", age_user(pointer->user.birth_date));
-            fprintf(output, "country_code: %s\n", pointer->user.country_code);
-            fprintf(output, "passport: %s\n", pointer->user.passport);
-            fprintf(output, "number_of_flights: %d\n", pointer->user.flights);
-            fprintf(output, "number_of_reservations: %d\n", pointer->user.reservations);
-            fprintf(output, "total_spent: %.3f\n", pointer->user.total_spent);
-        } else fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", pointer->user.name, pointer->user.sex, age_user(pointer->user.birth_date),pointer->user.country_code, pointer->user.passport, pointer->user.flights, pointer->user.reservations, pointer->user.total_spent);
+            fprintf(output, "name: %s\n", get_user_name(pointer));
+            fprintf(output, "sex: %s\n", get_user_sex(pointer));
+            fprintf(output, "age: %d\n", age_user(get_user_birth_date(pointer)));
+            fprintf(output, "country_code: %s\n", get_user_country_code(pointer));
+            fprintf(output, "passport: %s\n", get_user_passport(pointer));
+            fprintf(output, "number_of_flights: %d\n", get_user_flights(pointer));
+            fprintf(output, "number_of_reservations: %d\n", get_user_reservations(pointer));
+            fprintf(output, "total_spent: %.3f\n", get_user_total_spent(pointer));
+        } else fprintf(output, "%s;%s;%d;%s;%s;%d;%d;%.3f\n", get_user_name(pointer), get_user_sex(pointer), age_user(get_user_birth_date(pointer)),get_user_country_code(pointer), get_user_passport(pointer), get_user_flights(pointer), get_user_reservations(pointer), get_user_total_spent(pointer));
         fclose(output);    
     }
 }
 
-void outputs_query2_reservations(int *list, int tam, int flag, int check, int n) {
+void outputs_query2_reservations(const int *list, int tam, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
         if (flag == 1) {
@@ -91,10 +91,10 @@ void outputs_query2_reservations(int *list, int tam, int flag, int check, int n)
             for (int i = tam - 1, num = 1; 0 <= i; i--, num++) {
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
-                fprintf(output, "id: %s\n", reservation_array_valid[ind].init->reservation.id);
-                if (i == 0) fprintf(output, "date: %s\n", reservation_array_valid[ind].init->reservation.begin_date);
+                fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))));
+                if (i == 0) fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
                 else {
-                    fprintf(output, "date: %s\n", reservation_array_valid[ind].init->reservation.begin_date);
+                    fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
                     fprintf(output, "\n");
                 }
             }
@@ -103,15 +103,15 @@ void outputs_query2_reservations(int *list, int tam, int flag, int check, int n)
             int ind;
             for (int i = tam - 1; 0 <= i; i--) {
                 ind = list[i];
-                if (i == 0) fprintf(output, "%s;%s\n", reservation_array_valid[ind].init->reservation.id, reservation_array_valid[ind].init->reservation.begin_date);
-                else fprintf(output, "%s;%s\n", reservation_array_valid[ind].init->reservation.id, reservation_array_valid[ind].init->reservation.begin_date);
+                if (i == 0) fprintf(output, "%s;%s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
+                else fprintf(output, "%s;%s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
             }
         }
         fclose(output);
     }
 }
 
-void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
+void outputs_query2_flights(const int *list, int tam, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
         if (flag == 1) {
@@ -143,7 +143,7 @@ void outputs_query2_flights(int *list, int tam, int flag, int check, int n) {
     }
 }
 
-void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int flag, int check, int n) {
+void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int tam_r, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
         int check_date, ind_f, ind_r, i = tam_r - 1, j = tam_f - 1, num = 1;
@@ -153,8 +153,8 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     for (; 0 <= i; i--, num++) {
                         ind_r = list_r[i];
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", reservation_array_valid[ind_r].init->reservation.id);
-                        fprintf(output, "date: %s\n", reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))));
+                        fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
                         if(i != 0) fprintf(output, "\n");
                     }
@@ -180,12 +180,12 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 ind_f = list_f[j];
                 ind_r = list_r[i];
                 char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
-                if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
-                    check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
+                if (strcmp(only_date_aux, get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r)))) != 0) {
+                    check_date = compare_date_time3(only_date_aux, get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                     if (check_date == 1) {
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", reservation_array_valid[ind_r].init->reservation.id);
-                        fprintf(output, "date: %s\n", reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))));
+                        fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
                         i--;
@@ -200,7 +200,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     }
                 } 
                 else {
-                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(get_reservation_id(getRListInit(get_reservation_array_valid(ind_r)))) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))));
                         fprintf(output, "date: %s\n", only_date_aux);
@@ -210,8 +210,8 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     }
                     else{
                         fprintf(output, "--- %d ---\n", num);
-                        fprintf(output, "id: %s\n", reservation_array_valid[ind_r].init->reservation.id);
-                        fprintf(output, "date: %s\n", reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))));
+                        fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
                         i--;
@@ -228,7 +228,7 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 if (0<=i && j==-1) {
                     for (; 0 <= i; i--, num++) {
                         ind_r = list_r[i];
-                        fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                     }
                     fclose(output);
                     return;
@@ -248,10 +248,10 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                 ind_r = list_r[i];
                 ind_f = list_f[j];
                 char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
-                if (strcmp(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date) != 0) {
-                    check_date = compare_date_time(only_date_aux, reservation_array_valid[ind_r].init->reservation.begin_date);
+                if (strcmp(only_date_aux, get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r)))) != 0) {
+                    check_date = compare_date_time3(only_date_aux, get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                     if (check_date == 1) {
-                        fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         i--;
                     }
                     else {
@@ -260,12 +260,12 @@ void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int fla
                     }
                 } 
                 else {
-                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(reservation_array_valid[ind_r].init->reservation.id) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
+                    if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(get_reservation_id(getRListInit(get_reservation_array_valid(ind_r)))) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                         fprintf(output, "%s;%s;flight\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
                         j--;
                     }
                     else{
-                        fprintf(output, "%s;%s;reservation\n", reservation_array_valid[ind_r].init->reservation.id, reservation_array_valid[ind_r].init->reservation.begin_date);
+                        fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         i--;
                     }
                 }

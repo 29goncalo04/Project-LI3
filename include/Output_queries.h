@@ -11,18 +11,18 @@
 void create_output(int check, int n);
     //     |->função responsável por criar os outputs
 
-void outputs_query1_flights (FNo *pointer, int flag, int n);
+void outputs_query1_flights (const FNo *pointer, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 1 com um voo como argumento
 
-void outputs_query1_reservations (RNo *pointer, char *breakfast, int flag, int n);
+void outputs_query1_reservations (const RNo *pointer, char *breakfast, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 1 com uma reserva como argumento
 
-void outputs_query1_users (UNo *pointer, int flag, int check, int n);
+void outputs_query1_users (const UNo *pointer, int flag, int check, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 1 com um utilizador como argumento
 
-void outputs_query2_reservations(int *list, int tam, int flag, int check, int n);
-void outputs_query2_flights(int *list, int tam, int flag, int check, int n);
-void outputs_query2_both(int *list_f, int tam_f, int *list_r, int tam_r, int flag, int check, int n);
+void outputs_query2_reservations(const int *list, int tam, int flag, int check, int n);
+void outputs_query2_flights(const int *list, int tam, int flag, int check, int n);
+void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int tam_r, int flag, int check, int n);
 
 void outputs_query2 (Flight_aux *flight_aux_array, Reservation_aux *reservation_aux_array, int index_line, char *argument2, int num_flights_passenger_id, int num_reservations, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 2

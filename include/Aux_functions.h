@@ -13,18 +13,18 @@ int delay(const char *schedule, const char *real);
     //     |->função responsável por calcular a diferença de segundos entre
     //        a hora estimada de partida e a hora real de partida do voo
 
-int nights(char *begin, char *end);
+int nights(const char *begin, const char *end);
     //     |->função responsável por calcular o número de noites
     //        disponíveis na reserva de um utilizador
 
-int nights_between (char *begin_res, char* end_res, char* begin_arg, char* end_arg);
+int nights_between (const char *begin_res, const char* end_res, char* begin_arg, char* end_arg);
     //     |->função responsável por calcular o número de noites
     //        de uma reserva entre duas datas
 
-double total_price(char *price_per_night, int nights, char *city_tax);
+double total_price(const char *price_per_night, int nights, const char *city_tax);
     //     |->função responsável por calcular os gastos numa reserva
 
-int age_user(char *birth_date);
+int age_user(const char *birth_date);
     //     |->função responsável por calcular a idade de um utilizador
 
 int compare_hotels (const void *a, const void *b);
