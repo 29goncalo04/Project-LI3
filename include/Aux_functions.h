@@ -27,14 +27,18 @@ double total_price(int price_per_night, int nights, int city_tax);
 int age_user(const char *birth_date);
     //     |->função responsável por calcular a idade de um utilizador
 
-int compare_hotels (const void *a, const void *b);
+int compare_reservations (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array das reservas
+    //        para o ordenar por data de início (ou id, caso a data seja igual)
+
+int compare_flights (const void *a, const void *b);
+    //     |->função responsável por comparar dois elementos do array dos voos
     //        para o ordenar por data de início (ou id, caso a data seja igual)
 
 int is_date_between (const char *date, const char *i, const char *f);
     //     |->função que verifica se uma data (date) está entre duas outras datas (i e f)
 
-int compare_flights (const void *a, const void *b);
+//int compare_flights (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array dos voos
     //        para o ordenar por data de partida (ou id, caso a data seja igual) 
 

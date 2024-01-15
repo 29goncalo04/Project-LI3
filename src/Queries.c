@@ -528,7 +528,14 @@ void query2 (char *str, int flag, int n) {
             while (upointer != NULL) {
                 if (strcmp(id, get_user_id(upointer)) == 0) {
                     if (verify_account_status(get_user_account_status(upointer)) != 2) {
-                        outputs_query2_reservations(get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 1, n);
+                        int tam = get_user_reservations(upointer);
+                        int* list_reservations = (int* )malloc(tam * sizeof(int));
+                        for (int j = 0; j<tam; j++) {
+                            list_reservations[j] = get_user_list_reservations(upointer)[j];
+                        }
+                        qsort(list_reservations, tam, sizeof(int), compare_reservations);
+                        outputs_query2_reservations(list_reservations, get_user_reservations(upointer), flag, 1, n);
+                        free(list_reservations);
                     }
                     else {
                         outputs_query2_reservations(get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 0, n);   
@@ -544,7 +551,16 @@ void query2 (char *str, int flag, int n) {
             const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
             while (upointer != NULL) {
                 if (strcmp(id, get_user_id(upointer)) == 0) {
-                    if (verify_account_status(get_user_account_status(upointer)) != 2) outputs_query2_flights(get_user_list_flights(upointer), get_user_flights(upointer), flag, 1, n);
+                    if (verify_account_status(get_user_account_status(upointer)) != 2) {
+                        int tam = get_user_flights(upointer);
+                        int* list_flights = (int* )malloc(tam * sizeof(int));
+                        for (int j = 0; j<tam; j++) {
+                            list_flights[j] = get_user_list_flights(upointer)[j];
+                        }
+                        qsort(list_flights, tam, sizeof(int), compare_flights);
+                        outputs_query2_flights(list_flights, tam, flag, 1, n);
+                        free(list_flights);
+                    }
                     else {
                         outputs_query2_flights(get_user_list_flights(upointer), get_user_flights(upointer), flag, 0, n);   
                     }
@@ -562,7 +578,25 @@ void query2 (char *str, int flag, int n) {
         const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
         while (upointer != NULL) {
             if (strcmp(id, get_user_id(upointer)) == 0) {
-                if (verify_account_status(get_user_account_status(upointer)) != 2) outputs_query2_both(get_user_list_flights(upointer), get_user_flights(upointer), get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 1, n);
+                if (verify_account_status(get_user_account_status(upointer)) != 2) {
+                    int tam = get_user_reservations(upointer);
+                    int* list_reservations = (int* )malloc(tam * sizeof(int));
+                    for (int j = 0; j<tam; j++) {
+                        list_reservations[j] = get_user_list_reservations(upointer)[j];
+                    }
+                    qsort(list_reservations, tam, sizeof(int), compare_reservations);
+
+                    int tam2 = get_user_flights(upointer);
+                    int* list_flights = (int* )malloc(tam2 * sizeof(int));
+                    for (int j = 0; j<tam2; j++) {
+                        list_flights[j] = get_user_list_flights(upointer)[j];
+                    }
+                    qsort(list_flights, tam2, sizeof(int), compare_flights);
+
+                    outputs_query2_both(list_flights, tam2, list_reservations, tam, flag, 1, n);
+                    free(list_reservations);
+                    free(list_flights);
+                }
                 else outputs_query2_both(get_user_list_flights(upointer), get_user_flights(upointer), get_user_list_reservations(upointer), get_user_reservations(upointer), flag, 0, n);
                 return;
             }
@@ -594,7 +628,7 @@ void query4 (char *id, int flag, int n) {
     for (int j = 0; j<tam; j++) {
         list_reservations[j] = get_hotel_list_reservations(pointer)[j];
     }
-    qsort(list_reservations, tam, sizeof(int), compare_hotels);
+    qsort(list_reservations, tam, sizeof(int), compare_reservations);
     if (pointer == NULL) outputs_query4(list_reservations, get_hotel_reservations(pointer), flag, 0, n);
     else outputs_query4(list_reservations, get_hotel_reservations(pointer), flag, 1, n);
     free(list_reservations);
@@ -608,10 +642,18 @@ void query5 (char *str, int flag, int n) {
     char *arg_end_date = strtok(NULL, "\n");
     l_arg_end_date = strlen (arg_end_date);
     arg_end_date[l_arg_end_date-1] = '\0';
+    
     ind_airport = found_index_airport(origin);
-
     const ANo *pointer = getAListInit(get_airport_array_valid(ind_airport));
-    outputs_query5(arg_begin_date, arg_end_date, get_airport_list_flights(pointer), get_airport_flights(pointer), flag, 1, n);
+    int tam = get_airport_flights(pointer);
+    int* list_airport = (int* )malloc(tam * sizeof(int));
+    for (int j = 0; j<tam; j++) {
+        list_airport[j] = get_airport_list_flights(pointer)[j];
+    }
+    
+    qsort(list_airport, tam, sizeof(int), compare_flights);
+    outputs_query5(origin, arg_begin_date, arg_end_date, list_airport, tam, flag, 1, n);
+    free(list_airport);
     return;
 }
 

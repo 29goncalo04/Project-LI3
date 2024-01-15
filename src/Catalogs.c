@@ -453,40 +453,6 @@ const RNo* get_reservation_prox(const RNo* RNo){
     return RNo->prox;
 }
 
-void ordena_list_reservations(int ind, const char *date_ind, const char *id_r, int **list, int n) {
-    int j, check;
-    for (int i = 0; i < n; i++) {
-        if ((*list)[i] == -1) {
-            (*list)[i] = ind;
-            return;
-        }
-        else {
-            j = (*list)[i];
-            RNo *pointer = reservation_array_valid[j].init;
-            if (strcmp(date_ind, get_reservation_begin_date(pointer)) != 0) {
-                check = compare_date_time3(date_ind, get_reservation_begin_date(pointer));
-                if (check == 1) {
-                    for (int k = n-1; i < k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind;
-                    return;
-                }
-            } 
-            else { //Book00903905
-                if (atoi(get_reservation_id(pointer) + 4) - atoi(id_r + 4) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                    for (int k = n-1; i < k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind;
-                    return;
-                }
-            }
-        }
-    }
-    return;
-}
-
 void reservations_hash_sort(RList *reservation_array_valid, RList list) {
     int ind = found_index_reservations(get_reservation_id(list.init));
     if (reservation_array_valid[ind].init == NULL) { //esta tudo NULL (vacio)
@@ -496,22 +462,12 @@ void reservations_hash_sort(RList *reservation_array_valid, RList list) {
         list.init->prox = reservation_array_valid[ind].init;
         reservation_array_valid[ind] = list;
     }
-    char* aux = strdup(get_reservation_user_id(list.init));
-    int ind_u = found_index_users(aux);
-    free(aux);
-    UNo *upointer = user_array_valid[ind_u].init;
-    while (upointer != NULL) {
-        if (strcmp(get_reservation_user_id(list.init), get_user_id(upointer)) == 0) {
-            ordena_list_reservations(ind, get_reservation_begin_date(list.init), get_reservation_id(list.init), &(upointer->list_reservations), upointer->reservations);                  
-            break;
-        }
-        else upointer = upointer->prox;
-    }
 }
 
 void create_array_reservations(char parametros[][FIELD_SIZE]){
     int val = validate_reservation(parametros);
     if (val == 1){  //se essa linha for válida os seus parâmetros são armazenados no array de reservas válidas
+        int id_reservation_table = found_index_reservations(parametros[0]);
         RNo* nova = create_reservation(parametros);
         RList list;
         list.init = nova;
@@ -520,14 +476,14 @@ void create_array_reservations(char parametros[][FIELD_SIZE]){
         while (pointer != NULL) {
             if (strcmp(get_reservation_user_id(list.init), get_user_id(pointer)) == 0) {
                 pointer->list_reservations = realloc(pointer->list_reservations, (pointer->reservations+1)*sizeof(int));
-                pointer->list_reservations[pointer->reservations] = -1;
+                pointer->list_reservations[pointer->reservations] = id_reservation_table;
                 pointer->reservations++;
                 pointer->total_spent += total_price(get_reservation_price_per_night(list.init), nights(get_reservation_begin_date(list.init), get_reservation_end_date(list.init)), get_reservation_city_tax(list.init));
                 break;
             }
             else pointer = pointer->prox;
         }
-        int ind_hotel = found_index_hotels(parametros[2]), id_reservation_table = found_index_reservations(parametros[0]);
+        int ind_hotel = found_index_hotels(parametros[2]);
         HNo *pointer_h = hotel_array_valid[ind_hotel].init;
         pointer_h->list_reservations = realloc(pointer_h->list_reservations, (pointer_h->reservations+1)*sizeof(int));
         pointer_h->list_reservations[pointer_h->reservations] = id_reservation_table;
@@ -628,40 +584,6 @@ void create_array_airport() {
         set_airport_flights(nova, 0);                                           
         set_airport_list_flights(nova);
         airport_array_valid[i].init = nova;
-    }
-    return;
-}
-
-void ordena_list_airport_flights(int ind_f, char *data_estimada, char *id_f, int **list, int n) {
-    int j, check;
-    for (int i = 0; i < n; i++) {
-        if ((*list)[i] == -1) {
-            (*list)[i] = ind_f;
-            break;
-        }
-        else {
-            j = (*list)[i];
-            const FNo *pointer = getFListInit(get_flight_array_valid(j));
-            if (strcmp(data_estimada, get_flight_schedule_departure_date(pointer)) != 0) {
-                check = compare_date_time3(data_estimada, get_flight_schedule_departure_date(pointer));
-                if (check == 1) {
-                    for (int k = n-1; i < k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind_f;
-                    break;
-                }
-            } 
-            else { //00903905
-                if (atoi(get_flight_id(pointer)) - atoi(id_f) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                    for (int k = n-1; i <= k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind_f;
-                    break;
-                }
-            }
-        }
     }
     return;
 }
@@ -852,15 +774,17 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         FNo* nova = create_flight(parametros);
         FList list;
         list.init = nova;
-        char *origin_cpy = strdup (parametros[4]);
+        char *origin_cpy = strdup (parametros[4]);//origin
         toUpperCase (origin_cpy);
-        int ind = found_index_airport(origin_cpy), ind_f = found_index_flights(parametros[0]);
+        int ind_org = found_index_airport(origin_cpy), ind_f = found_index_flights(parametros[0]);
         free (origin_cpy);
-        ANo *pointer = airport_array_valid[ind].init;
+        
+        ANo *pointer = airport_array_valid[ind_org].init;
         pointer->list_flights = realloc(pointer->list_flights, (pointer->flights+1)*sizeof(int));
-        pointer->list_flights[pointer->flights] = -1;
+        pointer->list_flights[pointer->flights] = ind_f;
         pointer->flights++;
-        ordena_list_airport_flights(ind_f, parametros[6], parametros[0], &(pointer->list_flights), pointer->flights);
+
+        //ordena_list_airport_flights(ind_f, parametros[6], parametros[0], &(pointer->list_flights), pointer->flights);
         create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }
@@ -923,39 +847,6 @@ void free_flight_valid() {
 ////////////////////////PASSENGERS///////////////////////////
 ////////////////////////PASSENGERS///////////////////////////
 ////////////////////////PASSENGERS///////////////////////////
-void ordena_list_flights(int ind, const char *date_ind, char *id_f, int **list, int n) {
-    int j, check;
-    for (int i = 0; i < n; i++) {
-        if ((*list)[i] == -1) {
-            (*list)[i] = ind;
-            return;
-        }
-        else {
-            j = (*list)[i];
-            const FNo *pointer = getFListInit(get_flight_array_valid(j));
-            if (strcmp(date_ind, get_flight_schedule_departure_date(pointer)) != 0) {
-                check = compare_date_time3(date_ind, get_flight_schedule_departure_date(pointer));
-                if (check == 1) {
-                    for (int k = n-1; i < k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind;
-                    return;
-                }
-            } 
-            else { //00903905
-                if (atoi(get_flight_id(pointer)) - atoi(id_f) < 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
-                    for (int k = n-1; i <= k; k--) {
-                        (*list)[k] = (*list)[k-1];
-                    }
-                    (*list)[i] = ind;
-                    return;
-                }
-            }
-        }
-    }
-    return;
-}
 
 void create_array_passengers(char parametros[][FIELD_SIZE]){
     int ind_u, ind_f, val;
@@ -965,15 +856,15 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
         UNo *upointer = user_array_valid[ind_u].init;
         while (upointer != NULL) {
             if (strcmp(parametros[1], get_user_id(upointer)) == 0) {
-                upointer->list_flights = realloc(upointer->list_flights, (upointer->flights+1)*sizeof(int));
-                upointer->list_flights[upointer->flights] = -1;
-                upointer->flights++;
                 ind_f = found_index_flights(parametros[0]);
-                ordena_list_flights(ind_f, get_flight_schedule_departure_date(flight_array_valid[ind_f].init), parametros[0], &(upointer->list_flights), upointer->flights);
+                upointer->list_flights = realloc(upointer->list_flights, (upointer->flights+1)*sizeof(int));
+                upointer->list_flights[upointer->flights] = ind_f;
+                upointer->flights++;
                 break;
             }
             else upointer = upointer->prox;
         }
+
         ind_f = found_index_flights(parametros[0]); //id_f
         FNo *fpointer = flight_array_valid[ind_f].init;
         while (fpointer != NULL) {

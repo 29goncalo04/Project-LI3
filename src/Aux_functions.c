@@ -62,7 +62,7 @@ int age_user(const char *birth_date){  //1979/11/27
     return age;
 }
 
-int compare_hotels (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
+int compare_reservations (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
     char *beginA = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)a))));
     char *beginB = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)b))));
     if (strcmp (beginA, beginB) < 0){
@@ -94,23 +94,55 @@ int compare_hotels (const void *a, const void *b) {  // ordenar da data mais rec
     return 0;
 }
 
+int compare_flights (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
+    char *beginA = strdup(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(*(const int*)a))));
+    char *beginB = strdup(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(*(const int*)b))));
+    if (strcmp (beginA, beginB) < 0){
+        free(beginA);
+        free(beginB);
+        return 1;
+    }
+    if (strcmp (beginA, beginB) > 0){
+        free(beginA);
+        free(beginB);
+        return -1;
+    }
+    char *idA = strdup(get_flight_id(getFListInit(get_flight_array_valid(*(const int*)a))));
+    char *idB = strdup(get_flight_id(getFListInit(get_flight_array_valid(*(const int*)b))));
+    if (strcmp (idA, idB) < 0){
+        free(beginA);
+        free(beginB);
+        free(idA);
+        free(idB);
+        return -1;
+    }
+    if (strcmp (idA, idB) > 0){
+        free(beginA);
+        free(beginB);
+        free(idA);
+        free(idB);
+        return 1;
+    }
+    return 0;
+}
+
 int is_date_between (const char *date, const char *i, const char *f) {  // date é a que queremos verificar, i é a data inicial e f a data final
     if (strcmp (date, i) < 0) return 0;  // date é menor que i, logo não está entre as datas
     if (strcmp (date, f) > 0) return 0;  // date é maior que f, não está entre as datas
     return 1;  // date está entre i e f
 }
 
-int compare_flights (const void *a, const void *b) {  // ordenar da data mais antiga para a mais recente, ou pelo id se as datas forem iguais
-    char *beginA = ((flight_date_aux *) a)->schedule_departure_date;
-    char *beginB = ((flight_date_aux *) b)->schedule_departure_date;
-    if (strcmp (beginA, beginB) < 0) return 1;
-    if (strcmp (beginA, beginB) > 0) return -1;
-    char *idA = ((flight_date_aux *) a)->id;
-    char *idB = ((flight_date_aux *) b)->id;
-    if (strcmp (idA, idB) < 0) return -1;
-    if (strcmp (idA, idB) > 0) return 1;
-    return 0;
-}
+// int compare_flights (const void *a, const void *b) {  // ordenar da data mais antiga para a mais recente, ou pelo id se as datas forem iguais
+//     char *beginA = ((flight_date_aux *) a)->schedule_departure_date;
+//     char *beginB = ((flight_date_aux *) b)->schedule_departure_date;
+//     if (strcmp (beginA, beginB) < 0) return 1;
+//     if (strcmp (beginA, beginB) > 0) return -1;
+//     char *idA = ((flight_date_aux *) a)->id;
+//     char *idB = ((flight_date_aux *) b)->id;
+//     if (strcmp (idA, idB) < 0) return -1;
+//     if (strcmp (idA, idB) > 0) return 1;
+//     return 0;
+// }
 
 // Troca o conteudo de dois ints
 void swap_contador(int *a, int *b) {

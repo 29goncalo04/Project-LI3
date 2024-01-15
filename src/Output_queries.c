@@ -88,11 +88,11 @@ void outputs_query2_reservations(const int *list, int tam, int flag, int check, 
     if (check == 1) {
         if (flag == 1) {
             int ind;
-            for (int i = tam - 1, num = 1; 0 <= i; i--, num++) {
+            for (int i = 0, num = 1; i < tam; i++, num++) {
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
                 fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))));
-                if (i == 0) fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
+                if (i == tam-1) fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
                 else {
                     fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
                     fprintf(output, "\n");
@@ -101,9 +101,9 @@ void outputs_query2_reservations(const int *list, int tam, int flag, int check, 
         }
         else {
             int ind;
-            for (int i = tam - 1; 0 <= i; i--) {
+            for (int i = 0; i < tam; i++) {
                 ind = list[i];
-                if (i == 0) fprintf(output, "%s;%s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
+                if (i == tam-1) fprintf(output, "%s;%s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
                 else fprintf(output, "%s;%s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind))));
             }
         }
@@ -116,12 +116,12 @@ void outputs_query2_flights(const int *list, int tam, int flag, int check, int n
     if (check == 1) {
         if (flag == 1) {
             int ind;
-            for (int i = tam - 1, num = 1; 0 <= i; i--, num++) {
+            for (int i = 0, num = 1; i < tam; i++, num++) {
                 ind = list[i];
                 fprintf(output, "--- %d ---\n", num);
                 fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
                 char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
-                if (i == 0) fprintf(output, "date: %s\n", only_date_aux);
+                if (i == tam-1) fprintf(output, "date: %s\n", only_date_aux);
                 else {
                     fprintf(output, "date: %s\n", only_date_aux);
                     fprintf(output, "\n");
@@ -131,10 +131,10 @@ void outputs_query2_flights(const int *list, int tam, int flag, int check, int n
         }
         else {
             int ind;
-            for (int i = tam - 1; 0 <= i; i--) {
+            for (int i = 0; i < tam; i++) {
                 ind = list[i];
                 char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
-                if (i == 0) fprintf(output, "%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), only_date_aux);
+                if (i == tam-1) fprintf(output, "%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), only_date_aux);
                 else fprintf(output, "%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), only_date_aux);
                 free(only_date_aux);
             }
@@ -146,24 +146,24 @@ void outputs_query2_flights(const int *list, int tam, int flag, int check, int n
 void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int tam_r, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
-        int check_date, ind_f, ind_r, i = tam_r - 1, j = tam_f - 1, num = 1;
+        int check_date, ind_f, ind_r, i = 0, j = 0, num = 1;
         if (flag == 1) {
-            while (0 <= i || 0 <= j) {
-                if (0<=i && j==-1) {
-                    for (; 0 <= i; i--, num++) {
+            while (i < tam_r || j < tam_f) {
+                if (i < tam_r && j==tam_f) {
+                    for (; i < tam_r; i++, num++) {
                         ind_r = list_r[i];
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
-                        if(i != 0) fprintf(output, "\n");
+                        if(i != tam_r-1) fprintf(output, "\n");
                     }
                     fclose(output);
                     return;
                 }
 
-                if (0<=j && i==-1) {
-                    for (; 0 <= j; j--, num++) {
+                if (j<tam_f && i==tam_r) {
+                    for (; j < tam_f; j++, num++) {
                         ind_f = list_f[j];
                         fprintf(output, "--- %d ---\n", num);
                         fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))));
@@ -171,7 +171,7 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                         fprintf(output, "date: %s\n", only_date_aux);
                         free(only_date_aux);
                         fprintf(output, "type: flight\n");
-                        if(j != 0) fprintf(output, "\n");
+                        if(j != tam_f-1) fprintf(output, "\n");
                     }
                     fclose(output);
                     return;
@@ -188,7 +188,7 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                         fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
-                        i--;
+                        i++;
                     }
                     else {
                         fprintf(output, "--- %d ---\n", num);
@@ -196,7 +196,7 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                         fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
-                        j--;
+                        j++;
                     }
                 } 
                 else {
@@ -206,7 +206,7 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                         fprintf(output, "date: %s\n", only_date_aux);
                         fprintf(output, "type: flight\n");
                         fprintf(output, "\n");
-                        j--;
+                        j++;
                     }
                     else{
                         fprintf(output, "--- %d ---\n", num);
@@ -214,7 +214,7 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                         fprintf(output, "date: %s\n", get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                         fprintf(output, "type: reservation\n");
                         fprintf(output, "\n");
-                        i--;
+                        i++;
                     }
                 }
                 free(only_date_aux);
@@ -224,9 +224,9 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
             return;
         }
         else {
-            while (0 <= i || 0 <= j) {
-                if (0<=i && j==-1) {
-                    for (; 0 <= i; i--, num++) {
+            while (i < tam_r || j < tam_f) {
+                if (i < tam_r && j==tam_f) {
+                    for (; i < tam_r; i++, num++) {
                         ind_r = list_r[i];
                         fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                     }
@@ -234,8 +234,8 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                     return;
                 }
 
-                if (0<=j && i==-1) {
-                    for (; 0 <= j; j--, num++) {
+                if (j < tam_f && i==tam_r) {
+                    for (; j < tam_f; j++, num++) {
                         ind_f = list_f[j];
                         char *only_date_aux = only_date2(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind_f))));
                         fprintf(output, "%s;%s;flight\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
@@ -252,21 +252,21 @@ void outputs_query2_both(const int *list_f, int tam_f, const int *list_r, int ta
                     check_date = compare_date_time3(only_date_aux, get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
                     if (check_date == 1) {
                         fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
-                        i--;
+                        i++;
                     }
                     else {
                         fprintf(output, "%s;%s;flight\n",get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
-                        j--;
+                        j++;
                     }
                 } 
                 else {
                     if (atoi(get_flight_id(getFListInit(get_flight_array_valid(ind_f)))) - atoi(get_reservation_id(getRListInit(get_reservation_array_valid(ind_r)))) > 0) { //de dar errado a query 2 ou outra query por culpa do array(que tenho de guardar de recente-antiga e guardei antiga-recente) mudar o > pelo <
                         fprintf(output, "%s;%s;flight\n", get_flight_id(getFListInit(get_flight_array_valid(ind_f))), only_date_aux);
-                        j--;
+                        j++;
                     }
                     else{
                         fprintf(output, "%s;%s;reservation\n", get_reservation_id(getRListInit(get_reservation_array_valid(ind_r))), get_reservation_begin_date(getRListInit(get_reservation_array_valid(ind_r))));
-                        i--;
+                        i++;
                     }
                 }
                 free(only_date_aux);
@@ -322,40 +322,50 @@ void outputs_query4(const int *list, int num_reservations, int flag, int check, 
 //sua respetiva data estimada de partida esteja entre <begin_date> e <end_date> (ambos inclusivos).
 
 //is_date_between (char *date, char *i, char *f) retorna 1 si esta entre las dos
-void outputs_query5 (char *arg_begin_date, char *arg_end_date, const int *list, int num_flights, int flag, int check, int n) {
+void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list, int num_flights, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
         int check_date, ind, is_first_line = 1;
         if (flag == 1) {
-            for (int i = num_flights-1, j=0; 0 <= i; i--, j++) {
+            for (int i = 0, j=0; i < num_flights; i++, j++) {
                 ind = list[i];
-                check_date = is_date_between (get_flight_schedule_arrival_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
-                if (check_date == 1) {
-                    char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
-                    toUpperCase(destination_cpy);
-                    if (!is_first_line) fprintf(output, "\n");
-                    fprintf(output, "--- %d ---\n", j+1);
-                    fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
-                    fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
-                    fprintf(output, "destination: %s\n", destination_cpy);
-                    fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind))));
-                    fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
-                    free(destination_cpy);
-                    is_first_line = 0;
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                        toUpperCase(destination_cpy);
+                        if (!is_first_line) fprintf(output, "\n");
+                        fprintf(output, "--- %d ---\n", j+1);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
+                        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
+                        fprintf(output, "destination: %s\n", destination_cpy);
+                        fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind))));
+                        fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                        free(destination_cpy);
+                        is_first_line = 0;
+                    }
+                    else j--;
                 }
-                else j--;
+                free(origin_cpy);
             }
         }
         else {
-            for (int i = num_flights-1; 0 <= i; i--) {
+            for (int i = 0; i < num_flights; i++) {
                 ind = list[i];
-                check_date = is_date_between (get_flight_schedule_arrival_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
-                if (check_date == 1) {
-                    char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
-                    toUpperCase(destination_cpy);
-                    fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
-                    free(destination_cpy);
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                        toUpperCase(destination_cpy);
+                        fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                        free(destination_cpy);
+                    }
                 }
+                free(origin_cpy);
             }
         }
     }
