@@ -57,7 +57,7 @@ void free_user_valid();
 ////////////////////////RESERVATIONS///////////////////////////
 typedef struct RNo RNo;
 typedef struct RList RList;
-#define NUM_LINHAS_VALID_RESERVATION 6000000
+#define NUM_LINHAS_VALID_RESERVATION 7000000
 void set_reservation_id(RNo* RNo, const char* id);
 void set_reservation_user_id(RNo* RNo, const char* user_id);
 void set_reservation_hotel_id(RNo* RNo, const char* hotel_id);
