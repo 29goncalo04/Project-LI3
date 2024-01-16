@@ -18,6 +18,13 @@ void insertionSort_atrasos(int *atrasos, int num_atrasos){
     }
 }
 
+int year(char* date) {
+    char date_copy[20];
+    strcpy(date_copy, date);
+    int aux = atoi(strtok(date_copy, "/"));
+    return aux;
+}
+
 int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
     int atraso = 0, verdadeira = 0, prevista = 0;
     verdadeira = (real[11]-'0')*36000 + (real[12]-'0')*3600 + (real[14]-'0')*600 + (real[15]-'0')*60 + (real[17]-'0')*10 + (real[18]-'0');
@@ -121,6 +128,78 @@ int compare_flights (const void *a, const void *b) {  // ordenar da data mais re
         free(beginB);
         free(idA);
         free(idB);
+        return 1;
+    }
+    return 0;
+}
+
+int compare_airports2023 (const void *a, const void *b) {
+    int passengersA = get_airport_passengers2023(getAListInit(get_airport_array_valid(*(const int*)a)));
+    int passengersB = get_airport_passengers2023(getAListInit(get_airport_array_valid(*(const int*)b)));
+    if ((passengersA - passengersB) < 0){
+        return 1;
+    }
+    if ((passengersA - passengersB) > 0){
+        return -1;
+    }
+    char *originA = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)a))));
+    char *originB = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)b))));
+    if (strcmp (originA, originB) < 0){
+        free(originA);
+        free(originB);
+        return -1;
+    }
+    if (strcmp (originA, originB) > 0){
+        free(originA);
+        free(originB);
+        return 1;
+    }
+    return 0;
+}
+
+int compare_airports2022 (const void *a, const void *b) {
+    int passengersA = get_airport_passengers2022(getAListInit(get_airport_array_valid(*(const int*)a)));
+    int passengersB = get_airport_passengers2022(getAListInit(get_airport_array_valid(*(const int*)b)));
+    if ((passengersA - passengersB) < 0){
+        return 1;
+    }
+    if ((passengersA - passengersB) > 0){
+        return -1;
+    }
+    char *originA = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)a))));
+    char *originB = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)b))));
+    if (strcmp (originA, originB) < 0){
+        free(originA);
+        free(originB);
+        return -1;
+    }
+    if (strcmp (originA, originB) > 0){
+        free(originA);
+        free(originB);
+        return 1;
+    }
+    return 0;
+}
+
+int compare_airports2021 (const void *a, const void *b) {
+    int passengersA = get_airport_passengers2021(getAListInit(get_airport_array_valid(*(const int*)a)));
+    int passengersB = get_airport_passengers2021(getAListInit(get_airport_array_valid(*(const int*)b)));
+    if ((passengersA - passengersB) < 0){
+        return 1;
+    }
+    if ((passengersA - passengersB) > 0){
+        return -1;
+    }
+    char *originA = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)a))));
+    char *originB = strdup(get_airport_name(getAListInit(get_airport_array_valid(*(const int*)b))));
+    if (strcmp (originA, originB) < 0){
+        free(originA);
+        free(originB);
+        return -1;
+    }
+    if (strcmp (originA, originB) > 0){
+        free(originA);
+        free(originB);
         return 1;
     }
     return 0;

@@ -9,6 +9,8 @@
 void insertionSort_atrasos(int *atrasos, int num_atrasos);
     //     |->função que ordena o array de atrasos de um aeroporto
 
+int year(char* date);
+
 int delay(const char *schedule, const char *real);
     //     |->função responsável por calcular a diferença de segundos entre
     //        a hora estimada de partida e a hora real de partida do voo
@@ -34,6 +36,10 @@ int compare_reservations (const void *a, const void *b);
 int compare_flights (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array dos voos
     //        para o ordenar por data de início (ou id, caso a data seja igual)
+
+int compare_airports2023 (const void *a, const void *b);
+int compare_airports2022 (const void *a, const void *b);
+int compare_airports2021 (const void *a, const void *b);
 
 int is_date_between (const char *date, const char *i, const char *f);
     //     |->função que verifica se uma data (date) está entre duas outras datas (i e f)

@@ -548,15 +548,48 @@ void free_reservation_valid() {
 
 
 struct ANo {
-    int flights;
-    int *list_flights;
+    char *name;
+    int flights2023;
+    int passengers2023;
+    int *list_flights2023;
+    int flights2022;
+    int passengers2022;
+    int *list_flights2022;
+    int flights2021;
+    int passengers2021;
+    int *list_flights2021;
 };
 
-void set_airport_flights(ANo* ANo, int flights){
-    ANo->flights = flights;
+void set_airport_name(ANo* ANo, char* name){
+    //free(ANo->name);
+    ANo->name = strdup(name);
 }
-void set_airport_list_flights(ANo* ANo){
-    ANo->list_flights = NULL;
+void set_airport_passengers2023(ANo* ANo, int passengers){
+    ANo->passengers2023 = passengers;
+}
+void set_airport_flights2023(ANo* ANo, int flights){
+    ANo->flights2023 = flights;
+}
+void set_airport_list_flights2023(ANo* ANo){
+    ANo->list_flights2023 = NULL;
+}
+void set_airport_passengers2022(ANo* ANo, int passengers){
+    ANo->passengers2022 = passengers;
+}
+void set_airport_flights2022(ANo* ANo, int flights){
+    ANo->flights2022 = flights;
+}
+void set_airport_list_flights2022(ANo* ANo){
+    ANo->list_flights2022 = NULL;
+}
+void set_airport_passengers2021(ANo* ANo, int passengers){
+    ANo->passengers2021 = passengers;
+}
+void set_airport_flights2021(ANo* ANo, int flights){
+    ANo->flights2021 = flights;
+}
+void set_airport_list_flights2021(ANo* ANo){
+    ANo->list_flights2021 = NULL;
 }
 
 struct AList {
@@ -571,18 +604,49 @@ const AList* get_airport_array_valid(int pos) {
 const ANo* getAListInit(const AList* AList){
     return AList->init;
 }
-const int* get_airport_list_flights(const ANo* ANo){
-    return ANo->list_flights;
+const char* get_airport_name(const ANo* ANo){
+    return ANo->name;
 }
-int get_airport_flights(const ANo* ANo){
-    return ANo->flights;
+const int* get_airport_list_flights2023(const ANo* ANo){
+    return ANo->list_flights2023;
+}
+int get_airport_flights2023(const ANo* ANo){
+    return ANo->flights2023;
+}
+int get_airport_passengers2023(const ANo* ANo){
+    return ANo->passengers2023;
+}
+const int* get_airport_list_flights2022(const ANo* ANo){
+    return ANo->list_flights2022;
+}
+int get_airport_flights2022(const ANo* ANo){
+    return ANo->flights2022;
+}
+int get_airport_passengers2022(const ANo* ANo){
+    return ANo->passengers2022;
+}
+const int* get_airport_list_flights2021(const ANo* ANo){
+    return ANo->list_flights2021;
+}
+int get_airport_flights2021(const ANo* ANo){
+    return ANo->flights2021;
+}
+int get_airport_passengers2021(const ANo* ANo){
+    return ANo->passengers2021;
 }
 
 void create_array_airport() {
     for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) { 
         ANo* nova = malloc(sizeof(struct ANo));
-        set_airport_flights(nova, 0);                                           
-        set_airport_list_flights(nova);
+        set_airport_passengers2023(nova, 0);
+        set_airport_flights2023(nova, 0);                                           
+        set_airport_list_flights2023(nova);
+        set_airport_passengers2022(nova, 0);
+        set_airport_flights2022(nova, 0);                                           
+        set_airport_list_flights2022(nova);
+        set_airport_passengers2021(nova, 0);
+        set_airport_flights2021(nova, 0);                                           
+        set_airport_list_flights2021(nova);
         airport_array_valid[i].init = nova;
     }
     return;
@@ -590,7 +654,10 @@ void create_array_airport() {
 
 void free_list_airport(const ANo *nodo) {
     const ANo* atual = nodo;
-    free((int*)atual->list_flights);
+    free((char*)atual->name);
+    free((int*)atual->list_flights2023);
+    free((int*)atual->list_flights2022);
+    free((int*)atual->list_flights2021);
     free((char*)atual);
 }
 
@@ -608,6 +675,80 @@ void free_airport_valid() {
     perform_operation_on_airport_array(free_airport_element);
 }
 
+
+
+
+
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+struct YNo {
+    int airports;
+    int *list_airports;
+};
+
+void set_year_airports(YNo* YNo, int airports){
+    YNo->airports = airports;
+}
+void set_year_list_airports(YNo* YNo){
+    YNo->list_airports = NULL;
+}
+
+struct YList {
+    YNo *init;
+};
+
+YList year_array_valid[NUM_LINHAS_VALID_YEAR];
+
+const YList* get_year_array_valid(int pos) {
+    return &year_array_valid[pos];
+}
+const YNo* getYListInit(const YList* YList){
+    return YList->init;
+}
+const int* get_year_list_airports(const YNo* YNo){
+    return YNo->list_airports;
+}
+int get_year_airports(const YNo* YNo){
+    return YNo->airports;
+}
+
+void create_array_years() {
+    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) { 
+        YNo* nova = malloc(sizeof(struct YNo));
+        set_year_airports(nova, 0);                                           
+        set_year_list_airports(nova);
+        year_array_valid[i].init = nova;
+    }
+    return;
+}
+
+void free_list_year(const YNo *nodo) {
+    const YNo* atual = nodo;
+    free((int*)atual->list_airports);
+    free((char*)atual);
+}
+
+void perform_operation_on_year_array(void (*operation)(YList *)) {
+    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) {
+        operation(&year_array_valid[i]);
+    }
+}
+
+void free_year_element(YList *year_element) {
+    free_list_year(getYListInit(year_element));
+}
+
+void free_year_valid() {
+    perform_operation_on_year_array(free_year_element);
+}
 
 
 
@@ -778,13 +919,74 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         toUpperCase (origin_cpy);
         int ind_org = found_index_airport(origin_cpy), ind_f = found_index_flights(parametros[0]);
         free (origin_cpy);
+        char *destination_cpy = strdup (parametros[5]);//destination
+        toUpperCase (destination_cpy);
+        int ind_dest = found_index_airport(destination_cpy);
+        free (destination_cpy);
         
-        ANo *pointer = airport_array_valid[ind_org].init;
-        pointer->list_flights = realloc(pointer->list_flights, (pointer->flights+1)*sizeof(int));
-        pointer->list_flights[pointer->flights] = ind_f;
-        pointer->flights++;
+        int ind_year = found_index_year(year(parametros[6]));
+        YNo *pointer_y = year_array_valid[ind_year].init;
+        if(pointer_y->airports == 0){
+            pointer_y->list_airports = realloc(pointer_y->list_airports, (pointer_y->airports+1)*sizeof(int));
+            pointer_y->list_airports[pointer_y->airports] = ind_org;
+            pointer_y->airports++;
+            pointer_y->list_airports = realloc(pointer_y->list_airports, (pointer_y->airports+1)*sizeof(int));
+            pointer_y->list_airports[pointer_y->airports] = ind_dest;
+            pointer_y->airports++;
+        }
+        else{
+            for(int i = 0; i<pointer_y->airports; i++){
+                if (pointer_y->list_airports[i] == ind_org) break;
+                if (i == pointer_y->airports-1){
+                    pointer_y->list_airports = realloc(pointer_y->list_airports, (pointer_y->airports+1)*sizeof(int));
+                    pointer_y->list_airports[pointer_y->airports] = ind_org;
+                    pointer_y->airports++;
+                }
+            }
+            for(int i = 0; i<pointer_y->airports; i++){
+                if (pointer_y->list_airports[i] == ind_dest) break;
+                if (i == pointer_y->airports-1){
+                    pointer_y->list_airports = realloc(pointer_y->list_airports, (pointer_y->airports+1)*sizeof(int));
+                    pointer_y->list_airports[pointer_y->airports] = ind_dest;
+                    pointer_y->airports++;
+                }
+            }
+        }
 
-        //ordena_list_airport_flights(ind_f, parametros[6], parametros[0], &(pointer->list_flights), pointer->flights);
+        ANo *pointer = airport_array_valid[ind_org].init;
+        if (pointer->flights2023 + pointer->flights2022 + pointer->flights2021 == 0) pointer->name = strdup(parametros[4]);
+        if (year(parametros[6]) == 2023){
+            pointer->list_flights2023 = realloc(pointer->list_flights2023, (pointer->flights2023+1)*sizeof(int));
+            pointer->list_flights2023[pointer->flights2023] = ind_f;
+            pointer->flights2023++;
+        }
+        if (year(parametros[6]) == 2022){
+            pointer->list_flights2022 = realloc(pointer->list_flights2022, (pointer->flights2022+1)*sizeof(int));
+            pointer->list_flights2022[pointer->flights2022] = ind_f;
+            pointer->flights2022++;
+        }
+        if (year(parametros[6]) == 2021){
+            pointer->list_flights2021 = realloc(pointer->list_flights2021, (pointer->flights2021+1)*sizeof(int));
+            pointer->list_flights2021[pointer->flights2021] = ind_f;
+            pointer->flights2021++;
+        }
+        ANo *pointerDest = airport_array_valid[ind_dest].init;
+        if (pointerDest->flights2023 + pointerDest->flights2022 + pointerDest->flights2021 == 0) pointerDest->name = strdup(parametros[5]);
+        if (year(parametros[6]) == 2023){
+            pointerDest->list_flights2023 = realloc(pointerDest->list_flights2023, (pointerDest->flights2023+1)*sizeof(int));
+            pointerDest->list_flights2023[pointerDest->flights2023] = ind_f;
+            pointerDest->flights2023++;
+        }
+        if (year(parametros[6]) == 2022){
+            pointerDest->list_flights2022 = realloc(pointerDest->list_flights2022, (pointerDest->flights2022+1)*sizeof(int));
+            pointerDest->list_flights2022[pointerDest->flights2022] = ind_f;
+            pointerDest->flights2022++;
+        }
+        if (year(parametros[6]) == 2021){
+            pointerDest->list_flights2021 = realloc(pointerDest->list_flights2021, (pointerDest->flights2021+1)*sizeof(int));
+            pointerDest->list_flights2021[pointerDest->flights2021] = ind_f;
+            pointerDest->flights2021++;
+        }
         create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }
@@ -849,7 +1051,7 @@ void free_flight_valid() {
 ////////////////////////PASSENGERS///////////////////////////
 
 void create_array_passengers(char parametros[][FIELD_SIZE]){
-    int ind_u, ind_f, val;
+    int ind_u, ind_f, ind_a, val;
     val = validate_passenger(parametros);
     if (val==1){
         ind_u = found_index_users(parametros[1]); //id_u
@@ -874,6 +1076,18 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
             }
             else fpointer = fpointer->prox;
         }
+        ind_a = found_index_airport(fpointer->origin); //id_a
+        ANo *apointer = airport_array_valid[ind_a].init;
+        int year_aux = year(fpointer->schedule_departure_date);
+        if (year_aux == 2023) apointer->passengers2023++;
+        if (year_aux == 2022) apointer->passengers2022++;
+        if (year_aux == 2021) apointer->passengers2021++;
+        int ind_b = found_index_airport(fpointer->destination); //id_b
+        ANo *apointer2 = airport_array_valid[ind_b].init;
+        int year_aux2 = year(fpointer->schedule_departure_date);
+        if (year_aux2 == 2023) apointer2->passengers2023++;
+        if (year_aux2 == 2022) apointer2->passengers2022++;
+        if (year_aux2 == 2021) apointer2->passengers2021++;
     }
     else{
         complete_files_passengers(parametros);

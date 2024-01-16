@@ -77,6 +77,7 @@ void open_files(char* path){
             
             case 1:   
                 //init_flight_array(flight_array_valid);
+                create_array_years();
                 create_array_airport();
                 fflights = fopen(aux_flights, "r");
                 start_files_flights();

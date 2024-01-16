@@ -645,15 +645,46 @@ void query5 (char *str, int flag, int n) {
     
     ind_airport = found_index_airport(origin);
     const ANo *pointer = getAListInit(get_airport_array_valid(ind_airport));
-    int tam = get_airport_flights(pointer);
-    int* list_airport = (int* )malloc(tam * sizeof(int));
-    for (int j = 0; j<tam; j++) {
-        list_airport[j] = get_airport_list_flights(pointer)[j];
+    int tam3 = get_airport_flights2023(pointer);
+    int tam2 = get_airport_flights2022(pointer);
+    int tam1 = get_airport_flights2021(pointer);
+    int* list_airport2023 = (int* )malloc(tam3 * sizeof(int));
+    int* list_airport2022 = (int* )malloc(tam2 * sizeof(int));
+    int* list_airport2021 = (int* )malloc(tam1 * sizeof(int));
+    for (int j = 0; j<tam3; j++) {
+        list_airport2023[j] = get_airport_list_flights2023(pointer)[j];
     }
-    
-    qsort(list_airport, tam, sizeof(int), compare_flights);
-    outputs_query5(origin, arg_begin_date, arg_end_date, list_airport, tam, flag, 1, n);
-    free(list_airport);
+    for (int j = 0; j<tam2; j++) {
+        list_airport2022[j] = get_airport_list_flights2022(pointer)[j];
+    }
+    for (int j = 0; j<tam1; j++) {
+        list_airport2021[j] = get_airport_list_flights2021(pointer)[j];
+    }
+    qsort(list_airport2023, tam3, sizeof(int), compare_flights);
+    qsort(list_airport2022, tam2, sizeof(int), compare_flights);
+    qsort(list_airport2021, tam1, sizeof(int), compare_flights);
+    outputs_query5(origin, arg_begin_date, arg_end_date, list_airport2023, list_airport2022, list_airport2021, tam3, tam2, tam1, flag, 1, n);
+    free(list_airport2023);
+    free(list_airport2022);
+    free(list_airport2021);
+    return;
+}
+
+void query6(char *str, int flag, int n){
+    int year = atoi(strtok(str, " "));
+    int N = atoi(strtok(NULL, "\0"));
+    int ind_y = found_index_year(2022);
+    const int *list = get_year_list_airports(getYListInit(get_year_array_valid(ind_y)));
+    int tam = get_year_airports(getYListInit(get_year_array_valid(ind_y)));
+    int* list_aux = (int* )malloc(tam * sizeof(int));
+    for (int j = 0; j<tam; j++) {
+        list_aux[j] = list[j];
+    }
+    if (year==2023) qsort(list_aux, tam, sizeof(int), compare_airports2023);
+    if (year==2022) qsort(list_aux, tam, sizeof(int), compare_airports2022);
+    if (year==2021) qsort(list_aux, tam, sizeof(int), compare_airports2021);
+    outputs_query6(list_aux, year, N, flag, n, tam);
+    free(list_aux);
     return;
 }
 

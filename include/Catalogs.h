@@ -127,12 +127,35 @@ void set_airport_flights(ANo* ANo, int flights);
 void set_airport_list_flights(ANo* ANo);
 const AList* get_airport_array_valid(int pos);
 const ANo* getAListInit(const AList* AList);
-const int* get_airport_list_flights(const ANo* ANo);
-int get_airport_flights(const ANo* ANo);
+const char* get_airport_name(const ANo* ANo);
+const int* get_airport_list_flights2023(const ANo* ANo);
+int get_airport_flights2023(const ANo* ANo);
+int get_airport_passengers2023(const ANo* ANo);
+const int* get_airport_list_flights2022(const ANo* ANo);
+int get_airport_flights2022(const ANo* ANo);
+int get_airport_passengers2022(const ANo* ANo);
+const int* get_airport_list_flights2021(const ANo* ANo);
+int get_airport_flights2021(const ANo* ANo);
+int get_airport_passengers2021(const ANo* ANo);
 void create_array_airport();
 void ordena_list_airport_flights(int ind_f, char *data_estimada, char *id_f, int **list, int n);
 void free_list_airport(const ANo *nodo);
 void free_airport_valid();
+
+
+
+////////////////////////YEAR///////////////////////////
+typedef struct YNo YNo;
+typedef struct YList YList;
+#define NUM_LINHAS_VALID_YEAR 366
+const YList* get_year_array_valid(int pos);
+const YNo* getYListInit(const YList* YList);
+const int* get_year_list_airports(const YNo* YNo);
+int get_year_airports(const YNo* YNo);
+void create_array_years();
+void free_list_year(const YNo *nodo);
+void free_year_valid();
+
 
 ////////////////////////FLIGHTS///////////////////////////
 typedef struct FNo FNo;

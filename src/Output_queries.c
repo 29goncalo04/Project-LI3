@@ -322,27 +322,73 @@ void outputs_query4(const int *list, int num_reservations, int flag, int check, 
 //sua respetiva data estimada de partida esteja entre <begin_date> e <end_date> (ambos inclusivos).
 
 //is_date_between (char *date, char *i, char *f) retorna 1 si esta entre las dos
-void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list, int num_flights, int flag, int check, int n) {
+void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list3, const int *list2, const int *list1, int num_flights3, int num_flights2, int num_flights1, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
-        int check_date, ind, is_first_line = 1;
+        int check_date, ind3, ind2, ind1, is_first_line = 1;
         if (flag == 1) {
-            for (int i = 0, j=0; i < num_flights; i++, j++) {
-                ind = list[i];
-                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind))));
+            for (int i = 0, j=0; i < num_flights3; i++, j++) {
+                ind3 = list3[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind3))));
                 toUpperCase(origin_cpy);
                 if (strcmp(origin, origin_cpy) == 0) {
-                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind3))), arg_begin_date, arg_end_date);
                     if (check_date == 1) {
-                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind3))));
                         toUpperCase(destination_cpy);
                         if (!is_first_line) fprintf(output, "\n");
                         fprintf(output, "--- %d ---\n", j+1);
-                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))));
-                        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))));
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind3))));
+                        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind3))));
                         fprintf(output, "destination: %s\n", destination_cpy);
-                        fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind))));
-                        fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                        fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind3))));
+                        fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind3))));
+                        free(destination_cpy);
+                        is_first_line = 0;
+                    }
+                    else j--;
+                }
+                free(origin_cpy);
+            }
+            for (int i = 0, j=0; i < num_flights2; i++, j++) {
+                ind2 = list2[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind2))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind2))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind2))));
+                        toUpperCase(destination_cpy);
+                        if (!is_first_line) fprintf(output, "\n");
+                        fprintf(output, "--- %d ---\n", j+1);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind2))));
+                        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind2))));
+                        fprintf(output, "destination: %s\n", destination_cpy);
+                        fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind2))));
+                        fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind2))));
+                        free(destination_cpy);
+                        is_first_line = 0;
+                    }
+                    else j--;
+                }
+                free(origin_cpy);
+            }
+            for (int i = 0, j=0; i < num_flights1; i++, j++) {
+                ind1 = list1[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind1))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind1))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind1))));
+                        toUpperCase(destination_cpy);
+                        if (!is_first_line) fprintf(output, "\n");
+                        fprintf(output, "--- %d ---\n", j+1);
+                        fprintf(output, "id: %s\n", get_flight_id(getFListInit(get_flight_array_valid(ind1))));
+                        fprintf(output, "schedule_departure_date: %s\n", get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind1))));
+                        fprintf(output, "destination: %s\n", destination_cpy);
+                        fprintf(output, "airline: %s\n", get_flight_airline(getFListInit(get_flight_array_valid(ind1))));
+                        fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind1))));
                         free(destination_cpy);
                         is_first_line = 0;
                     }
@@ -352,16 +398,46 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
             }
         }
         else {
-            for (int i = 0; i < num_flights; i++) {
-                ind = list[i];
-                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind))));
+            for (int i = 0; i < num_flights3; i++) {
+                ind3 = list3[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind3))));
                 toUpperCase(origin_cpy);
                 if (strcmp(origin, origin_cpy) == 0) {
-                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind))), arg_begin_date, arg_end_date);
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind3))), arg_begin_date, arg_end_date);
                     if (check_date == 1) {
-                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind))));
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind3))));
                         toUpperCase(destination_cpy);
-                        fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind))));
+                        fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind3))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind3))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind3))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind3))));
+                        free(destination_cpy);
+                    }
+                }
+                free(origin_cpy);
+            }
+            for (int i = 0; i < num_flights2; i++) {
+                ind2 = list2[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind2))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind2))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind2))));
+                        toUpperCase(destination_cpy);
+                        fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind2))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind2))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind2))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind2))));
+                        free(destination_cpy);
+                    }
+                }
+                free(origin_cpy);
+            }
+            for (int i = 0; i < num_flights1; i++) {
+                ind1 = list1[i];
+                char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind1))));
+                toUpperCase(origin_cpy);
+                if (strcmp(origin, origin_cpy) == 0) {
+                    check_date = is_date_between (get_flight_schedule_departure_date (getFListInit (get_flight_array_valid(ind1))), arg_begin_date, arg_end_date);
+                    if (check_date == 1) {
+                        char *destination_cpy = strdup(get_flight_destination(getFListInit(get_flight_array_valid(ind1))));
+                        toUpperCase(destination_cpy);
+                        fprintf (output, "%s;%s;%s;%s;%s\n", get_flight_id(getFListInit(get_flight_array_valid(ind1))), get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(ind1))), destination_cpy, get_flight_airline(getFListInit(get_flight_array_valid(ind1))), get_flight_plane_model(getFListInit(get_flight_array_valid(ind1))));
                         free(destination_cpy);
                     }
                 }
@@ -372,6 +448,30 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
     fclose (output);
 }
 
+void outputs_query6 (const int *list, int year, int top, int flag, int n, int tam) {
+    create_output(1, n);
+    if (flag == 0){   //6
+        for (int i = 0; i < top && i < tam; i++) {
+            int ind = list[i];
+            fprintf(output, "%s;", get_airport_name(getAListInit(get_airport_array_valid(ind))));
+            if (year==2023) fprintf(output, "%d\n", get_airport_passengers2023(getAListInit(get_airport_array_valid(ind))));
+            if (year==2022) fprintf(output, "%d\n", get_airport_passengers2022(getAListInit(get_airport_array_valid(ind))));
+            if (year==2021) fprintf(output, "%d\n", get_airport_passengers2021(getAListInit(get_airport_array_valid(ind))));
+        }
+    }
+    else {          //6F
+        for (int i = 0; i < top && i < tam; i++) {
+            int ind = list[i];
+            fprintf(output, "--- %d ---\n",i+1);
+            fprintf(output, "name: %s\n", get_airport_name(getAListInit(get_airport_array_valid(ind))));
+            if(year==2023) fprintf(output, "passengers: %d\n", get_airport_passengers2023(getAListInit(get_airport_array_valid(ind))));
+            if(year==2022) fprintf(output, "passengers: %d\n", get_airport_passengers2022(getAListInit(get_airport_array_valid(ind))));
+            if(year==2021) fprintf(output, "passengers: %d\n", get_airport_passengers2021(getAListInit(get_airport_array_valid(ind))));
+            if (i+1 != 1) fprintf(output, "\n");
+        }
+    }
+    fclose(output);
+}
 
 void outputs_query8 (int revenue, int flag, int n) {
     create_output (1, n);

@@ -54,9 +54,10 @@ void identify_query(char* path){
                     if (line[1]== 'F') query5(line + i + 1, 1, n);//5F
                     else query5(line + i + 1, 0, n);//5
                 break;
-                // case '6':  //6 ou 6F
-                //     query6(line, i, n);
-                // break;
+                case '6':  //6 ou 6F
+                    if (line[1]== 'F') query6(line + i + 1, 1, n);//6F
+                    else query6(line + i + 1, 0, n);//6
+                break;
                 // case '7':  //7 ou 7F
                 //     query7(line, i, n);
                 // break;
@@ -172,12 +173,20 @@ void identify_query_tests_mode(char* path){
                         elapsed_query5 += calculate_time(start, end);
                     }
                 break;
-                // case '6':  //6 ou 6F
-                //     start_time(&start);
-                //     query6(line, i, n);
-                //     end_time(&end);
-                //     elapsed_query6 += calculate_time(start, end);
-                // break;
+                case '6':  //6 ou 6F
+                    if (line[1]== 'F'){
+                        start_time(&start);
+                        query6(line + i + 1, 1, n);//6F
+                        end_time(&end);
+                        elapsed_query6 += calculate_time(start, end);
+                    }
+                    else {
+                        start_time(&start);
+                        query6(line + i + 1, 0, n);//6F
+                        end_time(&end);
+                        elapsed_query6 += calculate_time(start, end);
+                    }
+                break;
                 // case '7':  //7 ou 7F
                 //     start_time(&start);
                 //     query7(line, i, n);
@@ -213,7 +222,7 @@ void identify_query_tests_mode(char* path){
     query3_time(elapsed_query3);
     query4_time(elapsed_query4);
     query5_time(elapsed_query5);
-    // query6_time(elapsed_query6);
+    query6_time(elapsed_query6);
     // query7_time(elapsed_query7);
     query8_time(elapsed_query8);
     // query9_time(elapsed_query9);
@@ -258,9 +267,10 @@ void identify_single_query(char* line){
                 if (line[1]== 'F') query5(line + i + 1, 1, 0);//5F
                 else query5(line + i + 1, 0, 0);//5
             break;
-            // case '6':  //6 ou 6F
-            //     query6(line, i, n);
-            // break;
+             case '6':  //6 ou 6F
+                if (line[1]== 'F') query6(line + i + 1, 1, 0);//6F
+                else query6(line + i + 1, 0, 0);//6
+             break;
             // case '7':  //7 ou 7F
             //     query7(line, i, n);
             // break;

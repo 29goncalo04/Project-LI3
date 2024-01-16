@@ -30,10 +30,10 @@ void outputs_query3(double med, int flag, int check, int n);
 void outputs_query4(const int *list, int num_reservations, int flag, int check, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 4
 
-void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list, int num_flights, int flag, int check, int n);
+void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list2023, const int *list2022, const int *list2021, int num_flights3, int num_flights2, int num_flights1, int flag, int check, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 5
 
-void outputs_query6 (PassengersXairport *passengersXairport_array, int index_pXa, int top, int flag, int n);
+void outputs_query6 (const int *list, int year, int top, int flag, int n, int tam);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 6
 
 void outputs_query7 (Mediana *mediana_array, int index_line, int N, int n);
