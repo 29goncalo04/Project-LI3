@@ -5,6 +5,7 @@
 #include "../include/Catalogs.h"
 #include "../include/Aux_structs.h"
 #include "../include/Aux_functions.h"
+#include "../include/Queries.h"
 
 void insertionSort_atrasos(int *atrasos, int num_atrasos){
     for (int i = 1; i < num_atrasos; i++) {
@@ -67,6 +68,27 @@ int age_user(const char *birth_date){  //1979/11/27
     age = (2023-ano);
     if (10 < mes || (10 == mes && 1 < dia)) age--;
     return age;
+}
+
+int comparar_numbers(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int compare_medianas(const void *a, const void *b) {
+    // Comparação pelas medianas
+    int diff = ((list_mediana *)a)->mediana - ((list_mediana *)b)->mediana;
+
+    // Se as medianas são iguais, use o nome do aeroporto como critério de desempate
+    if (diff == 0) {
+        char *originA = ((list_mediana *)a)->airport;
+        char *originB = ((list_mediana *)b)->airport;
+        
+        // Comparação dos nomes do aeroporto em ordem crescente
+        return strcmp(originA, originB);
+    }
+
+    if (diff > 0) return -1;
+    else return 1;
 }
 
 int compare_reservations (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais

@@ -473,6 +473,26 @@ void outputs_query6 (const int *list, int year, int top, int flag, int n, int ta
     fclose(output);
 }
 
+void outputs_query7 (list_mediana *list, int tam, int N, int flag, int n) {
+    create_output(1, n);
+    if (flag == 0){   //7
+        for (int i = 0; i < N && i < tam; i++) {
+            fprintf(output, "%s;%d\n", list[i].airport, list[i].mediana);
+            //printf("%s;%d\n", list->airport, list->mediana);
+        }
+    }
+    else {          //7F
+        for (int i = 0; i < N && i < tam; i++) {
+            fprintf(output, "--- %d ---\n",i+1);
+            fprintf(output, "name: %s\n", list[i].airport);
+            fprintf(output, "median: %d\n", list[i].mediana);
+            //printf("%s;%d\n", list->airport, list->mediana);
+            if (i+1 != N && i+1 != tam) fprintf(output, "\n");
+        }
+    }
+    fclose(output);
+}
+
 void outputs_query8 (int revenue, int flag, int n) {
     create_output (1, n);
     if (flag == 0) {   // 8

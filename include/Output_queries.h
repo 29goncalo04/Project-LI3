@@ -7,6 +7,7 @@
 #include "../include/Catalogs.h"
 #include "../include/Statistics.h"
 #include "../include/Aux_structs.h"
+#include "../include/Queries.h"
 
 void create_output(int check, int n);
     //     |->função responsável por criar os outputs
@@ -36,7 +37,7 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
 void outputs_query6 (const int *list, int year, int top, int flag, int n, int tam);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 6
 
-void outputs_query7 (Mediana *mediana_array, int index_line, int N, int n);
+void outputs_query7 (list_mediana *list, int tam, int N, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 7
 
 void outputs_query8(int revenue, int flag, int n);

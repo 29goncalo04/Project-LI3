@@ -29,6 +29,12 @@ double total_price(int price_per_night, int nights, int city_tax);
 int age_user(const char *birth_date);
     //     |->função responsável por calcular a idade de um utilizador
 
+int comparar_numbers(const void *a, const void *b);
+    //     |->função que compara dois numeros
+
+int compare_medianas(const void *a, const void *b);
+    //     |->função que compara duas medianas
+
 int compare_reservations (const void *a, const void *b);
     //     |->função responsável por comparar dois elementos do array das reservas
     //        para o ordenar por data de início (ou id, caso a data seja igual)

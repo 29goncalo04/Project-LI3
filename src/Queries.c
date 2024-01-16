@@ -688,6 +688,28 @@ void query6(char *str, int flag, int n){
     return;
 }
 
+void query7(char *str, int flag, int n) {
+    int number = atoi(strtok(str, "\n")), tam = 0;
+    //printf("%d\n", number);
+    list_mediana *list;
+    list = NULL;
+    for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) {
+        if(get_airport_atrasos(getAListInit(get_airport_array_valid(i))) != 0) {
+            list = realloc(list, (tam+1) * sizeof(struct list_mediana));
+            list[tam].airport = strdup(get_airport_name(getAListInit(get_airport_array_valid(i))));
+            list[tam].mediana = get_airport_mediana(getAListInit(get_airport_array_valid(i)));
+            tam++;
+        }
+    }
+
+    qsort(list, tam, sizeof(struct list_mediana), compare_medianas);
+    outputs_query7(list, tam, number, flag, n);
+    for (int i = 0; i < tam; i++) {
+        free(list[i].airport);
+    }
+    free(list);
+}
+
 void query8 (char *str, int flag, int n) {
     int l_arg_end_date, ind_h, revenue = 0;
     char *id = strtok (str, " ");

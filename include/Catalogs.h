@@ -137,11 +137,15 @@ int get_airport_passengers2022(const ANo* ANo);
 const int* get_airport_list_flights2021(const ANo* ANo);
 int get_airport_flights2021(const ANo* ANo);
 int get_airport_passengers2021(const ANo* ANo);
+int get_airport_atrasos(const ANo* ANo);
+const int* get_airport_list_atrasos(const ANo* ANo);
+int get_airport_mediana(const ANo* ANo);
 void create_array_airport();
 void ordena_list_airport_flights(int ind_f, char *data_estimada, char *id_f, int **list, int n);
 void free_list_airport(const ANo *nodo);
 void free_airport_valid();
-
+void ordena_atrasos(int num);
+void mediana_airport(int num);
 
 
 ////////////////////////YEAR///////////////////////////

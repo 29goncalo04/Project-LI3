@@ -558,6 +558,9 @@ struct ANo {
     int flights2021;
     int passengers2021;
     int *list_flights2021;
+    int *list_atrasos;
+    int atrasos;
+    int mediana;
 };
 
 void set_airport_name(ANo* ANo){
@@ -590,6 +593,16 @@ void set_airport_flights2021(ANo* ANo, int flights){
 void set_airport_list_flights2021(ANo* ANo){
     ANo->list_flights2021 = NULL;
 }
+void set_airport_list_atrasos(ANo* ANo){
+    ANo->list_atrasos = NULL;
+}
+void set_airport_atrasos(ANo* ANo, int atrasos){
+    ANo->atrasos = atrasos;
+}
+void set_airport_mediana(ANo* ANo, int mediana){
+    ANo->mediana = mediana;
+}
+
 
 struct AList {
     ANo *init;
@@ -633,6 +646,15 @@ int get_airport_flights2021(const ANo* ANo){
 int get_airport_passengers2021(const ANo* ANo){
     return ANo->passengers2021;
 }
+int get_airport_atrasos(const ANo* ANo){
+    return ANo->atrasos;
+}
+const int* get_airport_list_atrasos(const ANo* ANo){
+    return ANo->list_atrasos;
+}
+int get_airport_mediana(const ANo* ANo){
+    return ANo->mediana;
+}
 
 void create_array_airport() {
     for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) { 
@@ -647,6 +669,9 @@ void create_array_airport() {
         set_airport_passengers2021(nova, 0);
         set_airport_flights2021(nova, 0);                                           
         set_airport_list_flights2021(nova);
+        set_airport_atrasos(nova, 0);
+        set_airport_list_atrasos(nova);
+        set_airport_mediana(nova, 0);
         airport_array_valid[i].init = nova;
     }
     return;
@@ -658,6 +683,7 @@ void free_list_airport(const ANo *nodo) {
     free((int*)atual->list_flights2023);
     free((int*)atual->list_flights2022);
     free((int*)atual->list_flights2021);
+    free((int*)atual->list_atrasos);
     free((char*)atual);
 }
 
@@ -675,6 +701,33 @@ void free_airport_valid() {
     perform_operation_on_airport_array(free_airport_element);
 }
 
+
+void ordena_atrasos(int num) {
+    int tam;
+    for (int i = 0; i < num; i++) {
+        if(get_airport_atrasos(getAListInit(get_airport_array_valid(i))) != 0) {
+            tam = get_airport_atrasos(getAListInit(get_airport_array_valid(i)));
+            qsort(airport_array_valid[i].init->list_atrasos, tam, sizeof(int), comparar_numbers);
+        }
+    }
+}
+
+void mediana_airport(int num) {
+    int tam, mediana;
+    for (int i = 0; i < num; i++) {
+        if(get_airport_atrasos(getAListInit(get_airport_array_valid(i))) != 0) {
+            tam = get_airport_atrasos(getAListInit(get_airport_array_valid(i)));
+            if (tam % 2 == 0) {
+                mediana = (get_airport_list_atrasos(getAListInit(get_airport_array_valid(i)))[tam/2 - 1] + get_airport_list_atrasos(getAListInit(get_airport_array_valid(i)))[tam/2]) / 2;
+                set_airport_mediana(airport_array_valid[i].init, mediana);
+            }
+            else {
+                mediana = get_airport_list_atrasos(getAListInit(get_airport_array_valid(i)))[tam/2];
+                set_airport_mediana(airport_array_valid[i].init, mediana);
+            }
+        }
+    }
+}
 
 
 
@@ -994,6 +1047,11 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
             pointerDest->list_flights2021[pointerDest->flights2021] = ind_f;
             pointerDest->flights2021++;
         }
+
+        pointer->list_atrasos = realloc(pointer->list_atrasos, (pointer->atrasos+1) * sizeof(int));
+        pointer->list_atrasos[pointer->atrasos] = delay(parametros[6], parametros[8]);
+        pointer->atrasos++;
+
         create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }

@@ -116,6 +116,9 @@ void open_files(char* path){
                         l++;
                     }
                 }
+                ordena_atrasos(NUM_LINHAS_VALID_AIRPORT);
+                mediana_airport(NUM_LINHAS_VALID_AIRPORT);
+                //calcular mediana por cada aeroporto da hash table;
                 for (int i = 0; i<num_Atrasos; i++){
                     insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
                 }

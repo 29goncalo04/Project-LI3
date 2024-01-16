@@ -7,6 +7,11 @@
 
 #include "../include/Aux_structs.h"
 
+typedef struct list_mediana {
+    char *airport;
+    int mediana;
+}list_mediana;
+
 Flight_id_passenger create_flight_id(char *flight_id);
     //     |->função que cria um elemento individual do array de id's de voos
     //        de um passageiro
