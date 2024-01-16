@@ -325,9 +325,9 @@ void outputs_query4(const int *list, int num_reservations, int flag, int check, 
 void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list3, const int *list2, const int *list1, int num_flights3, int num_flights2, int num_flights1, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
-        int check_date, ind3, ind2, ind1, is_first_line = 1;
+        int check_date, ind3, ind2, ind1, is_first_line = 1, j = 0;
         if (flag == 1) {
-            for (int i = 0, j=0; i < num_flights3; i++, j++) {
+            for (int i = 0; i < num_flights3; i++) {
                 ind3 = list3[i];
                 char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind3))));
                 toUpperCase(origin_cpy);
@@ -345,12 +345,12 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
                         fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind3))));
                         free(destination_cpy);
                         is_first_line = 0;
+                        j++;
                     }
-                    else j--;
                 }
                 free(origin_cpy);
             }
-            for (int i = 0, j=0; i < num_flights2; i++, j++) {
+            for (int i = 0; i < num_flights2; i++) {
                 ind2 = list2[i];
                 char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind2))));
                 toUpperCase(origin_cpy);
@@ -368,12 +368,12 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
                         fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind2))));
                         free(destination_cpy);
                         is_first_line = 0;
+                        j++;
                     }
-                    else j--;
                 }
                 free(origin_cpy);
             }
-            for (int i = 0, j=0; i < num_flights1; i++, j++) {
+            for (int i = 0; i < num_flights1; i++) {
                 ind1 = list1[i];
                 char *origin_cpy = strdup(get_flight_origin(getFListInit(get_flight_array_valid(ind1))));
                 toUpperCase(origin_cpy);
@@ -391,8 +391,8 @@ void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, con
                         fprintf(output, "plane_model: %s\n", get_flight_plane_model(getFListInit(get_flight_array_valid(ind1))));
                         free(destination_cpy);
                         is_first_line = 0;
+                        j++;
                     }
-                    else j--;
                 }
                 free(origin_cpy);
             }
@@ -467,7 +467,7 @@ void outputs_query6 (const int *list, int year, int top, int flag, int n, int ta
             if(year==2023) fprintf(output, "passengers: %d\n", get_airport_passengers2023(getAListInit(get_airport_array_valid(ind))));
             if(year==2022) fprintf(output, "passengers: %d\n", get_airport_passengers2022(getAListInit(get_airport_array_valid(ind))));
             if(year==2021) fprintf(output, "passengers: %d\n", get_airport_passengers2021(getAListInit(get_airport_array_valid(ind))));
-            if (i+1 != 1) fprintf(output, "\n");
+            if (i+1 != top && i+1 != tam) fprintf(output, "\n");
         }
     }
     fclose(output);

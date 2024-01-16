@@ -560,9 +560,8 @@ struct ANo {
     int *list_flights2021;
 };
 
-void set_airport_name(ANo* ANo, char* name){
-    //free(ANo->name);
-    ANo->name = strdup(name);
+void set_airport_name(ANo* ANo){
+    ANo->name = NULL;
 }
 void set_airport_passengers2023(ANo* ANo, int passengers){
     ANo->passengers2023 = passengers;
@@ -638,6 +637,7 @@ int get_airport_passengers2021(const ANo* ANo){
 void create_array_airport() {
     for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) { 
         ANo* nova = malloc(sizeof(struct ANo));
+        set_airport_name(nova);
         set_airport_passengers2023(nova, 0);
         set_airport_flights2023(nova, 0);                                           
         set_airport_list_flights2023(nova);
@@ -954,7 +954,10 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         }
 
         ANo *pointer = airport_array_valid[ind_org].init;
-        if (pointer->flights2023 + pointer->flights2022 + pointer->flights2021 == 0) pointer->name = strdup(parametros[4]);
+        char *nameUP = strdup(parametros[4]);
+        toUpperCase(nameUP);
+        if (pointer->flights2023 + pointer->flights2022 + pointer->flights2021 == 0) pointer->name = strdup(nameUP);
+        free(nameUP);
         if (year(parametros[6]) == 2023){
             pointer->list_flights2023 = realloc(pointer->list_flights2023, (pointer->flights2023+1)*sizeof(int));
             pointer->list_flights2023[pointer->flights2023] = ind_f;
@@ -971,7 +974,11 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
             pointer->flights2021++;
         }
         ANo *pointerDest = airport_array_valid[ind_dest].init;
-        if (pointerDest->flights2023 + pointerDest->flights2022 + pointerDest->flights2021 == 0) pointerDest->name = strdup(parametros[5]);
+        char *nameUP2 = strdup(parametros[5]);
+        toUpperCase(nameUP2);
+        if (pointerDest->flights2023 + pointerDest->flights2022 + pointerDest->flights2021 == 0) pointerDest->name = strdup(nameUP2);
+        free(nameUP2);
+        toUpperCase(pointer->name);
         if (year(parametros[6]) == 2023){
             pointerDest->list_flights2023 = realloc(pointerDest->list_flights2023, (pointerDest->flights2023+1)*sizeof(int));
             pointerDest->list_flights2023[pointerDest->flights2023] = ind_f;
