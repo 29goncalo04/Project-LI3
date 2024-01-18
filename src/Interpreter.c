@@ -66,9 +66,10 @@ void identify_query(char* path){
                     if (line[1]== 'F') query8(line + i + 1, 1, n);//8F
                     else query8(line + i + 1, 0, n);//8
                 break;
-                // case '9':  //9 ou 9F
-                //     query9(line, i, n);
-                // break;
+                case '9':  //9 ou 9F
+                    if (line[1]== 'F') query9(line + i + 1, 1, n);//9F
+                    else query9(line + i + 1, 0, n);//9
+                break;
             }
         }
     }
@@ -216,12 +217,20 @@ void identify_query_tests_mode(char* path){
                         elapsed_query8 += calculate_time(start, end);
                     }
                 break;
-                // case '9':  //9 ou 9F
-                //     start_time(&start);
-                //     query9(line, i, n);
-                //     end_time(&end);
-                //     elapsed_query9 += calculate_time(start, end);
-                // break;
+                case '9':  //9 ou 9F
+                    if (line[1]== 'F'){
+                        start_time(&start);
+                        query9(line + i + 1, 1, n);//9F
+                        end_time(&end);
+                        elapsed_query9 += calculate_time(start, end);
+                    }
+                    else {
+                        start_time(&start);
+                        query9(line + i + 1, 0, n);//9F
+                        end_time(&end);
+                        elapsed_query9 += calculate_time(start, end);
+                    }
+                break;
             }
         }
     }
@@ -234,7 +243,7 @@ void identify_query_tests_mode(char* path){
     query6_time(elapsed_query6);
     query7_time(elapsed_query7);
     query8_time(elapsed_query8);
-    // query9_time(elapsed_query9);
+    query9_time(elapsed_query9);
     // query10_time(elapsed_query10);
     free(line);
     free(aux_queries);
@@ -288,9 +297,10 @@ void identify_single_query(char* line){
                 if (line[1]== 'F') query8(line + i + 1, 1, 0);//8F
                 else query8(line + i + 1, 0, 0);//8
             break;
-            // case '9':  //9 ou 9F
-            //     query9(line, i, n);
-            // break;
+            case '9':  //9 ou 9F
+                if (line[1]== 'F') query9(line + i + 1, 1, 0);//9F
+                else query9(line + i + 1, 0, 0);//9
+            break;
         }
     }
 }

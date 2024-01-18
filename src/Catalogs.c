@@ -11,6 +11,84 @@
 #include "../include/Aux_validation.h"
 #include "../include/Output_errors.h"
 
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX_5///////////////////////////
+
+struct PNo {
+    int users;
+    int *list_users;
+};
+
+void set_Prefix_users(PNo* PNo, int users){
+    PNo->users = users;
+}
+void set_Prefix_list_users(PNo* PNo){
+    PNo->list_users = NULL;
+}
+
+struct PList{
+    PNo *init;
+};
+
+PList Prefix_array_valid[NUM_LINHAS_VALID_PREFIX_5];
+
+const PList* get_Prefix_array_valid(int pos) {
+    return &Prefix_array_valid[pos];
+}
+const PNo* getPListInit(const PList* PList){
+    return PList->init;
+}
+const int* get_Prefix_list_users(const PNo* PNo){
+    return PNo->list_users;
+}
+int get_Prefix_users(const PNo* PNo){
+    return PNo->users;
+}
+
+void create_array_Prefix() {
+    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX_5; i++) { 
+        PNo* nova = malloc(sizeof(struct PNo));
+        set_Prefix_users(nova, 0);                                           
+        set_Prefix_list_users(nova);
+        Prefix_array_valid[i].init = nova;
+    }
+    return;
+}
+
+void free_list_Prefix(const PNo *nodo) {
+    const PNo* atual = nodo;
+    free((int*)atual->list_users);
+    free((char*)atual);
+}
+
+void perform_operation_on_Prefix_array(void (*operation)(PList *)) {
+    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX_5; i++) {
+        operation(&Prefix_array_valid[i]);
+    }
+}
+
+void free_Prefix_element(PList *Prefix_element) {
+    free_list_Prefix(getPListInit(Prefix_element));
+}
+
+void free_Prefix_valid() {
+    perform_operation_on_Prefix_array(free_Prefix_element);
+}
+
+
+
+
+
+
+
 ////////////////////////USERS///////////////////////////
 ////////////////////////USERS///////////////////////////
 ////////////////////////USERS///////////////////////////
@@ -184,6 +262,21 @@ void create_array_users(char parametros[][FIELD_SIZE]) {
         UNo* nova = create_user(parametros);
         UList list;
         list.init = nova;
+
+        if(verify_account_status(parametros[11]) == 1){    //account_status é active
+            int id_user_table = found_index_users(parametros[0]);
+            int ind_Prefix = found_index_Prefix(parametros[1]);
+            PNo *pointer_P = Prefix_array_valid[ind_Prefix].init;
+            pointer_P->list_users = realloc(pointer_P->list_users, (pointer_P->users+1)*sizeof(int));
+            pointer_P->list_users[pointer_P->users] = id_user_table;
+            pointer_P->users++;
+            int ind_prefix = found_index_prefix(parametros[1]);
+            PNo *pointer_p = Prefix_array_valid[ind_prefix].init;
+            pointer_p->list_users = realloc(pointer_p->list_users, (pointer_p->users+1)*sizeof(int));
+            pointer_p->list_users[pointer_p->users] = id_user_table;
+            pointer_p->users++;
+        }
+
         users_hash_sort(user_array_valid, list);
     } 
     else {

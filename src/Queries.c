@@ -690,7 +690,6 @@ void query6(char *str, int flag, int n){
 
 void query7(char *str, int flag, int n) {
     int number = atoi(strtok(str, "\n")), tam = 0;
-    //printf("%d\n", number);
     list_mediana *list;
     list = NULL;
     for (int i = 0; i < NUM_LINHAS_VALID_AIRPORT; i++) {
@@ -725,5 +724,118 @@ void query8 (char *str, int flag, int n) {
         }
     }
     outputs_query8 (revenue, flag, n);
+    return;
+}
+
+const char *global_prefix;
+
+int compare_Prefix (const void *a, const void *b) {
+    const UNo* auxA = getUListInit(get_user_array_valid(*(const int*)a));
+    while(auxA!=NULL && strncmp(get_user_name(auxA), global_prefix, strlen(global_prefix))!=0){
+        auxA = get_user_prox(auxA);
+    }
+    char *nameA = NULL; 
+    if (auxA!=NULL) nameA = strdup(get_user_name(auxA));
+    const UNo* auxB = getUListInit(get_user_array_valid(*(const int*)b));
+    while(auxB!=NULL && strncmp(get_user_name(auxB), global_prefix, strlen(global_prefix))!=0){
+        auxB = get_user_prox(auxB);
+    }
+    char *nameB = NULL;
+    int result;
+    if(auxB!=NULL) nameB = strdup(get_user_name(auxB));
+    if (nameA == NULL && nameB == NULL) {
+        return 0;
+    } else if (nameA == NULL) {
+        free(nameB);
+        return -1;
+    } else if (nameB == NULL) {
+        free(nameA);
+        return 1;
+    } else if (strcoll(nameA, nameB) != 0) {
+        result = strcoll(nameA, nameB);
+        free(nameA);
+        free(nameB);
+        return result;
+    }
+    char *idA = strdup(get_user_id(auxA));
+    char *idB = strdup(get_user_id(auxB));
+    result = strcoll(idA, idB);
+    free(nameA);
+    free(nameB);
+    free(idA);
+    free(idB);
+    return result;
+}
+
+void query9 (char *str, int flag, int n) {
+    char *prefix;
+    if (str[0]=='\"') prefix = strtok (str+1, "\"");
+    else prefix = strtok (str, "\n");
+    int ind_P;
+    if (strlen(prefix)<5) ind_P = found_index_prefix(prefix);
+    else ind_P = found_index_Prefix(prefix);
+    const int *list = get_Prefix_list_users(getPListInit(get_Prefix_array_valid(ind_P)));
+    int tam = get_Prefix_users(getPListInit(get_Prefix_array_valid(ind_P)));
+    int* list_temp = (int* )malloc(tam * sizeof(int));
+    for (int j = 0; j<tam; j++) {
+        list_temp[j] = list[j];
+    }
+    global_prefix = prefix;
+    qsort(list_temp, tam, sizeof(int), compare_Prefix);
+    //if(strcmp(prefix, "Julia")==0){    
+    //    for(int i=0; i<tam-1; i++){
+    //        if(strncmp(get_user_name(getUListInit(get_user_array_valid(list_aux[i]))), prefix, strlen(prefix))==0 && list_aux[i]==list_aux[i+1]){
+    //            printf("%d == %d\n", list_aux[i], list_aux[i+1]);
+    //            const UNo* aux = (getUListInit(get_user_array_valid(list_aux[i])));
+    //            while(aux!=NULL){
+    //                printf("%s %s\n", get_user_id(aux), get_user_name(aux));
+    //                aux = get_user_prox(aux);
+    //            }
+    //        }
+    //    }
+    //}
+    list_users *list_aux;
+    list_aux = NULL;
+    int tam_aux = 0/*, found = 0*/;
+    for (int /*i = 0,*/ j = 0; j < tam; j++/*, i = tam_aux*/) {
+        if(j==0){
+            const UNo* aux = getUListInit(get_user_array_valid(list_temp[j]));
+            while(aux!=NULL){
+                if(strncmp(get_user_name(aux), prefix, strlen(prefix))==0 && verify_account_status(get_user_account_status(aux))==1){
+                    list_aux = realloc(list_aux, (tam_aux+1) * sizeof(struct list_users));
+                    list_aux[tam_aux].name = strdup(get_user_name(aux));
+                    list_aux[tam_aux].id = strdup(get_user_id(aux));
+                    tam_aux++;
+                    //found = 1;
+                }
+                aux = get_user_prox(aux);
+            }
+            //if (found==1 && i==tam_aux) break;
+        }
+        else{
+            if (list_temp[j]!=list_temp[j-1]){
+                const UNo* aux = getUListInit(get_user_array_valid(list_temp[j]));
+                while(aux!=NULL){
+                    if(strncmp(get_user_name(aux), prefix, strlen(prefix))==0 && verify_account_status(get_user_account_status(aux))==1){
+                        list_aux = realloc(list_aux, (tam_aux+1) * sizeof(struct list_users));
+                        list_aux[tam_aux].name = strdup(get_user_name(aux));
+                        list_aux[tam_aux].id = strdup(get_user_id(aux));
+                        tam_aux++;
+                        //found = 1;
+                    }
+                    aux = get_user_prox(aux);
+                }
+                //if (found==1 && i==tam_aux) break;
+            }
+        }
+    }
+    free(list_temp);
+    qsort(list_aux, tam_aux, sizeof(struct list_users), compare_users);
+    outputs_query9 (list_aux, tam_aux, flag, n);
+    for (int i = 0; i < tam_aux; i++) {
+        free(list_aux[i].name);
+        free(list_aux[i].id);
+    }
+    free(list_aux);
     return;
 }

@@ -227,6 +227,34 @@ int compare_airports2021 (const void *a, const void *b) {
     return 0;
 }
 
+int compare_users(const void *a, const void *b) {
+    char *nameA = strdup(((list_users *)a)->name);
+    char *nameB = strdup(((list_users *)b)->name);
+    if (strcoll(nameA, nameB)!=0){
+        int result = strcoll(nameA, nameB);
+        free(nameA);
+        free(nameB);
+        return result;
+    }
+    char *idA = strdup(((list_users *)a)->id);
+    char *idB = strdup(((list_users *)b)->id);
+    if (strcoll(idA, idB)<0){
+        free(nameA);
+        free(nameB);
+        free(idA);
+        free(idB);
+        return -1;
+    }
+    if (strcoll(idA, idB)>0){
+        free(nameA);
+        free(nameB);
+        free(idA);
+        free(idB);
+        return 1;
+    }
+    return 0;
+}
+
 int is_date_between (const char *date, const char *i, const char *f) {  // date é a que queremos verificar, i é a data inicial e f a data final
     if (strcmp (date, i) < 0) return 0;  // date é menor que i, logo não está entre as datas
     if (strcmp (date, f) > 0) return 0;  // date é maior que f, não está entre as datas

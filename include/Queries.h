@@ -12,6 +12,11 @@ typedef struct list_mediana {
     int mediana;
 }list_mediana;
 
+typedef struct list_users {
+    char *name;
+    char *id;
+}list_users;
+
 Flight_id_passenger create_flight_id(char *flight_id);
     //     |->função que cria um elemento individual do array de id's de voos
     //        de um passageiro

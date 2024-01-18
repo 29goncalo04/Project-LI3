@@ -7,6 +7,17 @@
 
 #define FIELD_SIZE 100
 
+////////////////////////PREFIX_5///////////////////////////
+typedef struct PNo PNo;
+typedef struct PList PList;
+#define NUM_LINHAS_VALID_PREFIX_5 1211
+const PList* get_Prefix_array_valid(int pos);
+const PNo* getPListInit(const PList* PList);
+const int* get_Prefix_list_users(const PNo* PNo);
+int get_Prefix_users(const PNo* PNo);
+void create_array_Prefix();
+void free_list_Prefix(const PNo *nodo);
+void free_Prefix_valid();
 
 ////////////////////////USERS///////////////////////////
 typedef struct UNo UNo;

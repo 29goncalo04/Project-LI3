@@ -20,10 +20,10 @@ void show_output(){
   clear();
   attron(COLOR_PAIR(COR_TEXTO));
   mvprintw(30, (COLS-56)/2,"To start press '1' + ENTER to see the first page of the output");
-  mvprintw(46, (COLS-13)/2, "Pages available: %d", number_of_pages);
+  mvprintw(48, (COLS-13)/2, "Pages available: %d", number_of_pages);
   attroff(COLOR_PAIR(COR_TEXTO));
   attron(COLOR_PAIR(COR_TEXTO3));
-  mvprintw(48, (COLS-10)/2, "Your selection:");
+  mvprintw(45, (COLS-10)/2, "Your selection:");
   attroff(COLOR_PAIR(COR_TEXTO3));
   attron(COLOR_PAIR(COR_TEXTO2));
   mvprintw(50, (COLS-35)/2,"If you want to continue press 'q' + ENTER");
@@ -52,9 +52,9 @@ void show_output(){
             page[i] = c-'0';
             i++;
         }
-        move(48, (COLS+22)/2);
+        move(45, (COLS+22)/2);
         clrtoeol();
-        mvprintw(48, (COLS+22)/2, "%s", command);
+        mvprintw(45, (COLS+22)/2, "%s", command);
         refresh();
     }
     if (page[0]+'0' == 'q' && page[1]=='\0') break;   //sai do ciclo caso o utilizador clique em 'q'
@@ -79,14 +79,14 @@ void show_output(){
       }
       free(line);  // Libera a memória alocada por getline
       attron(COLOR_PAIR(COR_TEXTO3));
-      mvprintw(48, (COLS-10)/2, "Your selection:");
+      mvprintw(45, (COLS-10)/2, "Your selection:");
       attroff(COLOR_PAIR(COR_TEXTO3));
       attron(COLOR_PAIR(COR_TEXTO2));
-      mvprintw(50, (COLS-35)/2,"If you want to continue press 'q' + ENTER");
+      mvprintw(46, (COLS-35)/2,"If you want to continue press 'q' + ENTER");
       attroff(COLOR_PAIR(COR_TEXTO2));
       attron(COLOR_PAIR(COR_TEXTO));
-      mvprintw(52, (COLS+130)/2, "Current page: '%d'", ch);
-      mvprintw(53, (COLS+130)/2, "Number of pages: '%d'", number_of_pages);
+      mvprintw(48, (COLS+130)/2, "Current page: '%d'", ch);
+      mvprintw(47, (COLS+130)/2, "Number of pages: '%d'", number_of_pages);
       attroff(COLOR_PAIR(COR_TEXTO));
       refresh();
     }

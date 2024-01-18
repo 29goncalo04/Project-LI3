@@ -43,7 +43,7 @@ void outputs_query7 (list_mediana *list, int tam, int N, int flag, int n);
 void outputs_query8(int revenue, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 8
 
-void outputs_query9 (idXname *idXname_array, int num_linhas_idXname, int flag, int n);
+void outputs_query9 (list_users *list, int tam, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 9
 
 #endif

@@ -176,6 +176,7 @@ void open_files(char* path){
             
             case 0:
                 //init_user_array(user_array_valid);
+                create_array_Prefix();
                 fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
                 start_files_users();
                 if (fusers==NULL){

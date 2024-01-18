@@ -90,5 +90,6 @@ void free_all() {
     free_hotel_valid();
     free_airport_valid();
     free_year_valid();
+    free_Prefix_valid();
     free_Atrasos(Atrasos_array, num_Atrasos); //array_atrasos_valid acho que n vai ser usado, vai para o lixo
 }

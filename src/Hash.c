@@ -30,7 +30,7 @@ unsigned long hash_djb3(char *key, int num) {
 }
 
 int found_index_users(char *key) {
-    return hash_djb2(key, NUM_LINHAS_VALID_USER);
+    return hash_djb3(key, NUM_LINHAS_VALID_USER);
 }
 
 int found_index_flights(const char *key) {
@@ -55,4 +55,18 @@ int found_index_airport(char *key) {
 int found_index_year(int key) {
     int id = (key+2), ind = id % NUM_LINHAS_VALID_YEAR;
     return ind;
+}
+
+int found_index_Prefix(char *key) {
+    char name[6];
+    strncpy(name, key, 5);
+    name[5] = '\0';
+    return hash_djb3(name, 1185);
+}
+
+int found_index_prefix(char *key) {
+    char name[2];
+    strncpy(name, key, 1);
+    name[1] = '\0';
+    return name[0]+1121;
 }

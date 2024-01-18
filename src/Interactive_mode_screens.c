@@ -91,7 +91,7 @@ void start_query(){
   mvprintw(30, (COLS-98)/2,"Write a command to process a query, for example, ");
   attroff(COLOR_PAIR(COR_TEXTO));
   attron(COLOR_PAIR(COR_TEXTO2));
-  mvprintw(30, (COLS-1)/2,"1F Book0000033110 ");
+  mvprintw(30, (COLS-1)/2," 1F Book0000033110 ");
   attroff(COLOR_PAIR(COR_TEXTO2));
   attron(COLOR_PAIR(COR_TEXTO));
   mvprintw(30, (COLS+36)/2,"(press 'ENTER' when you finish):\n");

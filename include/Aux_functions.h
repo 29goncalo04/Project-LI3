@@ -47,6 +47,8 @@ int compare_airports2023 (const void *a, const void *b);
 int compare_airports2022 (const void *a, const void *b);
 int compare_airports2021 (const void *a, const void *b);
 
+int compare_users(const void *a, const void *b);
+
 int is_date_between (const char *date, const char *i, const char *f);
     //     |->função que verifica se uma data (date) está entre duas outras datas (i e f)
 
