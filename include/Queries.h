@@ -44,11 +44,11 @@ void query1(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 1
 
-void query2(char *line, int i, int n);
+void query2(char *line, int i, int n, int mode);   //mode==0 é interativo
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 2
 
-void query3(char *line, int i, int n);
+void query3(char *line, int i, int n, int mode);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 3
 
@@ -68,12 +68,13 @@ void query7(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 7
 
-void query8(char *line, int i, int n);
+void query8(char *line, int i, int n, int mode);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 8
 
 void query9(char *line, int i, int n);
     //     |->função responsável por criar o output pedido sempre
     //        que o id da query for 9
+void query10 (char *str, int flag, int n);
 
 #endif

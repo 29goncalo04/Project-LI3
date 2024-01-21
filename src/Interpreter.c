@@ -19,32 +19,36 @@ void identify_query(char* path){
         return;
     }
     while (getline(&line, &len, input) != -1) {
-        //printf("%s\n",line);
-        //printf("identificando query\n");
         int i = 0;
         n++;
         for (; line[i]!=' '; i++);
-        if (0 < i && i < 4) {// 1_   1F_  10F_
+        if (0 <= i) {// 1_   1F_  10F_
             switch (line[0]){
                 case '1':  //1 ou 1F ou 10
-                    if (line[1]=='0') continue;//10
+                    if (line[1]=='0') {  //10
+                        if (line[2]== 'F') {
+                            if (line[3]== '\n') query10("v", 1, n);//10F (sem argumentos)
+                            else query10(line + i + 1, 1, n); //10F
+                        }
+                        else {
+                            if(line[2]=='\n') query10("v", 0, n);//10(sem argumentos)
+                            else query10(line + i + 1, 0, n);//10 ...
+                        }
+                    }
                     else {
-                        //printf("query 1 con n  = %d y argument = %s\n", n, line + i + 1);
                         if (line[1]== 'F') query1(line + i + 1, 1, n);//1F
                         if (line[1]== ' ') {
-                            //printf("query1\n");
-                            //printf("%s\n",line);
                             query1(line + i + 1, 0, n);//1
                         }
                     }
                 break;
                 case '2':  //2 ou 2F
-                    if (line[1]== 'F') query2(line + i + 1, 1, n);//2F
-                    else query2(line + i + 1, 0, n);//2
+                    if (line[1]== 'F') query2(line + i + 1, 1, n, 1);//2F
+                    else query2(line + i + 1, 0, n, 1);//2
                 break;
                 case '3':  //3 ou 3F
-                    if (line[1]== 'F') query3(line + i + 1, 1, n);//3F
-                    else query3(line + i + 1, 0, n);//3
+                    if (line[1]== 'F') query3(line + i + 1, 1, n, 1);//3F
+                    else query3(line + i + 1, 0, n, 1);//3
                 break;
                 case '4':  //4 ou 4F
                     if (line[1]== 'F') query4(line + i + 1, 1, n);//4F
@@ -63,8 +67,8 @@ void identify_query(char* path){
                     else query7(line + i + 1, 0, n);//7
                 break;
                 case '8':  //8 ou 8F
-                    if (line[1]== 'F') query8(line + i + 1, 1, n);//8F
-                    else query8(line + i + 1, 0, n);//8
+                    if (line[1]== 'F') query8(line + i + 1, 1, n, 1);//8F
+                    else query8(line + i + 1, 0, n, 1);//8
                 break;
                 case '9':  //9 ou 9F
                     if (line[1]== 'F') query9(line + i + 1, 1, n);//9F
@@ -94,17 +98,26 @@ void identify_query_tests_mode(char* path){
         int i = 0;
         n++;
         for (; line[i]!=' '; i++);
-        if (0 < i && i < 4) {// 1_   1F_  10F_
+        if (0 <= i) {// 1_   1F_  10F_
             switch (line[0]){
                 case '1':  //1 ou 1F ou 10
-                    if (line[1]=='0'){ //10 e 10F
-                        start_time(&start);
-                        //meter aqui a query 10
-                        end_time(&end);
-                        elapsed_query10 += calculate_time(start, end);
-                        continue;
+                    if (line[1]=='0') {  //10
+                        if (line[2]== 'F') {
+                            start_time(&start);
+                            if (line[3]== '\n') query10("v", 1, n);//10F (sem argumentos)
+                            else query10(line + i + 1, 1, n); //10F
+                            end_time(&end);
+                            elapsed_query10 += calculate_time(start, end);
+                        }
+                        else {
+                            start_time(&start);
+                            if(line[2]=='\n') query10("v", 0, n);//10(sem argumentos)
+                            else query10(line + i + 1, 0, n);//10 ...
+                            end_time(&end);
+                            elapsed_query10 += calculate_time(start, end);
+                        }
                     }
-                    else {
+                    else {  //1 ou 1F
                         if (line[1]== 'F'){ 
                             start_time(&start);
                             query1(line + i + 1, 1, n);//1F
@@ -122,13 +135,13 @@ void identify_query_tests_mode(char* path){
                 case '2':  //2 ou 2F
                     if (line[1]== 'F'){
                         start_time(&start);
-                        query2(line + i + 1, 1, n);//2F
+                        query2(line + i + 1, 1, n, 1);//2F
                         end_time(&end);
                         elapsed_query2 += calculate_time(start, end);
                     }
                     else {
                         start_time(&start);
-                        query2(line + i + 1, 0, n);//2
+                        query2(line + i + 1, 0, n, 1);//2
                         end_time(&end);
                         elapsed_query2 += calculate_time(start, end);
                     }
@@ -136,13 +149,13 @@ void identify_query_tests_mode(char* path){
                 case '3':  //3 ou 3F
                     if (line[1]== 'F'){
                         start_time(&start);
-                        query3(line + i + 1, 1, n);//3F
+                        query3(line + i + 1, 1, n, 1);//3F
                         end_time(&end);
                         elapsed_query3 += calculate_time(start, end);
                     }
                     else {
                         start_time(&start);
-                        query3(line + i + 1, 0, n);//3F
+                        query3(line + i + 1, 0, n, 1);//3F
                         end_time(&end);
                         elapsed_query3 += calculate_time(start, end);
                     }
@@ -206,13 +219,13 @@ void identify_query_tests_mode(char* path){
                 case '8':  //8 ou 8F
                     if (line[1]== 'F'){
                         start_time(&start);
-                        query8(line + i + 1, 1, n);//8F
+                        query8(line + i + 1, 1, n, 1);//8F
                         end_time(&end);
                         elapsed_query8 += calculate_time(start, end);
                     }
                     else {
                         start_time(&start);
-                        query8(line + i + 1, 0, n);//8F
+                        query8(line + i + 1, 0, n, 1);//8F
                         end_time(&end);
                         elapsed_query8 += calculate_time(start, end);
                     }
@@ -244,7 +257,7 @@ void identify_query_tests_mode(char* path){
     query7_time(elapsed_query7);
     query8_time(elapsed_query8);
     query9_time(elapsed_query9);
-    // query10_time(elapsed_query10);
+    query10_time(elapsed_query10);
     free(line);
     free(aux_queries);
     fclose(input);
@@ -255,27 +268,33 @@ int command_error = 0;  //se o comando é válido command_error = 0
 void identify_single_query(char* line){
     int i = 0;
     for (; line[i]!=' '; i++);
-    if (0 < i && i < 4) {// 1_   1F_  10F_
+    if (0 <= i) {// 1_   1F_  10F_
         switch (line[0]){
             case '1':  //1 ou 1F ou 10
-                if (line[1]=='0');//10
+                if (line[1]=='0') {
+                    if (line[2]== 'F') {
+                        if (line[3]== '\n') query10("v", 1, 0);//10F (sem argumentos)
+                        else query10(line + i + 1, 1, 0); //10F
+                    }
+                    else {
+                        if(line[2]=='\n') query10("v", 0, 0);//10(sem argumentos)
+                        else query10(line + i + 1, 0, 0);//10 ...
+                    }
+                }
                 else {
-                    //printf("query 1 con n  = %d y argument = %s\n", n, line + i + 1);
                     if (line[1]== 'F') query1(line + i + 1, 1, 0);//1F
                     if (line[1]== ' ') {
-                        //printf("query1\n");
-                        //printf("%s\n",line);
                         query1(line + i + 1, 0, 0);//1
                     }
                 }
             break;
             case '2':  //2 ou 2F
-                if (line[1]== 'F') query2(line + i + 1, 1, 0);//2F
-                else query2(line + i + 1, 0, 0);//2
+                if (line[1]== 'F') query2(line + i + 1, 1, 0, 0);//2F
+                else query2(line + i + 1, 0, 0, 0);//2
             break;
             case '3':  //3 ou 3F
-                if (line[1]== 'F') query3(line + i + 1, 1, 0);//3F
-                else query3(line + i + 1, 0, 0);//3
+                if (line[1]== 'F') query3(line + i + 1, 1, 0, 0);//3F
+                else query3(line + i + 1, 0, 0, 0);//3
             break;
             case '4':  //4 ou 4F
                 if (line[1]== 'F') query4(line + i + 1, 1, 0);//4F
@@ -294,8 +313,8 @@ void identify_single_query(char* line){
                 else query7(line + i + 1, 0, 0);//7
             break;
             case '8':  //8 ou 8F
-                if (line[1]== 'F') query8(line + i + 1, 1, 0);//8F
-                else query8(line + i + 1, 0, 0);//8
+                if (line[1]== 'F') query8(line + i + 1, 1, 0, 0);//8F
+                else query8(line + i + 1, 0, 0, 0);//8
             break;
             case '9':  //9 ou 9F
                 if (line[1]== 'F') query9(line + i + 1, 1, 0);//9F

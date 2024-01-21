@@ -26,6 +26,18 @@ int year(char* date) {
     return aux;
 }
 
+char* year_month(char* date) {
+    char *year_month_str = strdup(date);
+    year_month_str[7] = '\0';
+    return year_month_str;
+}
+
+char* year_month_day(char* date) {
+    char *year_month_day_str = strdup(date);
+    year_month_day_str = strtok(year_month_day_str, " ");
+    return year_month_day_str;
+}
+
 int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
     int atraso = 0, verdadeira = 0, prevista = 0;
     verdadeira = (real[11]-'0')*36000 + (real[12]-'0')*3600 + (real[14]-'0')*600 + (real[15]-'0')*60 + (real[17]-'0')*10 + (real[18]-'0');
@@ -260,18 +272,6 @@ int is_date_between (const char *date, const char *i, const char *f) {  // date 
     if (strcmp (date, f) > 0) return 0;  // date é maior que f, não está entre as datas
     return 1;  // date está entre i e f
 }
-
-// int compare_flights (const void *a, const void *b) {  // ordenar da data mais antiga para a mais recente, ou pelo id se as datas forem iguais
-//     char *beginA = ((flight_date_aux *) a)->schedule_departure_date;
-//     char *beginB = ((flight_date_aux *) b)->schedule_departure_date;
-//     if (strcmp (beginA, beginB) < 0) return 1;
-//     if (strcmp (beginA, beginB) > 0) return -1;
-//     char *idA = ((flight_date_aux *) a)->id;
-//     char *idB = ((flight_date_aux *) b)->id;
-//     if (strcmp (idA, idB) < 0) return -1;
-//     if (strcmp (idA, idB) > 0) return 1;
-//     return 0;
-// }
 
 // Troca o conteudo de dois ints
 void swap_contador(int *a, int *b) {

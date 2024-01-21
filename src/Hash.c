@@ -52,9 +52,15 @@ int found_index_airport(char *key) {
     return hash_djb3(key, NUM_LINHAS_VALID_AIRPORT);
 }
 
+int found_index_year_month_day(char *key) {
+    return hash_djb3(key, 90000);
+}
+
 int found_index_year(int key) {
-    int id = (key+2), ind = id % NUM_LINHAS_VALID_YEAR;
-    return ind;
+    for (int i = 1, j = 2010; i<=14; i++, j++){
+        if(key==j) return 90000+i;
+    }
+    return 0;
 }
 
 int found_index_Prefix(char *key) {

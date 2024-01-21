@@ -97,7 +97,7 @@ void start_query(){
   mvprintw(30, (COLS+36)/2,"(press 'ENTER' when you finish):\n");
   attroff(COLOR_PAIR(COR_TEXTO));
   refresh();
-  char query_command[100];
+  char query_command[300];
   memset(query_command, 0, sizeof(query_command)); // Inicializa a string
   int ch, command_index = 0;
   move(31, (COLS-17)/2);

@@ -515,14 +515,14 @@ void query1 (char *argument, int flag, int n) {
     if (generated_file == 0) create_output(0, n);
 }
 
-void query2 (char *str, int flag, int n) {
+void query2 (char *str, int flag, int n, int mode) {
     int ind_u, l;
     char *id = strtok(str, " ");
     char *argument = strtok(NULL, " ");
     if (argument != NULL) {
         l = strlen(argument);
         argument[l-1] = '\0';
-        if (strcmp("reservations", argument) == 0) {
+        if (strcmp("reservations", argument) == 0 || strcmp("reservation", argument) == 0) {
             ind_u = found_index_users(id);
             const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
             while (upointer != NULL) {
@@ -546,7 +546,7 @@ void query2 (char *str, int flag, int n) {
             }
             create_output(0, n);
         }
-        if (strcmp("flights", argument) == 0) {
+        if (strcmp("flights", argument) == 0 || strcmp("flight", argument) == 0) {
             ind_u = found_index_users(id);
             const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
             while (upointer != NULL) {
@@ -573,7 +573,8 @@ void query2 (char *str, int flag, int n) {
     }
     else {
         l = strlen(id);
-        id[l-1] = '\0';
+        if(mode == 1) id[l-1] = '\0';
+        else id[l] = '\0';
         ind_u = found_index_users(id);
         const UNo *upointer = getUListInit(get_user_array_valid(ind_u));
         while (upointer != NULL) {
@@ -606,10 +607,11 @@ void query2 (char *str, int flag, int n) {
     }
 }
 
-void query3 (char *id, int flag, int n) {
+void query3 (char *id, int flag, int n, int mode) {
     int l = strlen(id), ind;
     double rt = 0, total = 0, med;
-    id[l-1] = '\0';
+    if(mode==1) id[l-1] = '\0';
+    else id[l] = '\0';
     ind = found_index_hotels(id);
     const int *list = get_hotel_list_reservations(getHListInit(get_hotel_array_valid(ind)));
     for (int i = 0; i<get_hotel_reservations((getHListInit(get_hotel_array_valid(ind)))); i++) {
@@ -709,13 +711,14 @@ void query7(char *str, int flag, int n) {
     free(list);
 }
 
-void query8 (char *str, int flag, int n) {
+void query8 (char *str, int flag, int n, int mode) {
     int l_arg_end_date, ind_h, revenue = 0;
     char *id = strtok (str, " ");
     char *arg_begin_date = strtok (NULL, " ");
     char *arg_end_date = strtok (NULL, " ");
     l_arg_end_date = strlen (arg_end_date);
-    arg_end_date[l_arg_end_date-1] = '\0';
+    if(mode==1) arg_end_date[l_arg_end_date-1] = '\0';
+    else arg_end_date[l_arg_end_date] = '\0';
     ind_h = found_index_hotels(id);
     const int *list = get_hotel_list_reservations(getHListInit(get_hotel_array_valid(ind_h)));
     for (int i = 0; i<get_hotel_reservations(getHListInit(get_hotel_array_valid(ind_h))); i++) {
@@ -837,5 +840,23 @@ void query9 (char *str, int flag, int n) {
         free(list_aux[i].id);
     }
     free(list_aux);
+    return;
+}
+
+void query10 (char *str, int flag, int n) {
+    if (strcmp(str, "v")==0) {
+        outputs_query10_years(2010, flag, n);
+    }
+    else {
+        char* argument = strtok (str, "\n");
+        if (strlen(argument)>5) {
+            char *year = strtok(argument, " ");
+            char *month = strtok(NULL, "\n");
+            outputs_query10_year_month(year, month, flag, n);
+        }
+        else {
+            outputs_query10_year(argument, flag, n);
+        }
+    }
     return;
 }

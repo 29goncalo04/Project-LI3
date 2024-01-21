@@ -162,11 +162,16 @@ void mediana_airport(int num);
 ////////////////////////YEAR///////////////////////////
 typedef struct YNo YNo;
 typedef struct YList YList;
-#define NUM_LINHAS_VALID_YEAR 366
+#define NUM_LINHAS_VALID_YEAR 90054
 const YList* get_year_array_valid(int pos);
 const YNo* getYListInit(const YList* YList);
 const int* get_year_list_airports(const YNo* YNo);
 int get_year_airports(const YNo* YNo);
+int get_year_new_users(const YNo* YNo);
+int get_year_flights(const YNo* YNo);
+int get_year_passengers(const YNo* YNo);
+int get_year_unique_passengers(const YNo* YNo);
+int get_year_reservations(const YNo* YNo);
 void create_array_years();
 void free_list_year(const YNo *nodo);
 void free_year_valid();
@@ -218,5 +223,11 @@ void free_flight_valid();
 ////////////////////////PASSENGERS///////////////////////////
 void ordena_list_flights(int ind, const char *date_ind, char *id_f, int **list, int n);
 void create_array_passengers(char parametros[][FIELD_SIZE]);
+void unique_passengers();
+
+
+
+////////////////////////QUERY10///////////////////////////
+void aux_query10(char parametros[][FIELD_SIZE]);
 
 #endif

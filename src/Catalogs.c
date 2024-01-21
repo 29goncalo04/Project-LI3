@@ -11,6 +11,129 @@
 #include "../include/Aux_validation.h"
 #include "../include/Output_errors.h"
 
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+////////////////////////YEAR///////////////////////////
+struct YNo {   //2023     2023/02
+    int airports;
+    int *list_airports;
+    int new_users;
+    int flights;
+    int passengers;
+    int unique_passengers;
+    //int users;
+    //char **list_users;
+    int reservations;
+};
+
+void set_year_airports(YNo* YNo, int airports){
+    YNo->airports = airports;
+}
+void set_year_list_airports(YNo* YNo){
+    YNo->list_airports = NULL;
+}
+void set_year_new_users(YNo* YNo, int new_user){
+    YNo->new_users = new_user;
+}
+void set_year_flights(YNo* YNo, int flights){
+    YNo->flights = flights;
+}
+void set_year_passengers(YNo* YNo, int passengers){
+    YNo->passengers = passengers;
+}
+void set_year_unique_passengers(YNo* YNo, int unique_passengers){
+    YNo->passengers = unique_passengers;
+}
+//void set_year_users(YNo* YNo, int users){
+//    YNo->users = users;
+//}
+//void set_year_list_users(YNo* YNo){
+//    YNo->list_users = NULL;
+//}
+void set_year_reservations(YNo* YNo, int reservations){
+    YNo->reservations = reservations;
+}
+
+struct YList {
+    YNo *init;
+};
+
+YList year_array_valid[NUM_LINHAS_VALID_YEAR];
+
+const YList* get_year_array_valid(int pos) {
+    return &year_array_valid[pos];
+}
+const YNo* getYListInit(const YList* YList){
+    return YList->init;
+}
+const int* get_year_list_airports(const YNo* YNo){
+    return YNo->list_airports;
+}
+int get_year_airports(const YNo* YNo){
+    return YNo->airports;
+}
+int get_year_new_users(const YNo* YNo){
+    return YNo->new_users;
+}
+int get_year_flights(const YNo* YNo){
+    return YNo->flights;
+}
+int get_year_passengers(const YNo* YNo){
+    return YNo->passengers;
+}
+int get_year_unique_passengers(const YNo* YNo){
+    return YNo->unique_passengers;
+}
+int get_year_reservations(const YNo* YNo){
+    return YNo->reservations;
+}
+
+void create_array_years() {
+    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) { 
+        YNo* nova = malloc(sizeof(struct YNo));
+        set_year_airports(nova, 0);                                           
+        set_year_list_airports(nova);
+        set_year_new_users(nova, 0); 
+        set_year_flights(nova, 0); 
+        set_year_unique_passengers(nova, 0);
+        set_year_passengers(nova, 0);
+        set_year_reservations(nova, 0); 
+        year_array_valid[i].init = nova;
+    }
+    return;
+}
+
+void free_list_year(const YNo *nodo) {
+    const YNo* atual = nodo;
+    free((int*)atual->list_airports);
+    //for(int i = 0; i < atual->users; i++) {
+    //    free(atual->list_users[i]);
+    //}
+    //free((char**)atual->list_users);
+    free((char*)atual);
+}
+
+void perform_operation_on_year_array(void (*operation)(YList *)) {
+    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) {
+        operation(&year_array_valid[i]);
+    }
+}
+
+void free_year_element(YList *year_element) {
+    free_list_year(getYListInit(year_element));
+}
+
+void free_year_valid() {
+    perform_operation_on_year_array(free_year_element);
+}
+
 ////////////////////////PREFIX_5///////////////////////////
 ////////////////////////PREFIX_5///////////////////////////
 ////////////////////////PREFIX_5///////////////////////////
@@ -256,6 +379,7 @@ void users_hash_sort(UList *user_array_valid, UList list) {
     }
 }
 
+//new users
 void create_array_users(char parametros[][FIELD_SIZE]) {
     int val = validate_user(parametros);
     if (val == 1) {
@@ -277,10 +401,30 @@ void create_array_users(char parametros[][FIELD_SIZE]) {
             pointer_p->users++;
         }
 
+        //query 10
+        if(compare_date(parametros[9], "2023/10/01")!=1){
+            YNo *pointer;
+            char *str;
+            int ind_year = found_index_year(year(parametros[9]));
+            pointer = year_array_valid[ind_year].init;
+            pointer->new_users++;
+            str = year_month(parametros[9]);
+            int ind_year_month = found_index_year_month_day(str);
+            free(str);
+            pointer = year_array_valid[ind_year_month].init;
+            pointer->new_users++;
+            
+            str = year_month_day(parametros[9]);
+            int ind_year_month_day = found_index_year_month_day(str);
+            free(str);
+            pointer = year_array_valid[ind_year_month_day].init;
+            pointer->new_users++;
+        }
+
         users_hash_sort(user_array_valid, list);
     } 
     else {
-       complete_files_users(parametros); 
+        complete_files_users(parametros); 
     }
 }
 
@@ -582,7 +726,29 @@ void create_array_reservations(char parametros[][FIELD_SIZE]){
         pointer_h->list_reservations[pointer_h->reservations] = id_reservation_table;
         pointer_h->reservations++;
         reservations_hash_sort(reservation_array_valid, list);
-    }
+
+        //query 10
+        if(compare_date(parametros[7], "2023/10/01")!=1){
+            YNo *ypointer;
+            char *str;
+            int ind_year = found_index_year(year(parametros[7]));
+            ypointer = year_array_valid[ind_year].init;
+            ypointer->reservations++;
+
+            str = year_month(parametros[7]);
+            int ind_year_month = found_index_year_month_day(str);
+            free(str);
+            ypointer = year_array_valid[ind_year_month].init;
+            ypointer->reservations++;
+
+            str = year_month_day(parametros[7]);
+            int ind_year_month_day = found_index_year_month_day(str);
+            free(str);
+            ypointer = year_array_valid[ind_year_month_day].init;
+            ypointer->reservations++;
+        }
+        
+    }   
     else{
         complete_files_reservations(parametros);
     }
@@ -822,79 +988,6 @@ void mediana_airport(int num) {
     }
 }
 
-
-
-
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-////////////////////////YEAR///////////////////////////
-struct YNo {
-    int airports;
-    int *list_airports;
-};
-
-void set_year_airports(YNo* YNo, int airports){
-    YNo->airports = airports;
-}
-void set_year_list_airports(YNo* YNo){
-    YNo->list_airports = NULL;
-}
-
-struct YList {
-    YNo *init;
-};
-
-YList year_array_valid[NUM_LINHAS_VALID_YEAR];
-
-const YList* get_year_array_valid(int pos) {
-    return &year_array_valid[pos];
-}
-const YNo* getYListInit(const YList* YList){
-    return YList->init;
-}
-const int* get_year_list_airports(const YNo* YNo){
-    return YNo->list_airports;
-}
-int get_year_airports(const YNo* YNo){
-    return YNo->airports;
-}
-
-void create_array_years() {
-    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) { 
-        YNo* nova = malloc(sizeof(struct YNo));
-        set_year_airports(nova, 0);                                           
-        set_year_list_airports(nova);
-        year_array_valid[i].init = nova;
-    }
-    return;
-}
-
-void free_list_year(const YNo *nodo) {
-    const YNo* atual = nodo;
-    free((int*)atual->list_airports);
-    free((char*)atual);
-}
-
-void perform_operation_on_year_array(void (*operation)(YList *)) {
-    for (int i = 0; i < NUM_LINHAS_VALID_YEAR; i++) {
-        operation(&year_array_valid[i]);
-    }
-}
-
-void free_year_element(YList *year_element) {
-    free_list_year(getYListInit(year_element));
-}
-
-void free_year_valid() {
-    perform_operation_on_year_array(free_year_element);
-}
 
 
 
@@ -1145,6 +1238,27 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         pointer->list_atrasos[pointer->atrasos] = delay(parametros[6], parametros[8]);
         pointer->atrasos++;
 
+        //query 10
+        if(compare_date(parametros[6], "2023/10/01")!=1){
+            YNo *ypointer;
+            char *str;
+            ind_year = found_index_year(year(parametros[6]));
+            ypointer = year_array_valid[ind_year].init;
+            ypointer->flights++;
+
+            str = year_month(parametros[6]);
+            int ind_year_month = found_index_year_month_day(str);
+            free(str);
+            ypointer = year_array_valid[ind_year_month].init;
+            ypointer->flights++;
+
+            str = year_month_day(parametros[6]);
+            int ind_year_month_day = found_index_year_month_day(str);
+            free(str);
+            ypointer = year_array_valid[ind_year_month_day].init;
+            ypointer->flights++;
+        }
+
         create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }
@@ -1230,6 +1344,28 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
         while (fpointer != NULL) {
             if (strcmp(parametros[0], get_flight_id(fpointer)) == 0) {
                 fpointer->passengers++;
+
+                //query 10
+                if(compare_date(fpointer->schedule_departure_date, "2023/10/01")!=1){
+                    YNo *ypointer;
+                    char *str;
+                    int ind_year = found_index_year(year(fpointer->schedule_departure_date));
+                    ypointer = year_array_valid[ind_year].init;
+                    ypointer->passengers++;
+
+                    str = year_month(fpointer->schedule_departure_date);
+                    int ind_year_month = found_index_year_month_day(str);
+                    free(str);
+                    ypointer = year_array_valid[ind_year_month].init;
+                    ypointer->passengers++;
+
+                    str = year_month_day(fpointer->schedule_departure_date);
+                    int ind_year_month_day = found_index_year_month_day(str);
+                    free(str);
+                    ypointer = year_array_valid[ind_year_month_day].init;
+                    ypointer->passengers++;
+                }
+
                 break;
             }
             else fpointer = fpointer->prox;
@@ -1246,8 +1382,52 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
         if (year_aux2 == 2023) apointer2->passengers2023++;
         if (year_aux2 == 2022) apointer2->passengers2022++;
         if (year_aux2 == 2021) apointer2->passengers2021++;
+
+
     }
     else{
         complete_files_passengers(parametros);
+    }
+}
+
+
+void aux_query10(char parametros[][FIELD_SIZE]){
+    int ind_u = found_index_users(parametros[0]);
+    UNo *upointer = user_array_valid[ind_u].init;
+    while (upointer != NULL) {
+        if (strcmp(parametros[0], get_user_id(upointer)) == 0) {
+            int aux[90054] = {0};
+            int* list_flights = upointer->list_flights;
+            for(int i = 0; i<get_user_flights(upointer); i++){
+                if(compare_date(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(list_flights[i]))), "2023/10/01")!=1){
+                    YNo *ypointer;
+                    int ind_year =  found_index_year(year(flight_array_valid[list_flights[i]].init->schedule_departure_date));
+                    char *str = year_month(flight_array_valid[list_flights[i]].init->schedule_departure_date);
+                    int ind_year_month = found_index_year_month_day(str);
+                    free(str);
+                    str = year_month_day(flight_array_valid[list_flights[i]].init->schedule_departure_date);
+                    int ind_year_month_day = found_index_year_month_day(str);
+                    free(str);
+                    ypointer = year_array_valid[ind_year].init;
+                    if(aux[ind_year]==0){
+                        ypointer->unique_passengers++;
+                        aux[ind_year] = 1;
+                    }
+
+                    ypointer = year_array_valid[ind_year_month].init;
+                    if(aux[ind_year_month]==0){
+                        ypointer->unique_passengers++;
+                        aux[ind_year_month] = 1;
+                    }
+
+                    ypointer = year_array_valid[ind_year_month_day].init;
+                    if(aux[ind_year_month_day]==0){
+                        ypointer->unique_passengers++;
+                        aux[ind_year_month_day] = 1;
+                    }
+                }
+            }
+        }
+    upointer = upointer->prox;
     }
 }

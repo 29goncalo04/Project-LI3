@@ -8,6 +8,7 @@
 #include "../include/Queries.h"
 #include "../include/Aux_functions.h"
 #include "../include/Catalogs.h"
+#include "../include/Hash.h"
 
 FILE *output;
 
@@ -519,6 +520,104 @@ void outputs_query9 (list_users *list, int tam, int flag, int n){
             fprintf(output, "id: %s\n", list[i].id);
             fprintf(output, "name: %s\n", list[i].name);
             if(i!=tam-1) fprintf(output, "\n");
+        }
+    }
+    fclose(output);
+}
+
+void outputs_query10_years(int year, int flag, int n){
+    create_output (1, n);
+    for(int i = 0; i<14; i++){
+        if (flag == 0){  //10
+            fprintf(output, "%d;%d;%d;%d;%d;%d\n", year+i, get_year_new_users(getYListInit(get_year_array_valid(found_index_year(year+i)))), get_year_flights(getYListInit(get_year_array_valid(found_index_year(year+i)))), get_year_passengers(getYListInit(get_year_array_valid(found_index_year(year+i)))), get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year(year+i)))), get_year_reservations(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+        }
+        else {   //10F
+            fprintf(output, "--- %d ---\n", i+1);
+            fprintf(output, "year: %d\n", year+i);
+            fprintf(output, "users: %d\n", get_year_new_users(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+            fprintf(output, "flights: %d\n", get_year_flights(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+            fprintf(output, "passengers: %d\n", get_year_passengers(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+            fprintf(output, "unique_passengers: %d\n", get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+            fprintf(output, "reservations: %d\n", get_year_reservations(getYListInit(get_year_array_valid(found_index_year(year+i)))));
+            if(i!=13) fprintf(output, "\n");
+        }
+    }
+    fclose(output);
+}
+
+void outputs_query10_year(char* year, int flag, int n){
+    create_output (1, n);
+    int i;
+    if(atoi(year)==2023) i = 9;
+    else i = 12;
+    for(int j = 0; j<i; j++){
+        char date[8];
+        strcpy(date, year);
+        date[4] = '/';
+        if (j+1 <= i){
+            date[5] = '0' + (j+1)/10;
+            date[6] = '0' + (j+1)%10;
+        }
+        date[7] = '\0';
+        if (flag == 0){  //10
+            fprintf(output, "%d;%d;%d;%d;%d;%d\n", j+1, get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+        }
+        else {   //10F
+            fprintf(output, "--- %d ---\n", j+1);
+            fprintf(output, "month: %d\n", j+1);
+            fprintf(output, "users: %d\n", get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            fprintf(output, "flights: %d\n", get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            fprintf(output, "passengers: %d\n", get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            fprintf(output, "unique_passengers: %d\n", get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            fprintf(output, "reservations: %d\n", get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            if(j!=i-1) fprintf(output, "\n");
+        }
+    }
+    fclose(output);
+}
+
+void outputs_query10_year_month(char* year, char* month, int flag, int n){
+    create_output (1, n);
+    int i, line = 1;
+    if(atoi(year)==2023) i = 9;
+    else i = 12;
+    int j = atoi(month) - 1;
+    int dias;
+    if(j==0 || j==2 || j==4 || j==6 || j==7 || j==9 || j==11) dias = 31;
+    if(j==1) dias = 28;
+    if(j==3 || j==5 || j==8 || j==10) dias = 30;
+    for(int k = 0, m = 0; k<dias; k++){
+        char date[11];
+        strcpy(date, year);
+        date[4] = '/';
+        if (j+1 <= i){
+            date[5] = '0' + (j+1)/10;
+            date[6] = '0' + (j+1)%10;
+            if(k+1 <= dias){
+                date[7] = '/';
+                date[8] = '0' + (k+1)/10;
+                date[9] = '0' + (k+1)%10;
+            }
+        }
+        date[10] = '\0';
+        if (flag == 0){  //10
+            if(get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0){
+                fprintf(output, "%d;%d;%d;%d;%d;%d\n", k+1, get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))), get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            }
+        }
+        else {   //10F
+            if(get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0 || get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date))))!=0){
+                if(!line) fprintf(output, "\n");
+                line = 0;
+                fprintf(output, "--- %d ---\n", m+1);
+                m++;
+                fprintf(output, "day: %d\n", k+1);
+                fprintf(output, "users: %d\n", get_year_new_users(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+                fprintf(output, "flights: %d\n", get_year_flights(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+                fprintf(output, "passengers: %d\n", get_year_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+                fprintf(output, "unique_passengers: %d\n", get_year_unique_passengers(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+                fprintf(output, "reservations: %d\n", get_year_reservations(getYListInit(get_year_array_valid(found_index_year_month_day(date)))));
+            }
         }
     }
     fclose(output);

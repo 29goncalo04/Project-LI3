@@ -46,4 +46,13 @@ void outputs_query8(int revenue, int flag, int n);
 void outputs_query9 (list_users *list, int tam, int flag, int n);
     //     |->função responsável por escrever nos outputs de todos os comandos que chamam a query 9
 
+void outputs_query10_years(int year, int flag, int n);
+    //     |->função responsável por escrever nos outputs de todos os comandos sem argumentos que chamam a query 10
+
+void outputs_query10_year(char* year, int flag, int n);
+    //     |->função responsável por escrever nos outputs de todos os comandos com apenas um ano como argumento que chamam a query 10
+
+void outputs_query10_year_month(char* year, char* month, int flag, int n);
+    //     |->função responsável por escrever nos outputs de todos os comandos com ano e mês como argumento que chamam a query 10
+
 #endif

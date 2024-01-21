@@ -7,6 +7,7 @@
 #include "../include/Statistics.h"
 #include "../include/Output_errors.h"
 #include "../include/Hash.h"
+#include "../include/Aux_validation.h"
 
 FILE *fpassengers;
 FILE *freservations;
@@ -37,7 +38,7 @@ void open_files(char* path){
     strcat(aux_users, "/users.csv");
 
 
-    for (int num_ficheiro = 0; num_ficheiro<4; num_ficheiro++) {         //existe um caso específico para cada ficheiro     
+    for (int num_ficheiro = 0; num_ficheiro<5; num_ficheiro++) {         //existe um caso específico para cada ficheiro     
         int l = 0;
         switch (num_ficheiro){
             case 3: 
@@ -72,12 +73,10 @@ void open_files(char* path){
                     }
                 }
                 fclose(fpassengers);
-                printf("pasajeros listo\n");
                 break;
             
             case 1:   
                 //init_flight_array(flight_array_valid);
-                create_array_years();
                 create_array_airport();
                 fflights = fopen(aux_flights, "r");
                 start_files_flights();
@@ -123,11 +122,9 @@ void open_files(char* path){
                     insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
                 }
                 fclose(fflights);
-                printf("vuelos listo\n");
                 break;
 
             case 2:  
-                //init_reservation_array(reservation_array_valid);
                 create_array_hotels();
                 freservations = fopen(aux_reservations, "r"); 
                 start_files_reservations();                                         //ficheiro das reservas
@@ -171,11 +168,10 @@ void open_files(char* path){
                     }
                 }
                 fclose(freservations);
-                printf("reservas listo\n");
                 break;
             
             case 0:
-                //init_user_array(user_array_valid);
+                create_array_years();
                 create_array_Prefix();
                 fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
                 start_files_users();
@@ -208,8 +204,33 @@ void open_files(char* path){
                     }
                 }
                 fclose(fusers);
-                printf("users listo\n");
-                break;          
+                break;  
+
+            case 4:
+                fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                if (fusers==NULL){
+                    path_error = 1;
+                    return;
+                }
+                while (getline(&line, &len, fusers) != -1) {
+                    if (l != 0) {
+                        char parametros[1][FIELD_SIZE];
+                        int j_linha = 0;
+                        for (j = 0; line[j_linha] != ';'; j_linha++, j++) {
+                            parametros[0][j] = line[j_linha];
+                        }
+                        parametros[0][j] = '\0';
+                        j_linha++;
+                        int val = check_length(parametros[0]);
+                        if(val){
+                            aux_query10 (parametros);
+                        }
+                    } else {
+                        l++;
+                    }
+                }
+                fclose(fusers);
+                break;        
         }
     }
     free(aux_passengers);
