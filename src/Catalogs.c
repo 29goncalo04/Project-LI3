@@ -49,7 +49,7 @@ void set_year_passengers(YNo* YNo, int passengers){
     YNo->passengers = passengers;
 }
 void set_year_unique_passengers(YNo* YNo, int unique_passengers){
-    YNo->passengers = unique_passengers;
+    YNo->unique_passengers = unique_passengers;
 }
 //void set_year_users(YNo* YNo, int users){
 //    YNo->users = users;
