@@ -3,7 +3,6 @@
 #ifndef VALIDATION_H
 #define VALIDATION_H
 
-#include "../include/Statistics.h"
 #include "../include/Catalogs.h"
 
 int validate_passenger(char parametros[][FIELD_SIZE]);

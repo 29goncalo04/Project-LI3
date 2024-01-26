@@ -3,21 +3,9 @@
 
 #include "../include/Aux_validation.h"
 #include "../include/Catalogs.h"
-#include "../include/Aux_structs.h"
 #include "../include/Aux_functions.h"
 #include "../include/Queries.h"
 
-void insertionSort_atrasos(int *atrasos, int num_atrasos){
-    for (int i = 1; i < num_atrasos; i++) {
-        int key = atrasos[i];
-        int j = i - 1;
-        while (j >= 0 && atrasos[j]>key){
-            atrasos[j + 1] = atrasos[j];
-            j--;
-        }  
-        atrasos[j + 1] = key;
-    }
-}
 
 int year(char* date) {
     char date_copy[20];
@@ -38,7 +26,7 @@ char* year_month_day(char* date) {
     return year_month_day_str;
 }
 
-int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  2021/07/01 06:56:50
+int delay(const char *schedule, const char *real){
     int atraso = 0, verdadeira = 0, prevista = 0;
     verdadeira = (real[11]-'0')*36000 + (real[12]-'0')*3600 + (real[14]-'0')*600 + (real[15]-'0')*60 + (real[17]-'0')*10 + (real[18]-'0');
     prevista = (schedule[11]-'0')*36000 + (schedule[12]-'0')*3600 + (schedule[14]-'0')*600 + (schedule[15]-'0')*60 + (schedule[17]-'0')*10 + (schedule[18]-'0');
@@ -46,7 +34,7 @@ int delay(const char *schedule, const char *real){ //2021/07/01 05:56:50  !!!!  
     return atraso;
 }
 
-int nights(const char *begin, const char *end){  //2021/07/01   !!!!!   2021/07/03
+int nights(const char *begin, const char *end){
     int noites = 0, inicio = 0, fim = 0;
     inicio = (begin[8]-'0')*10 + (begin[9]-'0');
     fim = (end[8]-'0')*10 + (end[9]-'0');
@@ -55,7 +43,7 @@ int nights(const char *begin, const char *end){  //2021/07/01   !!!!!   2021/07/
 }
 
 int nights_between (const char *begin_res, const char* end_res, char* begin_arg, char* end_arg) {
-    if (strcmp (begin_arg, end_arg) > 0 || strcmp (begin_arg, end_res) > 0 || strcmp (end_arg, begin_res) < 0) return 0;   // deve retornar 0 ou dizer q o input da query foi inválido (no modo interativo)???
+    if (strcmp (begin_arg, end_arg) > 0 || strcmp (begin_arg, end_res) > 0 || strcmp (end_arg, begin_res) < 0) return 0;
     if (strcmp (begin_arg, begin_res) >= 0) {
         if (strcmp (end_arg, end_res) < 0) return nights (begin_arg, end_arg) + 1;
         return nights (begin_arg, end_res);
@@ -72,7 +60,7 @@ double total_price(int price_per_night, int nights, int city_tax){
     return price;
 }
 
-int age_user(const char *birth_date){  //1979/11/27
+int age_user(const char *birth_date){
     int ano = 0, mes = 0, dia = 0, age = 0;
     ano = (birth_date[0]-'0')*1000 + (birth_date[1]-'0')*100 + (birth_date[2]-'0')*10 + (birth_date[3]-'0');
     mes = (birth_date[5]-'0')*10 + (birth_date[6]-'0');
@@ -82,28 +70,22 @@ int age_user(const char *birth_date){  //1979/11/27
     return age;
 }
 
-int comparar_numbers(const void *a, const void *b) {
+int compare_numbers(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
 }
 
 int compare_medianas(const void *a, const void *b) {
-    // Comparação pelas medianas
     int diff = ((list_mediana *)a)->mediana - ((list_mediana *)b)->mediana;
-
-    // Se as medianas são iguais, use o nome do aeroporto como critério de desempate
     if (diff == 0) {
         char *originA = ((list_mediana *)a)->airport;
         char *originB = ((list_mediana *)b)->airport;
-        
-        // Comparação dos nomes do aeroporto em ordem crescente
         return strcmp(originA, originB);
     }
-
     if (diff > 0) return -1;
     else return 1;
 }
 
-int compare_reservations (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
+int compare_reservations (const void *a, const void *b) {
     char *beginA = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)a))));
     char *beginB = strdup(get_reservation_begin_date(getRListInit(get_reservation_array_valid(*(const int*)b))));
     if (strcmp (beginA, beginB) < 0){
@@ -135,7 +117,7 @@ int compare_reservations (const void *a, const void *b) {  // ordenar da data ma
     return 0;
 }
 
-int compare_flights (const void *a, const void *b) {  // ordenar da data mais recente para a mais antiga, ou pelo id se as datas forem iguais
+int compare_flights (const void *a, const void *b) {
     char *beginA = strdup(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(*(const int*)a))));
     char *beginB = strdup(get_flight_schedule_departure_date(getFListInit(get_flight_array_valid(*(const int*)b))));
     if (strcmp (beginA, beginB) < 0){
@@ -273,7 +255,7 @@ int is_date_between (const char *date, const char *i, const char *f) {  // date 
     return 1;  // date está entre i e f
 }
 
-// Troca o conteudo de dois ints
+// Troca o conteúdo de dois ints
 void swap_contador(int *a, int *b) {
     int temp = *a;
     *a = *b;
@@ -290,48 +272,20 @@ void swapStrings(char **str1, char **str2) {
     free(temp);
 }
 
-char *only_date(char *schedule_departure_date){  //2023/02/10 03:24:09
+char *only_date(char *schedule_departure_date){
     char *date = (char*)malloc(11 * sizeof(char));
     strncpy(date, schedule_departure_date, 10);
     date[10] = '\0'; 
     return date;
 }
 
-char *only_date2(const char *schedule_departure_date){  //2023/02/10 03:24:09
+char *only_date2(const char *schedule_departure_date){
     char *date = (char*)malloc(11 * sizeof(char));
     strncpy(date, schedule_departure_date, 10);
     date[10] = '\0'; 
     return date;
 }
 
-void insertionSort_flights(Flight_aux *flight_aux_array, int size){
-    for (int i = 1; i < size; i++) {
-        Flight_aux key = flight_aux_array[i];
-        int j = i - 1;
-        while (j >= 0 && compare_date_time(flight_aux_array[j].schedule_departure_date, key.schedule_departure_date)==1) {
-            flight_aux_array[j + 1] = flight_aux_array[j];
-            j--;
-        }  
-        flight_aux_array[j + 1] = key;
-    }
-}
-
-void insertionSort_medianas(Mediana *mediana_array, int num_medianas){
-    for (int i = 1; i < num_medianas; i++) {
-        Mediana key = mediana_array[i];
-        int j = i - 1;
-        while (j >= 0 && ((mediana_array[j].mediana<key.mediana) || (mediana_array[j].mediana==key.mediana && strcmp(mediana_array[j].airport, key.airport)>0))) {
-            mediana_array[j + 1] = mediana_array[j];
-            j--;
-        }  
-        mediana_array[j + 1] = key;
-    }
-}
-
-int calculate_mediana(int *atrasos, int num_atrasos){
-    if ((num_atrasos%2)==1) return atrasos[num_atrasos/2];
-    else return ((atrasos[num_atrasos/2] + atrasos[(num_atrasos/2) - 1]) / 2);
-}
 
 int compare_date_time2(char *i, char *f) {
     return strcmp(i, f);

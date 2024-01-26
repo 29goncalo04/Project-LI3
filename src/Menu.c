@@ -6,7 +6,7 @@
 #include "../include/Interactive_mode_screens.h"
 
 void create_menu(){
-  initscr(); // Inicializa a biblioteca ncurses
+  initscr();   // Inicializa a biblioteca ncurses
   curs_set(0);
   start_color();
   init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -25,7 +25,7 @@ void create_menu(){
   init_pair(COR_TEXTO2, COLOR_RED, COLOR_BLACK);
   init_pair(COR_TEXTO3, COLOR_GREEN, COLOR_BLACK);
 
-    // cria as opções do menu
+  // cria as opções do menu
   opcao_menu opcoes[] = {
     {"Start", start_dataset},
     {"Help", ajuda},
@@ -33,14 +33,14 @@ void create_menu(){
     {"Leave", sair},
   };
 
-  int opcao_atual = 0;        // variável que armazena a opção selecionada
-  int programa_ativo = 1;         // variável para controlar o estado do programa
+  int opcao_atual = 0;   // variável que armazena a opção selecionada
+  int programa_ativo = 1;   // variável para controlar o estado do programa
   int dataset_started = 0;   //variável para indicar se o dataset já foi processado
 
   // loop do menu
   while (programa_ativo) {
     clear();
-    attron(COLOR_PAIR(COR_TEXTO3));  // Ativar a cor de fundo definida pelo par de cores especificado           
+    attron(COLOR_PAIR(COR_TEXTO3));   // Ativar a cor de fundo definida pelo par de cores especificado           
     mvprintw(2, (COLS-135)/2,"########     ###    ########    ###             ##     ##    ###    ##    ##    ###     ######   ######## ##     ## ######## ##    ## ########");
     mvprintw(3, (COLS-135)/2,"##     ##   ## ##      ##      ## ##            ###   ###   ## ##   ###   ##   ## ##   ##    ##  ##       ###   ### ##       ###   ##    ##");
     mvprintw(4, (COLS-135)/2,"##     ##  ##   ##     ##     ##   ##           #### ####  ##   ##  ####  ##  ##   ##  ##        ##       #### #### ##       ####  ##    ##");
@@ -75,25 +75,25 @@ void create_menu(){
     // seleção do jogador
     int tecla = getch();
     switch (tecla) {
-      case 65:    //Código ASCII para seta para cima
+      case 65:   //Código ASCII para seta para cima
         opcao_atual--;
         if (opcao_atual < 0) {
           opcao_atual = 3;
         }
         break;
-      case 66:     //Código ASCII para seta para baixo
+      case 66:    //Código ASCII para seta para baixo
         opcao_atual++;
         if (opcao_atual > 3) {
           opcao_atual = 0;
         }
         break;
       case '\n':   //seleciona a opção desejada
-        if (strcmp(opcoes[opcao_atual].titulo, "Leave") == 0) programa_ativo = 0;  // Define o menu como inativo se a opção "Leave" for selecionada
-        else if (strcmp(opcoes[opcao_atual].titulo, "Start") == 0 && dataset_started == 0){    //o dataset ainda não foi iniciado
+        if (strcmp(opcoes[opcao_atual].titulo, "Leave") == 0) programa_ativo = 0;   // Define o menu como inativo se a opção "Leave" for selecionada
+        else if (strcmp(opcoes[opcao_atual].titulo, "Start") == 0 && dataset_started == 0){   //o dataset ainda não foi iniciado
           start_dataset();
           dataset_started = 1;
         }
-        else if (strcmp(opcoes[opcao_atual].titulo, "Start") == 0 && dataset_started == 1){    //o dataset já foi iniciado anteriormente
+        else if (strcmp(opcoes[opcao_atual].titulo, "Start") == 0 && dataset_started == 1){   //o dataset já foi iniciado anteriormente
           start_query();
         }
         else{

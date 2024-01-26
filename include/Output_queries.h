@@ -5,8 +5,6 @@
 #define OUTPUT_QUERIES_H
 
 #include "../include/Catalogs.h"
-#include "../include/Statistics.h"
-#include "../include/Aux_structs.h"
 #include "../include/Queries.h"
 
 void create_output(int check, int n);

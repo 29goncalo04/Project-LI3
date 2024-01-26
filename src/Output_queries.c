@@ -12,7 +12,7 @@
 
 FILE *output;
 
-void create_output(int check, int n){    //conteudo = 1 se existir conteudo para escrever nesse ficheiro, e conteudo = 0 se for para criar um ficheiro vazio
+void create_output(int check, int n){    //check = 1 se existir conteudo para escrever nesse ficheiro, e check = 0 se for para criar um ficheiro vazio
     int filename_size = strlen("../trabalho-pratico/Resultados/command1_output.txt");  //calcula o tamanho do nome do ficheiro
     if (n>=10 && n<100) filename_size++;
     else if (n>=100) filename_size = filename_size + 2;
@@ -318,11 +318,6 @@ void outputs_query4(const int *list, int num_reservations, int flag, int check, 
     }
 }
 
-
-//Um voo está entre <begin_date> e <end_date> caso a
-//sua respetiva data estimada de partida esteja entre <begin_date> e <end_date> (ambos inclusivos).
-
-//is_date_between (char *date, char *i, char *f) retorna 1 si esta entre las dos
 void outputs_query5 (char *origin, char *arg_begin_date, char *arg_end_date, const int *list3, const int *list2, const int *list1, int num_flights3, int num_flights2, int num_flights1, int flag, int check, int n) {
     create_output(check, n);
     if (check == 1) {
@@ -479,7 +474,6 @@ void outputs_query7 (list_mediana *list, int tam, int N, int flag, int n) {
     if (flag == 0){   //7
         for (int i = 0; i < N && i < tam; i++) {
             fprintf(output, "%s;%d\n", list[i].airport, list[i].mediana);
-            //printf("%s;%d\n", list->airport, list->mediana);
         }
     }
     else {          //7F
@@ -487,7 +481,6 @@ void outputs_query7 (list_mediana *list, int tam, int N, int flag, int n) {
             fprintf(output, "--- %d ---\n",i+1);
             fprintf(output, "name: %s\n", list[i].airport);
             fprintf(output, "median: %d\n", list[i].mediana);
-            //printf("%s;%d\n", list->airport, list->mediana);
             if (i+1 != N && i+1 != tam) fprintf(output, "\n");
         }
     }

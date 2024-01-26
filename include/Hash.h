@@ -1,8 +1,6 @@
-#include "../include/Catalogs.h"
+//módulo com as funções de hash
 
-void init_user(UList *list);
-void init_flight(FList *list);
-void init_reservation(RList *list);
+#include "../include/Catalogs.h"
 
 int found_index_flights(const char *key);
 int found_index_reservations(const char *key);

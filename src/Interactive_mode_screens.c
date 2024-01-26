@@ -69,7 +69,7 @@ void output_type(){
     case '1':
       clear();
       attron(COLOR_PAIR(COR_TEXTO));
-      mvprintw(30, (COLS-70)/2,"Your output file is in the 'Results' folder with the name 'command0_output.txt'");
+      mvprintw(30, (COLS-70)/2,"Your output file is in the 'Resultados' folder with the name 'command0_output.txt'");
       attroff(COLOR_PAIR(COR_TEXTO));
       refresh();
       sleep(5);
@@ -120,7 +120,7 @@ void start_query(){
     refresh();
   }
   identify_single_query(query_command);
-  if(command_error==0){     //caso o comando seja válido (em princípio)
+  if(command_error==0){     //caso o comando seja válido
     FILE *output;
     output = fopen("../trabalho-pratico/Resultados/command0_output.txt", "r");
     fseek(output, 0, SEEK_END);

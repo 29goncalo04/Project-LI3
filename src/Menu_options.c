@@ -116,12 +116,12 @@ void ajuda(){
         attroff(COLOR_PAIR(COR_TEXTO2));
         printw("    - If you want to indicate another path to the dataset you will have to restart the program.\n\n\n");
         refresh();
-        if (getch() != ERR) break;           //volta para o menu de ajuda mal alguma tecla seja pressionada
+        if (getch() != ERR) break;   //volta para o menu de ajuda mal alguma tecla seja pressionada
       }
       break;
     case '2':
-      break;           //volta para o menu de ajuda quando a tecla 2 for pressionada
-    default:       //caso uma tecla que não '1' ou '2' seja pressionada, nada acontece
+      break;   //volta para o menu de ajuda quando a tecla 2 for pressionada
+    default:   //caso uma tecla que não '1' ou '2' seja pressionada, nada acontece
       ajuda();
   }
 }
@@ -144,7 +144,7 @@ void creditos(){
   attron(COLOR_PAIR(COR_TEXTO2));
   printw("                            ->");
   attroff(COLOR_PAIR(COR_TEXTO2));
-  printw("Luís Freitas (a104000)\n\n\n\n\n\n");
+  printw("Luis Freitas (a104000)\n\n\n\n\n\n");
   for (int k=0; k<(COLS-24)/2; k++) printw(" ");
   printw(" ------------------------\n");
   for (int k=(COLS-25)/2+25; k<COLS; k++) printw(" ");
@@ -161,7 +161,7 @@ void creditos(){
   switch (opcao_selecionada) {
     case '1':
       break;
-    default:      //caso uma tecla que não '1' seja pressionada, nada acontece
+    default:   //caso uma tecla que não '1' seja pressionada, nada acontece
       creditos();
   }
 }

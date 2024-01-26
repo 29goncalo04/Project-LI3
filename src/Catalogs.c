@@ -5,7 +5,6 @@
 
 #include "../include/Catalogs.h"
 #include "../include/Validation.h"
-#include "../include/Statistics.h"
 #include "../include/Hash.h"
 #include "../include/Aux_functions.h"
 #include "../include/Aux_validation.h"
@@ -21,15 +20,13 @@
 ////////////////////////YEAR///////////////////////////
 ////////////////////////YEAR///////////////////////////
 ////////////////////////YEAR///////////////////////////
-struct YNo {   //2023     2023/02
+struct YNo {
     int airports;
     int *list_airports;
     int new_users;
     int flights;
     int passengers;
     int unique_passengers;
-    //int users;
-    //char **list_users;
     int reservations;
 };
 
@@ -51,12 +48,6 @@ void set_year_passengers(YNo* YNo, int passengers){
 void set_year_unique_passengers(YNo* YNo, int unique_passengers){
     YNo->unique_passengers = unique_passengers;
 }
-//void set_year_users(YNo* YNo, int users){
-//    YNo->users = users;
-//}
-//void set_year_list_users(YNo* YNo){
-//    YNo->list_users = NULL;
-//}
 void set_year_reservations(YNo* YNo, int reservations){
     YNo->reservations = reservations;
 }
@@ -113,10 +104,6 @@ void create_array_years() {
 void free_list_year(const YNo *nodo) {
     const YNo* atual = nodo;
     free((int*)atual->list_airports);
-    //for(int i = 0; i < atual->users; i++) {
-    //    free(atual->list_users[i]);
-    //}
-    //free((char**)atual->list_users);
     free((char*)atual);
 }
 
@@ -134,16 +121,16 @@ void free_year_valid() {
     perform_operation_on_year_array(free_year_element);
 }
 
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
-////////////////////////PREFIX_5///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
+////////////////////////PREFIX///////////////////////////
 
 struct PNo {
     int users;
@@ -161,7 +148,7 @@ struct PList{
     PNo *init;
 };
 
-PList Prefix_array_valid[NUM_LINHAS_VALID_PREFIX_5];
+PList Prefix_array_valid[NUM_LINHAS_VALID_PREFIX];
 
 const PList* get_Prefix_array_valid(int pos) {
     return &Prefix_array_valid[pos];
@@ -177,7 +164,7 @@ int get_Prefix_users(const PNo* PNo){
 }
 
 void create_array_Prefix() {
-    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX_5; i++) { 
+    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX; i++) { 
         PNo* nova = malloc(sizeof(struct PNo));
         set_Prefix_users(nova, 0);                                           
         set_Prefix_list_users(nova);
@@ -193,7 +180,7 @@ void free_list_Prefix(const PNo *nodo) {
 }
 
 void perform_operation_on_Prefix_array(void (*operation)(PList *)) {
-    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX_5; i++) {
+    for (int i = 0; i < NUM_LINHAS_VALID_PREFIX; i++) {
         operation(&Prefix_array_valid[i]);
     }
 }
@@ -370,7 +357,7 @@ void users_hash_sort(UList *user_array_valid, UList list) {
     char* aux = strdup(get_user_id(list.init));
     int ind = found_index_users(aux);
     free(aux);
-    if (user_array_valid[ind].init == NULL) { //esta tudo NULL (vacio)
+    if (user_array_valid[ind].init == NULL) {
         user_array_valid[ind] = list;
     }
     else {
@@ -692,7 +679,7 @@ const RNo* get_reservation_prox(const RNo* RNo){
 
 void reservations_hash_sort(RList *reservation_array_valid, RList list) {
     int ind = found_index_reservations(get_reservation_id(list.init));
-    if (reservation_array_valid[ind].init == NULL) { //esta tudo NULL (vacio)
+    if (reservation_array_valid[ind].init == NULL) {
         reservation_array_valid[ind] = list;
     }
     else {
@@ -966,7 +953,7 @@ void ordena_atrasos(int num) {
     for (int i = 0; i < num; i++) {
         if(get_airport_atrasos(getAListInit(get_airport_array_valid(i))) != 0) {
             tam = get_airport_atrasos(getAListInit(get_airport_array_valid(i)));
-            qsort(airport_array_valid[i].init->list_atrasos, tam, sizeof(int), comparar_numbers);
+            qsort(airport_array_valid[i].init->list_atrasos, tam, sizeof(int), compare_numbers);
         }
     }
 }
@@ -1154,11 +1141,11 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
         FNo* nova = create_flight(parametros);
         FList list;
         list.init = nova;
-        char *origin_cpy = strdup (parametros[4]);//origin
+        char *origin_cpy = strdup (parametros[4]);
         toUpperCase (origin_cpy);
         int ind_org = found_index_airport(origin_cpy), ind_f = found_index_flights(parametros[0]);
         free (origin_cpy);
-        char *destination_cpy = strdup (parametros[5]);//destination
+        char *destination_cpy = strdup (parametros[5]);
         toUpperCase (destination_cpy);
         int ind_dest = found_index_airport(destination_cpy);
         free (destination_cpy);
@@ -1259,7 +1246,6 @@ void create_array_flights(char parametros[][FIELD_SIZE]){
             ypointer->flights++;
         }
 
-        create_array_atrasos(list.init, NUM_LINHAS_VALID_FLIGHT, parametros);
         flights_hash_sort(flight_array_valid, list);
     }
     else{
@@ -1326,7 +1312,7 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
     int ind_u, ind_f, ind_a, val;
     val = validate_passenger(parametros);
     if (val==1){
-        ind_u = found_index_users(parametros[1]); //id_u
+        ind_u = found_index_users(parametros[1]);
         UNo *upointer = user_array_valid[ind_u].init;
         while (upointer != NULL) {
             if (strcmp(parametros[1], get_user_id(upointer)) == 0) {
@@ -1339,7 +1325,7 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
             else upointer = upointer->prox;
         }
 
-        ind_f = found_index_flights(parametros[0]); //id_f
+        ind_f = found_index_flights(parametros[0]);
         FNo *fpointer = flight_array_valid[ind_f].init;
         while (fpointer != NULL) {
             if (strcmp(parametros[0], get_flight_id(fpointer)) == 0) {
@@ -1370,13 +1356,13 @@ void create_array_passengers(char parametros[][FIELD_SIZE]){
             }
             else fpointer = fpointer->prox;
         }
-        ind_a = found_index_airport(fpointer->origin); //id_a
+        ind_a = found_index_airport(fpointer->origin);
         ANo *apointer = airport_array_valid[ind_a].init;
         int year_aux = year(fpointer->schedule_departure_date);
         if (year_aux == 2023) apointer->passengers2023++;
         if (year_aux == 2022) apointer->passengers2022++;
         if (year_aux == 2021) apointer->passengers2021++;
-        int ind_b = found_index_airport(fpointer->destination); //id_b
+        int ind_b = found_index_airport(fpointer->destination);
         ANo *apointer2 = airport_array_valid[ind_b].init;
         int year_aux2 = year(fpointer->schedule_departure_date);
         if (year_aux2 == 2023) apointer2->passengers2023++;

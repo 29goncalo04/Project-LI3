@@ -4,14 +4,13 @@
 
 #include "../include/Catalogs.h"
 #include "../include/Aux_validation.h"
-#include "../include/Statistics.h"
 #include "../include/Validation.h"
 #include "../include/Hash.h"
 
 int validate_passenger(char parametros[][FIELD_SIZE]) {
     int wanted_flight_id_validation = 0, wanted_user_id_validation = 0, ind_u, ind_f;
     const FNo *fnodo;
-    ind_f = found_index_flights(parametros[0]); //id_voo
+    ind_f = found_index_flights(parametros[0]);
     for (fnodo = getFListInit(get_flight_array_valid(ind_f)); fnodo != NULL; fnodo = get_flight_prox(fnodo)){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
         if (strcmp(parametros[0], get_flight_id(fnodo))==0){
             wanted_flight_id_validation = 1;
@@ -20,7 +19,7 @@ int validate_passenger(char parametros[][FIELD_SIZE]) {
     }
     if (wanted_flight_id_validation==1){
         const UNo *unodo;
-        ind_u = found_index_users(parametros[1]); //id_user
+        ind_u = found_index_users(parametros[1]);
         unodo = getUListInit(get_user_array_valid(ind_u));
         for (unodo = getUListInit(get_user_array_valid(ind_u)); unodo != NULL; unodo = get_user_prox(unodo)){   //procura esse id de utilizador no array que tem os utilizadores válidos guardados   
             if (strcmp(parametros[1], get_user_id(unodo))==0){
@@ -58,7 +57,7 @@ int validate_reservation(char parametros[][FIELD_SIZE]){
     ind = found_index_users(parametros[1]);
     unodo = getUListInit(get_user_array_valid(ind));
     for (unodo = getUListInit(get_user_array_valid(ind)); unodo != NULL; unodo = get_user_prox(unodo)) {
-        if (strcmp(parametros[1], get_user_id(unodo))==0) {    //encontrou o id desse utilizador no array de utilizadores válidos
+        if (strcmp(parametros[1], get_user_id(unodo))==0) {   //encontrou o id desse utilizador no array de utilizadores válidos
             wanted_user_id_validation = 1;
             break;
         }

@@ -12,7 +12,7 @@ void find_equal_files(char* path3){
     struct dirent *entry_path3;
 
     while ((entry_path3 = readdir(dir_path3)) != NULL){   //vai percorrer todos os ficheiros da pasta dos outputs corretos
-        if (entry_path3->d_type == DT_REG) {  // Verificar se é um arquivo regular
+        if (entry_path3->d_type == DT_REG) {  //verificar se é um arquivo regular
             char file_path3[500];
             snprintf(file_path3, sizeof(file_path3), "%s%s", path3, entry_path3->d_name);
             char file_resultados[500];
@@ -24,7 +24,7 @@ void find_equal_files(char* path3){
                 if (result == NULL) fprintf(output_tests, "File '%s' is correct.\n", entry_path3->d_name);
                 else {
                     if (strcmp(result, "File is empty")==0) fprintf(output_tests, "File '%s' is empty.\n", entry_path3->d_name);
-                    else fprintf(output_tests, "File '%s' differ on the line -> %s", entry_path3->d_name, result);
+                    else fprintf(output_tests, "File '%s' differs on the line -> %s", entry_path3->d_name, result);
                 }
                 free(result);
             }

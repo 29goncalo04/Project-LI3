@@ -3,14 +3,15 @@
 #ifndef AUX_VALIDATION_H
 #define AUX_VALIDATION_H
 
-#include "../include/Statistics.h"
 
 int compare_date_time (char *i, char *f);
     //    |->função que compara duas datas e retorna 1 caso a primeira data seja a mais antiga
 
 int compare_date (const char *i, const char *f);
+    //    |->função que compara duas datas e retorna 1 caso a primeira data seja a mais antiga
 
 int compare_date_time3 (const char *i, const char *f);
+    //    |->função que compara duas datas e retorna 1 caso a primeira data seja a mais antiga
 
 int verify_email (char *e);
     //    |->função que verifica se um email que lhe é passado como argumento é válido ou não de acordo com as regras especificadas
@@ -43,7 +44,7 @@ int verify_city_tax (char *t);
     //    |->função que verifica se o imposto que se paga numa cidade é válido 
 
 char* strnCpy(char *d, char *s, int n, int p);
-    //    |->função semelhante à "strcpy" mas esta modificada consegue copiar uma string para uma posição específica de outra string
+    //    |->função semelhante à "strcpy" mas modificada para conseguir copiar uma string para uma posição específica de outra string
 
 int check_date(char *d);
     //    |->função que verifica se uma data é válida

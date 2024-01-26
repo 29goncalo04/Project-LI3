@@ -12,8 +12,8 @@ void identify_query_tests_mode(char* path);
     //        o id da query que o comando do ficheiro de comandos chama e calcular o tempo que cada query demora a ser executada
 
 void identify_query(char* path);
-//     |->função responsável por identificar
-//        o id da query que o comando do ficheiro de comandos chama
+    //     |->função responsável por identificar
+    //        o id da query que o comando do ficheiro de comandos chama
 
 void identify_single_query(char* command);
     //     |->função responsável por identificar

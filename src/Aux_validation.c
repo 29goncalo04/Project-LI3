@@ -2,40 +2,39 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "../include/Statistics.h"
 #include "../include/Aux_validation.h"
 
-int compare_date_time (char *i, char *f){     //i de evento inicial, f de evento final
-    int tamanho = strlen(i);                    //1979/11/27      2016/09/10 17:34:41   2020/01/24  2020/01/23
+int compare_date_time (char *i, char *f){   //i de evento inicial, f de evento final
+    int tamanho = strlen(i);
     for (int k = 0; k<tamanho; k++){
-        if (i[k]-f[k]>0) return 0;  //não é válido
+        if (i[k]-f[k]>0) return 0;   //não é válido
         else if (i[k]-f[k]<0) return 1;   //é válido
     }
     if (tamanho>0) return 1;
     return 0;
 }
 
-int compare_date (const char *i, const char *f){     //i de evento inicial, f de evento final
-    int tamanho = strlen(i);                    //1979/11/27      2016/09/10   2020/01/24
+int compare_date (const char *i, const char *f){   //i de evento inicial, f de evento final
+    int tamanho = strlen(i);
     for (int k = 0; k<tamanho; k++){
-        if (i[k]-f[k]>0) return 1;  //não é válido
+        if (i[k]-f[k]>0) return 1;   //não é válido
         else if (i[k]-f[k]<0) return -1;   //é válido
     }
     return 0;
 }
 
 int compare_date_time3 (const char *i, const char *f){     //i de evento inicial, f de evento final
-    int tamanho = strlen(i);                    //1979/11/27      2016/09/10 17:34:41   2020/01/24  2020/01/23
+    int tamanho = strlen(i);
     for (int k = 0; k<tamanho; k++){
-        if (i[k]-f[k]>0) return 0;  //não é válido
+        if (i[k]-f[k]>0) return 0;   //não é válido
         else if (i[k]-f[k]<0) return 1;   //é válido
     }
     if (tamanho>0) return 1;
     return 0;
 }
 
-int verify_email (char *e){    //<username>@<domain>.<TLD>
-    int tamanho = strlen(e);   //alícsá-mendes@li3.pt
+int verify_email (char *e){
+    int tamanho = strlen(e);
     if (tamanho<6) return 0;
     int i = 0, j = 0;
     while (e[i]!='@' && i<tamanho){
@@ -63,7 +62,7 @@ int verify_email (char *e){    //<username>@<domain>.<TLD>
 
 int verify_account_status(const char *status){
     int tamanho = strlen(status), i = 0, result = 2;
-    char *status2 = malloc(tamanho + 1); //o +1 é para guardar o '\0'
+    char *status2 = malloc(tamanho + 1);
     while (i<tamanho){
         status2[i] = tolower(status[i]);
         i++;
@@ -76,7 +75,7 @@ int verify_account_status(const char *status){
     return result;
 }
 
-int verify_airport (char *airport){     //função para verificar se um aeroporto é válido
+int verify_airport (char *airport){
     int tamanho = strlen(airport);
     if (tamanho!=3) return 0;   //é inválido
     return 1;
@@ -115,7 +114,7 @@ int compare_seats_passengers (char *seats, int num_passengers) {
     for (int i = 0; i<comp_s; i++){
         if (seats[i]<48 || seats[i]>57) return 0;
     }
-    int num_seats = atoi(seats);                   //passou uma string de números para o respetivo número inteiro
+    int num_seats = atoi(seats);
     if (num_seats>=num_passengers) return 1;
     else return 0;
 }
@@ -128,7 +127,7 @@ int verify_hotel_stars (char *s) {
 }
 
 
-int verify_city_tax (char *t) { // considerando que todos os caracteres de t são números ou '.'
+int verify_city_tax (char *t) {
     for (int i=0; t[i]; i++) {
         if (t[i]==46 || t[i]==45) return 0; // se o 'algarismo' na posição i for um '.' ou '-', t é inválido
     }
@@ -146,21 +145,21 @@ char* strnCpy(char *d, char *s, int n, int p) {
   return d;
 }
 
-int check_date(char *d) { // 2023/12/31 ADICIONAR CASO DE NEGAR DIA: 00 MES: 00 ANO: 0000 nnnn/nn/nn
+int check_date(char *d) {
   int check = 0, i, l = strlen(d);
   if (10 == l) {
 
-    for (i = 0; i < 4; i++) { // xxxx ano Verificamos o ano  
-      if (d[i] < '0' || '9' < d[i]) return check; // 48 = 0 e 57 = 9
+    for (i = 0; i < 4; i++) { 
+      if (d[i] < '0' || '9' < d[i]) return check;
     }
 
     if (d[i] != '/') return check;
-    else i++; //xx mês Verificamos o mês
+    else i++;
 
-    if (d[i] < '0' || '1' < d[i]) return check; // os meses vão de 01-12
+    if (d[i] < '0' || '1' < d[i]) return check;
     else {
-      if (d[i] == '1') { // só é válido: 10, 11 0 12
-        if (d[i+1] < '0' || '2' < d[i+1]) return check;  // só é válido: 10, 11 0 12
+      if (d[i] == '1') {
+        if (d[i+1] < '0' || '2' < d[i+1]) return check;
       }
       else {
         if (d[i+1] < '1' || '9' < d[i+1]) return check;
@@ -169,9 +168,9 @@ int check_date(char *d) { // 2023/12/31 ADICIONAR CASO DE NEGAR DIA: 00 MES: 00 
 
     i += 2;
     if (d[i] != '/') return check;
-    else i++; //xx dias Verificamos o dia
+    else i++;
 
-    if (d[i] < '0' || '3' < d[i]) return check; // os dias vão de 01-31 
+    if (d[i] < '0' || '3' < d[i]) return check;
     else {
       if (d[i] == '3') {
         if (d[i+1] < '0' || '1' < d[i+1]) return check;

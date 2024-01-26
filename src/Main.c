@@ -17,10 +17,10 @@ int main(int argc, char* argv[]) {
     else {
         if(argc == 3){   //modo batch
             open_files(argv[1]);
-            identify_query(argv[2]);//função que faz as queries
+            identify_query(argv[2]);   //função que faz as queries
             free_all();
         }
-        else {    //programa de testes         ./programa-testes dataset/data/ dataset/input.txt dataset/outputs/
+        else {   //programa de testes
             struct timespec start, end;
             start_output_time();
 
@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
             memory_used();
         }
     }
-    printf("perfecto\n");
     exit(0);
     return 0;
 }

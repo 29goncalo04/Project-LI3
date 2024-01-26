@@ -4,7 +4,6 @@
 #include "../include/Parser.h"
 #include "../include/Aux_functions.h"
 #include "../include/Catalogs.h"
-#include "../include/Statistics.h"
 #include "../include/Output_errors.h"
 #include "../include/Hash.h"
 #include "../include/Aux_validation.h"
@@ -38,7 +37,7 @@ void open_files(char* path){
     strcat(aux_users, "/users.csv");
 
 
-    for (int num_ficheiro = 0; num_ficheiro<5; num_ficheiro++) {         //existe um caso específico para cada ficheiro     
+    for (int num_ficheiro = 0; num_ficheiro<5; num_ficheiro++) {   //existe um caso específico para cada ficheiro     
         int l = 0;
         switch (num_ficheiro){
             case 3: 
@@ -47,7 +46,7 @@ void open_files(char* path){
                 if (fpassengers==NULL){
                     path_error = 1;
                     return;
-                }                                                //ficheiro dos passageiros
+                }   //ficheiro dos passageiros
                 while (getline(&line, &len, fpassengers) != -1) {
                     if (l != 0) {
                         char parametros[2][FIELD_SIZE];
@@ -60,7 +59,7 @@ void open_files(char* path){
                                 parametros[i][j] = '\0';
                                 j_linha++;
                             }
-                            else{           //parte do código responsável por guardar o último parâmetro (user_id)
+                            else{   //parte do código responsável por guardar o último parâmetro (user_id)
                                 for (j = 0; line[j_linha] != '\0' && line[j_linha] != '\n'; j_linha++, j++) {
                                     parametros[i][j] = line[j_linha];
                                 }
@@ -76,30 +75,29 @@ void open_files(char* path){
                 break;
             
             case 1:   
-                //init_flight_array(flight_array_valid);
                 create_array_airport();
                 fflights = fopen(aux_flights, "r");
                 start_files_flights();
                 if (fflights==NULL){
                     path_error = 1;
                     return;
-                }                                                 //ficheiro dos voos
-                while (getline(&line, &len, fflights) != -1) {               //o programa vai ler linha a linha do ficheiro aberto
+                }   //ficheiro dos voos
+                while (getline(&line, &len, fflights) != -1) {   //o programa vai ler linha a linha do ficheiro aberto
                     if (l != 0) {
-                        char parametros[13][FIELD_SIZE];                       //o número de parâmetros varia de ficheiro para ficheiro
+                        char parametros[13][FIELD_SIZE];   //o número de parâmetros varia de ficheiro para ficheiro
                         int j_linha = 0;
 
                         for (int i = 0; i<13; i++){
                             if (i<12){
-                                for (j = 0; line[j_linha] != ';'; j_linha++, j++) {     //o programa copia caracter a caracter 
-                                    parametros[i][j] = line[j_linha];                   //para o respetivo parâmetro até encontrar um ";"
+                                for (j = 0; line[j_linha] != ';'; j_linha++, j++) {   //o programa copia caracter a caracter para o respetivo parâmetro até encontrar um ";"
+                                    parametros[i][j] = line[j_linha];
                                 }
                                 parametros[i][j] = '\0';
                                 j_linha++;
                             }
                             else{
-                                if (line[j_linha] != '\0') {          //o programa apenas copia os caracteres para o parâmetro "notes"         
-                                    j = 0;                           //caso existam notes para ser lidas nessa linha, senão o parâmetro fica ""
+                                if (line[j_linha] != '\0') {          //o programa apenas copia os caracteres para o parâmetro "notes" caso existam notes para ser lidas nessa linha, senão o parâmetro fica ""
+                                    j = 0;
                                     while (line[j_linha] != '\0' && line[j_linha] != '\n') {
                                         parametros[12][j] = line[j_linha];
                                         j_linha++;
@@ -117,17 +115,13 @@ void open_files(char* path){
                 }
                 ordena_atrasos(NUM_LINHAS_VALID_AIRPORT);
                 mediana_airport(NUM_LINHAS_VALID_AIRPORT);
-                //calcular mediana por cada aeroporto da hash table;
-                for (int i = 0; i<num_Atrasos; i++){
-                    insertionSort_atrasos(Atrasos_array[i].atraso, Atrasos_array[i].num_atrasos);
-                }
                 fclose(fflights);
                 break;
 
             case 2:  
                 create_array_hotels();
                 freservations = fopen(aux_reservations, "r"); 
-                start_files_reservations();                                         //ficheiro das reservas
+                start_files_reservations();   //ficheiro das reservas
                 if (freservations==NULL){
                     path_error = 1;
                     return;
@@ -151,8 +145,8 @@ void open_files(char* path){
                                 j_linha++;
                             }
                             else{
-                                if (line[j_linha] != '\0') {     //o programa apenas copia os caracteres para o parâmetro "comment"         
-                                    j = 0;                       //caso existam comentários para ser lidos nessa linha, senão o parâmetro fica ""
+                                if (line[j_linha] != '\0') {   //o programa apenas copia os caracteres para o parâmetro "comment" caso existam comentários para ser lidos nessa linha, senão o parâmetro fica ""
+                                    j = 0;
                                     while (line[j_linha] != '\0' && line[j_linha] != '\n') {
                                         parametros[13][j] = line[j_linha];
                                         j_linha++;
@@ -173,7 +167,7 @@ void open_files(char* path){
             case 0:
                 create_array_years();
                 create_array_Prefix();
-                fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                fusers = fopen(aux_users, "r");   //ficheiro dos utilizadores
                 start_files_users();
                 if (fusers==NULL){
                     path_error = 1;
@@ -191,7 +185,7 @@ void open_files(char* path){
                                 parametros[i][j] = '\0';
                                 j_linha++;
                             }
-                            else{              //parte do código responsável por guardar o último parâmetro (account_status)
+                            else{   //parte do código responsável por guardar o último parâmetro (account_status)
                                 for (j = 0; line[j_linha] != '\0' && line[j_linha] != '\n'; j_linha++, j++) {
                                     parametros[i][j] = line[j_linha];
                                 }
@@ -207,7 +201,7 @@ void open_files(char* path){
                 break;  
 
             case 4:
-                fusers = fopen(aux_users, "r");                                                 //ficheiro dos utilizadores
+                fusers = fopen(aux_users, "r");   //ficheiro dos utilizadores
                 if (fusers==NULL){
                     path_error = 1;
                     return;
